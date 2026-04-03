@@ -1,0 +1,22 @@
+{
+  "name": "@appkit/mcp-server",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "appkit-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@appkit/schema": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^3.1.0"
+  }
+}

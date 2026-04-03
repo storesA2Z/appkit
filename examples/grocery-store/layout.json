@@ -1,0 +1,94 @@
+{
+  "pages": {
+    "home": [
+      {
+        "id": "cats-1",
+        "type": "categories",
+        "config": {
+          "type": "categories",
+          "collectionIds": ["fruits", "vegetables", "dairy", "bakery", "beverages", "snacks"],
+          "variant": "grid"
+        }
+      },
+      {
+        "id": "banner-1",
+        "type": "banner",
+        "config": {
+          "type": "banner",
+          "data": [
+            { "mediaType": "image", "title": "Weekly Deals", "subtitle": "Save up to 30%" },
+            { "mediaType": "image", "title": "Fresh Produce", "subtitle": "Farm to table" }
+          ],
+          "bannerConfig": { "autoplay": true, "autoplaySpeed": 4000, "showDots": true }
+        }
+      },
+      {
+        "id": "prod-1",
+        "type": "products",
+        "config": {
+          "type": "products",
+          "collectionId": "deals-of-the-day",
+          "title": "Today's Deals",
+          "showSeeAll": true,
+          "variant": "list",
+          "sortBy": "mostPopular"
+        }
+      },
+      {
+        "id": "flash-1",
+        "type": "flash_sale",
+        "config": {
+          "type": "flash_sale",
+          "flashSaleConfig": {
+            "endDate": "2026-04-05T20:00:00Z",
+            "title": "Flash Sale",
+            "subtitle": "Ends tonight!"
+          }
+        }
+      },
+      {
+        "id": "marquee-1",
+        "type": "marquee",
+        "config": {
+          "type": "marquee",
+          "marqueeConfig": {
+            "items": [
+              { "text": "Free delivery on orders $30+" },
+              { "text": "Same-day delivery available" }
+            ],
+            "speed": 4,
+            "direction": "left",
+            "backgroundColor": "#059669",
+            "textColor": "#ffffff"
+          }
+        }
+      }
+    ],
+    "explore": [],
+    "profile": [],
+    "search": []
+  },
+  "theme": {
+    "colors": {
+      "primary": "#059669",
+      "secondary": "#047857",
+      "accent": "#f59e0b",
+      "background": "#f9fafb",
+      "text": "#111827"
+    },
+    "typography": {
+      "fontFamily": "Inter",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    "layout": {
+      "borderRadius": "12px",
+      "spacing": "12px"
+    }
+  },
+  "metadata": {
+    "name": "Fresh Market",
+    "description": "Online grocery delivery app",
+    "version": "1.0.0"
+  }
+}

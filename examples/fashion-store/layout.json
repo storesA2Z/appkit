@@ -1,0 +1,128 @@
+{
+  "pages": {
+    "home": [
+      {
+        "id": "hero-1",
+        "type": "hero",
+        "config": {
+          "type": "hero",
+          "heroConfig": {
+            "imageUrl": "https://images.unsplash.com/photo-1558171813-01eda6b4be21?w=800",
+            "title": "Summer Collection 2026",
+            "subtitle": "Up to 40% off on new arrivals",
+            "ctaText": "Shop Now",
+            "textPosition": "center",
+            "overlayOpacity": 0.4,
+            "height": 280
+          }
+        }
+      },
+      {
+        "id": "cats-1",
+        "type": "categories",
+        "config": {
+          "type": "categories",
+          "collectionIds": ["women", "men", "accessories", "shoes", "bags"],
+          "variant": "circular"
+        }
+      },
+      {
+        "id": "prod-1",
+        "type": "products",
+        "config": {
+          "type": "products",
+          "collectionId": "new-arrivals",
+          "title": "New Arrivals",
+          "showSeeAll": true,
+          "sortBy": "newest",
+          "variant": "grid",
+          "cardSize": "medium"
+        }
+      },
+      {
+        "id": "flash-1",
+        "type": "flash_sale",
+        "config": {
+          "type": "flash_sale",
+          "flashSaleConfig": {
+            "endDate": "2026-04-10T23:59:59Z",
+            "title": "Flash Sale",
+            "subtitle": "Limited time deals",
+            "ctaText": "Shop Deals"
+          }
+        }
+      },
+      {
+        "id": "reviews-1",
+        "type": "reviews",
+        "config": {
+          "type": "reviews",
+          "reviewsConfig": {
+            "displayMode": "top-rated",
+            "productLimit": 6,
+            "showRatings": true,
+            "title": "Top Rated"
+          }
+        }
+      },
+      {
+        "id": "marquee-1",
+        "type": "marquee",
+        "config": {
+          "type": "marquee",
+          "marqueeConfig": {
+            "items": [
+              { "text": "Free shipping on orders $50+" },
+              { "text": "Easy 30-day returns" },
+              { "text": "New styles added weekly" }
+            ],
+            "speed": 5,
+            "direction": "left"
+          }
+        }
+      }
+    ],
+    "explore": [
+      {
+        "id": "tabs-1",
+        "type": "tabs",
+        "config": {
+          "type": "tabs",
+          "tabsConfig": {
+            "tabs": [
+              { "id": "tab-women", "title": "Women", "collectionIds": ["women-tops", "women-dresses"] },
+              { "id": "tab-men", "title": "Men", "collectionIds": ["men-shirts", "men-pants"] },
+              { "id": "tab-acc", "title": "Accessories", "collectionIds": ["jewelry", "watches"] }
+            ],
+            "variant": "grid"
+          }
+        }
+      }
+    ],
+    "profile": [],
+    "search": []
+  },
+  "theme": {
+    "colors": {
+      "primary": "#1a1a2e",
+      "secondary": "#16213e",
+      "accent": "#e94560",
+      "background": "#ffffff",
+      "text": "#1a1a2e"
+    },
+    "typography": {
+      "fontFamily": "Inter",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    "layout": {
+      "borderRadius": "8px",
+      "spacing": "16px"
+    }
+  },
+  "metadata": {
+    "name": "Fashion Boutique",
+    "description": "Modern fashion e-commerce app",
+    "version": "1.0.0"
+  }
+}
