@@ -5,31 +5,35 @@ export function MarqueeRenderer({ config, theme }: { config: MarqueeConfig; them
   const mc = config.marqueeConfig;
   const bg = mc.backgroundColor || theme.colors.primary;
   const textColor = mc.textColor || '#fff';
+  const items = mc.items || [];
 
   return (
     <div style={{
       backgroundColor: bg,
-      height: mc.height || 32,
+      height: mc.height || 34,
       display: 'flex',
       alignItems: 'center',
       overflow: 'hidden',
-      padding: '0 12px',
+      padding: '0 14px',
     }}>
       <div style={{
         display: 'flex',
-        gap: 24,
+        gap: 20,
         whiteSpace: 'nowrap',
         fontSize: 11,
         color: textColor,
         fontWeight: 500,
+        letterSpacing: '0.01em',
       }}>
-        {(mc.items || []).map((item, i) => (
-          <span key={i}>
-            {item.icon && <span style={{ marginRight: 4 }}>{item.icon}</span>}
-            {item.text}
+        {items.length > 0 ? items.map((item, i) => (
+          <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            {item.icon && <span>{item.icon}</span>}
+            <span>{item.text}</span>
+            {i < items.length - 1 && <span style={{ opacity: 0.3, marginLeft: 14 }}>|</span>}
           </span>
-        ))}
-        {(!mc.items || mc.items.length === 0) && <span>Marquee text</span>}
+        )) : (
+          <span style={{ opacity: 0.7 }}>Add marquee text items</span>
+        )}
       </div>
     </div>
   );

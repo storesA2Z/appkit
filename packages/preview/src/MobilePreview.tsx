@@ -31,10 +31,23 @@ export function MobilePreview({
           justifyContent: 'center',
           height: 400,
           color: '#9ca3af',
-          fontSize: 14,
+          fontSize: 13,
+          fontFamily: 'Inter, system-ui, sans-serif',
+          gap: 8,
         }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>+</div>
-          <div>Add sections to {page} page</div>
+          <div style={{
+            width: 56,
+            height: 56,
+            borderRadius: 16,
+            border: '2px dashed #d1d5db',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 24,
+            color: '#d1d5db',
+          }}>+</div>
+          <div style={{ fontWeight: 500 }}>No sections yet</div>
+          <div style={{ fontSize: 11, color: '#d1d5db' }}>Click a section from the left panel</div>
         </div>
       ) : (
         layout.map((section) => (
@@ -51,30 +64,42 @@ export function MobilePreview({
       <div style={{
         display: 'flex',
         justifyContent: 'space-around',
-        padding: '8px 0',
+        alignItems: 'center',
+        padding: '10px 16px 6px',
         borderTop: '1px solid #e5e7eb',
-        marginTop: 16,
+        marginTop: 12,
+        backgroundColor: '#fff',
       }}>
-        {['Home', 'Explore', 'Profile', 'Search'].map((tab) => (
-          <div
-            key={tab}
-            style={{
-              fontSize: 10,
-              color: tab.toLowerCase() === page ? theme.colors.primary : '#9ca3af',
-              fontWeight: tab.toLowerCase() === page ? 600 : 400,
-              textAlign: 'center',
-            }}
-          >
-            <div style={{
-              width: 20,
-              height: 20,
-              borderRadius: 4,
-              backgroundColor: tab.toLowerCase() === page ? theme.colors.primary + '20' : '#f3f4f6',
-              margin: '0 auto 2px',
-            }} />
-            {tab}
-          </div>
-        ))}
+        {(['Home', 'Explore', 'Profile', 'Search'] as const).map((tab) => {
+          const isActive = tab.toLowerCase() === page;
+          return (
+            <div
+              key={tab}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 3,
+              }}
+            >
+              <div style={{
+                width: 22,
+                height: 22,
+                borderRadius: 6,
+                backgroundColor: isActive ? theme.colors.primary + '18' : '#f3f4f6',
+                transition: 'background-color 0.15s',
+              }} />
+              <span style={{
+                fontSize: 9,
+                fontWeight: isActive ? 600 : 400,
+                color: isActive ? theme.colors.primary : '#9ca3af',
+                letterSpacing: '0.01em',
+              }}>
+                {tab}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </DeviceFrame>
   );

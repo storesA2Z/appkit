@@ -11,15 +11,17 @@ export function SectionCanvas() {
   const sections = project.pages[currentPage];
 
   return (
-    <div className="flex-1 flex items-start justify-center p-6 overflow-y-auto bg-gray-100">
-      <MobilePreview
-        layout={sections}
-        theme={project.theme}
-        page={currentPage}
-        selectedId={selectedSectionId}
-        onSectionClick={selectSection}
-        scale={0.85}
-      />
+    <div className="flex-1 flex items-start justify-center overflow-y-auto dot-grid py-10 px-6">
+      <div className="animate-fade-in">
+        <MobilePreview
+          layout={sections}
+          theme={project.theme}
+          page={currentPage}
+          selectedId={selectedSectionId}
+          onSectionClick={selectSection}
+          scale={0.9}
+        />
+      </div>
     </div>
   );
 }

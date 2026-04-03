@@ -1,14 +1,14 @@
 import React from 'react';
-import { Undo2, Redo2, Download, Bot } from 'lucide-react';
+import { Undo2, Redo2, Download, Sparkles, Settings2, Layers } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
 import { PageTabs } from './PageTabs';
 
 interface ToolbarProps {
-  onToggleAi?: () => void;
-  showAi?: boolean;
+  rightPanel: 'properties' | 'ai';
+  onSetRightPanel: (panel: 'properties' | 'ai') => void;
 }
 
-export function Toolbar({ onToggleAi, showAi }: ToolbarProps) {
+export function Toolbar({ rightPanel, onSetRightPanel }: ToolbarProps) {
   const undo = useAppkitStore((s) => s.undo);
   const redo = useAppkitStore((s) => s.redo);
   const historyIndex = useAppkitStore((s) => s.historyIndex);
@@ -27,14 +27,22 @@ export function Toolbar({ onToggleAi, showAi }: ToolbarProps) {
   };
 
   return (
-    <header className="h-12 bg-white border-b flex items-center px-4 justify-between shrink-0">
-      <div className="flex items-center gap-3">
-        <div className="font-bold text-lg tracking-tight">appkit</div>
-        <div className="flex items-center gap-1 ml-4">
+    <header className="h-14 bg-white border-b border-surface-3 flex items-center px-4 justify-between shrink-0 shadow-panel z-10">
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center">
+            <Layers size={14} className="text-white" />
+          </div>
+          <span className="font-bold text-[15px] tracking-tight text-gray-900">AppKit</span>
+        </div>
+
+        <div className="w-px h-6 bg-surface-3" />
+
+        <div className="flex items-center gap-0.5">
           <button
             onClick={undo}
             disabled={historyIndex <= 0}
-            className="p-1.5 rounded hover:bg-gray-100 disabled:opacity-30"
+            className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-surface-1 disabled:opacity-25 disabled:hover:bg-transparent transition-colors"
             title="Undo (Ctrl+Z)"
           >
             <Undo2 size={16} />
@@ -42,7 +50,7 @@ export function Toolbar({ onToggleAi, showAi }: ToolbarProps) {
           <button
             onClick={redo}
             disabled={historyIndex >= historyLength - 1}
-            className="p-1.5 rounded hover:bg-gray-100 disabled:opacity-30"
+            className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-surface-1 disabled:opacity-25 disabled:hover:bg-transparent transition-colors"
             title="Redo (Ctrl+Shift+Z)"
           >
             <Redo2 size={16} />
@@ -52,23 +60,39 @@ export function Toolbar({ onToggleAi, showAi }: ToolbarProps) {
 
       <PageTabs />
 
-      <div className="flex items-center gap-2">
-        {onToggleAi && (
+      <div className="flex items-center gap-1.5">
+        <div className="flex items-center bg-surface-1 rounded-lg p-0.5">
           <button
-            onClick={onToggleAi}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-              showAi ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            onClick={() => onSetRightPanel('properties')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+              rightPanel === 'properties'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            <Bot size={14} />
+            <Settings2 size={13} />
+            Properties
+          </button>
+          <button
+            onClick={() => onSetRightPanel('ai')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+              rightPanel === 'ai'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <Sparkles size={13} />
             AI
           </button>
-        )}
+        </div>
+
+        <div className="w-px h-6 bg-surface-3 mx-1" />
+
         <button
           onClick={handleExportJson}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-gray-900 text-white rounded-md hover:bg-gray-800"
+          className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
         >
-          <Download size={14} />
+          <Download size={13} />
           Export
         </button>
       </div>

@@ -35,6 +35,21 @@ const renderers: Record<string, React.FC<{ config: any; theme: ThemeConfig }>> =
   collections: CollectionsRenderer,
 };
 
+const typeLabels: Record<string, string> = {
+  banner: 'Banner',
+  products: 'Products',
+  categories: 'Categories',
+  hero: 'Hero',
+  header: 'Header',
+  flash_sale: 'Flash Sale',
+  video: 'Video',
+  reviews: 'Reviews',
+  offer: 'Offer',
+  tabs: 'Tabs',
+  marquee: 'Marquee',
+  collections: 'Collections',
+};
+
 export function SectionRenderer({ section, theme, isSelected, onClick }: SectionRendererProps) {
   const Renderer = renderers[section.type];
   if (!Renderer) return null;
@@ -55,23 +70,29 @@ export function SectionRenderer({ section, theme, isSelected, onClick }: Section
         borderColor: styling.borderColor || 'transparent',
         borderWidth: styling.borderWidth || 0,
         borderStyle: styling.borderWidth ? 'solid' : 'none',
-        outline: isSelected ? '2px solid #3b82f6' : 'none',
-        outlineOffset: 2,
+        outline: isSelected ? '2px solid #4c6ef5' : 'none',
+        outlineOffset: -1,
         cursor: 'pointer',
         position: 'relative',
+        transition: 'outline-color 0.15s ease',
       }}
     >
       {isSelected && (
         <div style={{
           position: 'absolute',
-          top: -20,
-          left: 4,
-          fontSize: 10,
-          color: '#3b82f6',
+          top: 0,
+          right: 0,
+          fontSize: 9,
           fontWeight: 600,
-          textTransform: 'uppercase',
+          color: '#fff',
+          backgroundColor: '#4c6ef5',
+          padding: '2px 8px',
+          borderRadius: '0 0 0 6px',
+          zIndex: 10,
+          letterSpacing: '0.02em',
+          fontFamily: 'Inter, system-ui, sans-serif',
         }}>
-          {section.type}
+          {typeLabels[section.type] || section.type}
         </div>
       )}
       <Renderer config={section.config} theme={theme} />

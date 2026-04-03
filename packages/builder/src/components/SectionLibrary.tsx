@@ -1,75 +1,118 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SECTION_TYPES, type SectionType } from '@appkit/schema';
 import {
   Image, Grid, ShoppingBag, Layers, Type, Video,
   Clock, Star, Gift, ImageIcon, FolderTree, MoveHorizontal,
+  Search, GripVertical,
 } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
 
-const sectionMeta: Record<SectionType, { label: string; icon: React.ElementType; description: string }> = {
-  banner: { label: 'Banner', icon: Image, description: 'Image/video carousel' },
-  categories: { label: 'Categories', icon: Grid, description: 'Category grid or carousel' },
-  products: { label: 'Products', icon: ShoppingBag, description: 'Product listing' },
-  collections: { label: 'Collections', icon: Layers, description: 'Collection showcase' },
-  header: { label: 'Header', icon: Type, description: 'Text divider' },
-  video: { label: 'Video', icon: Video, description: 'Video player' },
-  flash_sale: { label: 'Flash Sale', icon: Clock, description: 'Countdown promotion' },
-  reviews: { label: 'Reviews', icon: Star, description: 'Top-rated products' },
-  offer: { label: 'Offer', icon: Gift, description: 'Promotional card' },
-  hero: { label: 'Hero Image', icon: ImageIcon, description: 'Full-width hero' },
-  tabs: { label: 'Tabs', icon: FolderTree, description: 'Tabbed collections' },
-  marquee: { label: 'Marquee', icon: MoveHorizontal, description: 'Scrolling banner' },
+const sectionMeta: Record<SectionType, { label: string; icon: React.ElementType; description: string; group: string }> = {
+  hero: { label: 'Hero', icon: ImageIcon, description: 'Full-width hero image', group: 'Content' },
+  banner: { label: 'Banner', icon: Image, description: 'Image/video carousel', group: 'Content' },
+  header: { label: 'Header', icon: Type, description: 'Text divider', group: 'Content' },
+  video: { label: 'Video', icon: Video, description: 'Video player', group: 'Content' },
+  marquee: { label: 'Marquee', icon: MoveHorizontal, description: 'Scrolling ticker', group: 'Content' },
+  categories: { label: 'Categories', icon: Grid, description: 'Category grid', group: 'Commerce' },
+  products: { label: 'Products', icon: ShoppingBag, description: 'Product listing', group: 'Commerce' },
+  collections: { label: 'Collections', icon: Layers, description: 'Multi-collection', group: 'Commerce' },
+  tabs: { label: 'Tabs', icon: FolderTree, description: 'Tabbed collections', group: 'Commerce' },
+  flash_sale: { label: 'Flash Sale', icon: Clock, description: 'Countdown timer', group: 'Engagement' },
+  reviews: { label: 'Reviews', icon: Star, description: 'Product reviews', group: 'Engagement' },
+  offer: { label: 'Offer', icon: Gift, description: 'Promo card', group: 'Engagement' },
 };
+
+const groups = ['Content', 'Commerce', 'Engagement'] as const;
 
 export function SectionLibrary() {
   const addSection = useAppkitStore((s) => s.addSection);
   const currentSections = useAppkitStore((s) => s.project.pages[s.currentPage]);
   const selectSection = useAppkitStore((s) => s.selectSection);
   const selectedSectionId = useAppkitStore((s) => s.selectedSectionId);
+  const [search, setSearch] = useState('');
+
+  const filtered = SECTION_TYPES.filter((type) => {
+    if (!search) return true;
+    const meta = sectionMeta[type];
+    const q = search.toLowerCase();
+    return meta.label.toLowerCase().includes(q) || meta.description.toLowerCase().includes(q);
+  });
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
-      <div className="p-3 border-b">
-        <h3 className="font-semibold text-sm text-gray-700">Sections</h3>
+    <div className="h-full flex flex-col">
+      <div className="px-4 pt-4 pb-3">
+        <h2 className="text-[11px] font-semibold uppercase tracking-wider text-sidebar-text mb-3">Sections</h2>
+        <div className="relative">
+          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-sidebar-text" />
+          <input
+            type="text"
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-sidebar-hover text-sidebar-text-bright placeholder:text-sidebar-text text-xs rounded-lg pl-8 pr-3 py-2 border-0 outline-none focus:ring-1 focus:ring-brand-500/40 transition-shadow"
+          />
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-2 space-y-1">
-        {SECTION_TYPES.map((type) => {
-          const meta = sectionMeta[type];
-          const Icon = meta.icon;
+      <div className="flex-1 overflow-y-auto scrollbar-dark px-3 pb-3">
+        {groups.map((group) => {
+          const items = filtered.filter((type) => sectionMeta[type].group === group);
+          if (items.length === 0) return null;
+
           return (
-            <button
-              key={type}
-              onClick={() => addSection(type)}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-left text-sm hover:bg-blue-50 hover:text-blue-700 transition-colors"
-            >
-              <Icon size={16} className="shrink-0" />
-              <div>
-                <div className="font-medium">{meta.label}</div>
-                <div className="text-xs text-gray-400">{meta.description}</div>
+            <div key={group} className="mb-4">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-text/60 px-1 mb-1.5">{group}</div>
+              <div className="space-y-0.5">
+                {items.map((type) => {
+                  const meta = sectionMeta[type];
+                  const Icon = meta.icon;
+                  return (
+                    <button
+                      key={type}
+                      onClick={() => addSection(type)}
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-colors hover:bg-sidebar-hover group"
+                    >
+                      <div className="w-7 h-7 rounded-md bg-sidebar-hover group-hover:bg-sidebar-active flex items-center justify-center shrink-0 transition-colors">
+                        <Icon size={14} className="text-sidebar-text group-hover:text-brand-400 transition-colors" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-xs font-medium text-sidebar-text-bright">{meta.label}</div>
+                        <div className="text-[10px] text-sidebar-text truncate">{meta.description}</div>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
-            </button>
+            </div>
           );
         })}
       </div>
 
       {currentSections.length > 0 && (
-        <div className="border-t p-2">
-          <div className="text-xs text-gray-500 font-medium px-2 mb-1">Current ({currentSections.length})</div>
-          {currentSections.map((section) => {
-            const meta = sectionMeta[section.type];
-            return (
-              <button
-                key={section.id}
-                onClick={() => selectSection(section.id)}
-                className={`w-full text-left text-xs px-2 py-1.5 rounded ${
-                  selectedSectionId === section.id ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'
-                }`}
-              >
-                {meta.label}
-              </button>
-            );
-          })}
+        <div className="border-t border-sidebar-hover px-3 py-2 max-h-[200px] overflow-y-auto scrollbar-dark">
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-text/60 px-1 mb-1.5">
+            Active ({currentSections.length})
+          </div>
+          <div className="space-y-0.5">
+            {currentSections.map((section) => {
+              const meta = sectionMeta[section.type];
+              const isSelected = selectedSectionId === section.id;
+              return (
+                <button
+                  key={section.id}
+                  onClick={() => selectSection(section.id)}
+                  className={`w-full flex items-center gap-2 text-left text-[11px] px-2 py-1.5 rounded-md transition-colors ${
+                    isSelected
+                      ? 'bg-brand-600/20 text-brand-300'
+                      : 'text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-bright'
+                  }`}
+                >
+                  <GripVertical size={11} className="opacity-40 shrink-0" />
+                  <span className="truncate">{meta.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

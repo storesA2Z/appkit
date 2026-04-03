@@ -7,11 +7,12 @@ export function VideoRenderer({ config, theme }: { config: VideoConfig; theme: T
   return (
     <div style={{
       height,
-      backgroundColor: '#000',
+      backgroundColor: '#0f0f0f',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       position: 'relative',
+      overflow: 'hidden',
     }}>
       {config.thumbnailUrl ? (
         <div style={{
@@ -20,20 +21,29 @@ export function VideoRenderer({ config, theme }: { config: VideoConfig; theme: T
           background: `url(${config.thumbnailUrl}) center/cover`,
         }} />
       ) : (
-        <div style={{ color: '#6b7280', textAlign: 'center' }}>
-          <div style={{ fontSize: 32 }}>▶</div>
-          <div style={{ fontSize: 11, marginTop: 4 }}>{config.title || 'Video'}</div>
+        <div style={{
+          width: 52, height: 52, borderRadius: '50%',
+          backgroundColor: 'rgba(255,255,255,0.12)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{
+            width: 0, height: 0,
+            borderLeft: '14px solid rgba(255,255,255,0.9)',
+            borderTop: '8px solid transparent',
+            borderBottom: '8px solid transparent',
+            marginLeft: 3,
+          }} />
         </div>
       )}
       {config.title && (
         <div style={{
           position: 'absolute',
-          bottom: 8,
-          left: 12,
+          bottom: 0, left: 0, right: 0,
+          padding: '20px 14px 10px',
+          background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
           color: '#fff',
           fontSize: 12,
           fontWeight: 600,
-          textShadow: '0 1px 3px rgba(0,0,0,0.5)',
         }}>
           {config.title}
         </div>

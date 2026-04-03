@@ -11,7 +11,7 @@ export default function App() {
   const loadFromLocalStorage = useAppkitStore((s) => s.loadFromLocalStorage);
   const saveToLocalStorage = useAppkitStore((s) => s.saveToLocalStorage);
   const project = useAppkitStore((s) => s.project);
-  const [showAi, setShowAi] = useState(false);
+  const [rightPanel, setRightPanel] = useState<'properties' | 'ai'>('properties');
 
   useKeyboardShortcuts();
 
@@ -25,19 +25,24 @@ export default function App() {
   }, [project]);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      <Toolbar onToggleAi={() => setShowAi(!showAi)} showAi={showAi} />
+    <div className="h-screen flex flex-col bg-surface-2 select-none">
+      <Toolbar
+        rightPanel={rightPanel}
+        onSetRightPanel={setRightPanel}
+      />
 
       <div className="flex-1 flex overflow-hidden">
-        <div className="w-64 bg-white border-r shrink-0 overflow-hidden">
+        <aside className="w-[260px] bg-sidebar-bg shrink-0 flex flex-col overflow-hidden">
           <SectionLibrary />
-        </div>
+        </aside>
 
-        <SectionCanvas />
+        <main className="flex-1 overflow-hidden">
+          <SectionCanvas />
+        </main>
 
-        <div className="w-80 bg-white border-l shrink-0 overflow-y-auto">
-          {showAi ? <AiPanel /> : <PropertiesPanel />}
-        </div>
+        <aside className="w-[320px] bg-white border-l border-surface-3 shrink-0 flex flex-col overflow-hidden">
+          {rightPanel === 'ai' ? <AiPanel /> : <PropertiesPanel />}
+        </aside>
       </div>
     </div>
   );

@@ -9,33 +9,36 @@ export function FlashSaleRenderer({ config, theme }: { config: FlashSaleConfig; 
   return (
     <div style={{
       backgroundColor: bg,
-      padding: '16px',
+      padding: '14px 16px',
       color: textColor,
     }}>
-      <div style={{ fontSize: 14, fontWeight: 700 }}>{fc.title || 'Flash Sale'}</div>
-      {fc.subtitle && <div style={{ fontSize: 11, marginTop: 2, opacity: 0.9 }}>{fc.subtitle}</div>}
-      <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-        {['HH', 'MM', 'SS'].map((unit) => (
-          <div key={unit} style={{
-            backgroundColor: 'rgba(255,255,255,0.2)',
-            padding: '6px 10px',
-            borderRadius: 4,
-            fontSize: 16,
-            fontWeight: 700,
-            textAlign: 'center',
-          }}>
-            <div>00</div>
-            <div style={{ fontSize: 8, fontWeight: 400 }}>{unit}</div>
-          </div>
-        ))}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.01em' }}>{fc.title || 'Flash Sale'}</div>
+          {fc.subtitle && <div style={{ fontSize: 11, marginTop: 3, opacity: 0.85 }}>{fc.subtitle}</div>}
+        </div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[{ val: '08', label: 'hrs' }, { val: '42', label: 'min' }, { val: '17', label: 'sec' }].map(({ val, label }) => (
+            <div key={label} style={{
+              backgroundColor: 'rgba(0,0,0,0.15)',
+              padding: '5px 8px',
+              borderRadius: 6,
+              textAlign: 'center',
+              minWidth: 36,
+            }}>
+              <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.2 }}>{val}</div>
+              <div style={{ fontSize: 8, fontWeight: 500, opacity: 0.7, textTransform: 'uppercase' }}>{label}</div>
+            </div>
+          ))}
+        </div>
       </div>
       {fc.ctaText && (
         <div style={{
-          marginTop: 10,
-          padding: '6px 16px',
+          marginTop: 12,
+          padding: '7px 18px',
           backgroundColor: fc.styling?.ctaBackgroundColor || '#fff',
           color: fc.styling?.ctaTextColor || bg,
-          borderRadius: 4,
+          borderRadius: 6,
           fontSize: 12,
           fontWeight: 600,
           display: 'inline-block',
