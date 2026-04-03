@@ -1,5 +1,3 @@
-// === Core Enums ===
-
 export const SECTION_TYPES = [
   'banner', 'categories', 'products', 'collections',
   'header', 'video', 'flash_sale', 'reviews',
@@ -10,8 +8,6 @@ export type SectionType = (typeof SECTION_TYPES)[number];
 
 export const PAGE_TYPES = ['home', 'explore', 'profile', 'search'] as const;
 export type PageType = (typeof PAGE_TYPES)[number];
-
-// === Common Config Types ===
 
 export interface SpacingConfig {
   marginTop?: number;
@@ -44,8 +40,6 @@ export interface VisibilityRules {
   logic: 'AND' | 'OR';
   conditions: VisibilityCondition[];
 }
-
-// === Section Config Types ===
 
 export interface BannerItem {
   mediaType: 'image' | 'video';
@@ -217,8 +211,6 @@ export interface MarqueeConfig {
   };
 }
 
-// === Discriminated Union ===
-
 export type SectionConfig =
   | ({ type: 'banner' } & BannerConfig)
   | ({ type: 'categories' } & CategoriesConfig)
@@ -232,8 +224,6 @@ export type SectionConfig =
   | ({ type: 'hero' } & HeroConfig)
   | ({ type: 'tabs' } & TabsConfig)
   | ({ type: 'marquee' } & MarqueeConfig);
-
-// === Core Data Types ===
 
 export interface Section {
   id: string;

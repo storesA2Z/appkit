@@ -8,35 +8,11 @@ export interface ExpoProjectFile {
 export function generateExpoProject(layout: AppLayout): ExpoProjectFile[] {
   const files: ExpoProjectFile[] = [];
 
-  // layout.json — the source of truth for the app
-  files.push({
-    path: 'src/data/layout.json',
-    content: JSON.stringify(layout, null, 2),
-  });
-
-  // theme.ts
-  files.push({
-    path: 'src/theme/theme.ts',
-    content: generateThemeFile(layout.theme),
-  });
-
-  // package.json
-  files.push({
-    path: 'package.json',
-    content: generatePackageJson(layout.metadata.name),
-  });
-
-  // app.json (Expo config)
-  files.push({
-    path: 'app.json',
-    content: generateAppJson(layout.metadata),
-  });
-
-  // App.tsx entry point
-  files.push({
-    path: 'App.tsx',
-    content: generateAppEntry(),
-  });
+  files.push({ path: 'src/data/layout.json', content: JSON.stringify(layout, null, 2) });
+  files.push({ path: 'src/theme/theme.ts', content: generateThemeFile(layout.theme) });
+  files.push({ path: 'package.json', content: generatePackageJson(layout.metadata.name) });
+  files.push({ path: 'app.json', content: generateAppJson(layout.metadata) });
+  files.push({ path: 'App.tsx', content: generateAppEntry() });
 
   return files;
 }
@@ -101,8 +77,7 @@ const Tab = createBottomTabNavigator();
 
 function PageScreen({ route }: any) {
   const sections = layout.pages[route.name as keyof typeof layout.pages] || [];
-  // Render sections dynamically based on layout.json
-  return null; // TODO: Implement SectionRenderer for React Native
+  return null;
 }
 
 export default function App() {

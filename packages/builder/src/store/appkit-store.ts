@@ -224,9 +224,7 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
       if (storedId) {
         set({ currentProjectId: storedId });
       }
-    } catch {
-      // Ignore corrupt localStorage
-    }
+    } catch {}
   },
 
   createProject: (name, storeType) => {

@@ -90,9 +90,7 @@ export async function* streamClaude(
         if (event.type === 'message_stop') {
           yield { type: 'done' };
         }
-      } catch {
-        // Skip malformed JSON
-      }
+      } catch {}
     }
   }
   yield { type: 'done' };

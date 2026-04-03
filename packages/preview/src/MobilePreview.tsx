@@ -48,7 +48,6 @@ export function MobilePreview({
         ))
       )}
 
-      {/* Bottom tab bar */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-around',

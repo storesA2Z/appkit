@@ -21,7 +21,6 @@ export function DeviceFrame({ children, scale = 0.85 }: DeviceFrameProps) {
         boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
       }}
     >
-      {/* Status bar */}
       <div style={{
         height: 44,
         backgroundColor: '#fff',
@@ -38,12 +37,10 @@ export function DeviceFrame({ children, scale = 0.85 }: DeviceFrameProps) {
         }} />
       </div>
 
-      {/* Content area */}
       <div style={{ overflowY: 'auto', maxHeight: 'calc(100% - 94px)' }}>
         {children}
       </div>
 
-      {/* Home indicator */}
       <div style={{
         position: 'absolute',
         bottom: 8,
