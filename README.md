@@ -110,6 +110,51 @@ Generate a complete Expo project with:
 - `App.tsx` with navigation setup
 - Layout data and theme configuration
 
+## MCP Server
+
+The `@appkit/mcp-server` package provides a file-based workspace for programmatic layout management via the [Model Context Protocol](https://modelcontextprotocol.io). Use it to integrate AppKit with any MCP-compatible client (Claude Desktop, Cursor, Windsurf, etc.).
+
+### Workspace API
+
+```typescript
+import { Workspace } from '@appkit/mcp-server';
+
+const workspace = new Workspace('./my-store');
+
+// Load or create a project
+const project = workspace.loadProject();
+
+// CRUD operations on sections
+workspace.addSection('home', {
+  id: 'hero-1',
+  type: 'hero',
+  config: {
+    type: 'hero',
+    heroConfig: {
+      imageUrl: 'https://example.com/hero.jpg',
+      title: 'Summer Sale',
+      subtitle: '50% off everything',
+      ctaText: 'Shop Now',
+      textPosition: 'center',
+      overlayOpacity: 0.4,
+      height: 280,
+    },
+  },
+});
+
+workspace.updateSection('home', 'hero-1', { title: 'Winter Sale' });
+workspace.removeSection('home', 'hero-1');
+
+// Get all sections for a page
+const sections = workspace.getSections('home');
+
+// Full layout read/write
+const layout = workspace.getLayout();
+workspace.setLayout(layout);
+```
+
+Projects are persisted as `layout.json` in the workspace directory, making them easy to version control.
+
 ## License
 
 MIT
