@@ -14,8 +14,8 @@ import {
 } from '../index';
 
 describe('@appkit/schema types', () => {
-  it('exports all 12 section types', () => {
-    expect(SECTION_TYPES).toHaveLength(12);
+  it('exports all 13 section types', () => {
+    expect(SECTION_TYPES).toHaveLength(13);
     expect(SECTION_TYPES).toContain('banner');
     expect(SECTION_TYPES).toContain('categories');
     expect(SECTION_TYPES).toContain('products');
@@ -28,6 +28,7 @@ describe('@appkit/schema types', () => {
     expect(SECTION_TYPES).toContain('hero');
     expect(SECTION_TYPES).toContain('tabs');
     expect(SECTION_TYPES).toContain('marquee');
+    expect(SECTION_TYPES).toContain('custom');
   });
 
   it('exports all 4 page types', () => {

@@ -197,6 +197,13 @@ export function validateSection(section: Section): ValidationResult {
       break;
     }
 
+    case 'custom': {
+      const cc = config.customConfig;
+      if (!cc?.componentName) return fail('Custom section must have componentName');
+      if (cc.componentName.length > 100) return fail('Custom componentName max 100 chars');
+      break;
+    }
+
     default:
       return fail(`Unknown section type: ${(config as any).type}`);
   }

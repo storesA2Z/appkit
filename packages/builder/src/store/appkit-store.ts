@@ -23,6 +23,7 @@ function createDefaultSectionConfig(type: SectionType): Section['config'] {
     case 'hero': return { type: 'hero', heroConfig: { imageUrl: '' } };
     case 'tabs': return { type: 'tabs', tabsConfig: { tabs: [] } };
     case 'marquee': return { type: 'marquee', marqueeConfig: { items: [] } };
+    case 'custom': return { type: 'custom', customConfig: { componentName: '', props: {} } };
   }
 }
 

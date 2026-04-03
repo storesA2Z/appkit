@@ -12,6 +12,7 @@ import { OfferRenderer } from './OfferRenderer';
 import { TabsRenderer } from './TabsRenderer';
 import { MarqueeRenderer } from './MarqueeRenderer';
 import { CollectionsRenderer } from './CollectionsRenderer';
+import { CustomRenderer } from './CustomRenderer';
 
 interface SectionRendererProps {
   section: Section;
@@ -33,6 +34,7 @@ const renderers: Record<string, React.FC<{ config: any; theme: ThemeConfig }>> =
   tabs: TabsRenderer,
   marquee: MarqueeRenderer,
   collections: CollectionsRenderer,
+  custom: CustomRenderer,
 };
 
 const typeLabels: Record<string, string> = {
@@ -48,6 +50,7 @@ const typeLabels: Record<string, string> = {
   tabs: 'Tabs',
   marquee: 'Marquee',
   collections: 'Collections',
+  custom: 'Custom',
 };
 
 export function SectionRenderer({ section, theme, isSelected, onClick }: SectionRendererProps) {

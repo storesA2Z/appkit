@@ -20,7 +20,7 @@ export const layoutJsonSchema = {
               enum: [
                 'banner', 'categories', 'products', 'collections',
                 'header', 'video', 'flash_sale', 'reviews',
-                'offer', 'hero', 'tabs', 'marquee',
+                'offer', 'hero', 'tabs', 'marquee', 'custom',
               ],
             },
             config: { type: 'object' as const, description: 'Section-specific configuration' },

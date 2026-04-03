@@ -1,7 +1,7 @@
 export const SECTION_TYPES = [
   'banner', 'categories', 'products', 'collections',
   'header', 'video', 'flash_sale', 'reviews',
-  'offer', 'hero', 'tabs', 'marquee',
+  'offer', 'hero', 'tabs', 'marquee', 'custom',
 ] as const;
 
 export type SectionType = (typeof SECTION_TYPES)[number];
@@ -211,6 +211,15 @@ export interface MarqueeConfig {
   };
 }
 
+export interface CustomConfig {
+  customConfig: {
+    componentName: string;
+    componentPath?: string;
+    props: Record<string, any>;
+    fallbackText?: string;
+  };
+}
+
 export type SectionConfig =
   | ({ type: 'banner' } & BannerConfig)
   | ({ type: 'categories' } & CategoriesConfig)
@@ -223,7 +232,8 @@ export type SectionConfig =
   | ({ type: 'offer' } & OfferConfig)
   | ({ type: 'hero' } & HeroConfig)
   | ({ type: 'tabs' } & TabsConfig)
-  | ({ type: 'marquee' } & MarqueeConfig);
+  | ({ type: 'marquee' } & MarqueeConfig)
+  | ({ type: 'custom' } & CustomConfig);
 
 export interface Section {
   id: string;

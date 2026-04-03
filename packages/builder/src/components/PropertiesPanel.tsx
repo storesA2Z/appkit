@@ -2,7 +2,7 @@ import React from 'react';
 import { Trash2, MousePointerClick } from 'lucide-react';
 import {
   Image, Grid, ShoppingBag, Layers, Type, Video,
-  Clock, Star, Gift, ImageIcon, FolderTree, MoveHorizontal,
+  Clock, Star, Gift, ImageIcon, FolderTree, MoveHorizontal, Code2,
 } from 'lucide-react';
 import type { SectionType } from '@appkit/schema';
 import { useAppkitStore } from '../store/appkit-store';
@@ -18,6 +18,7 @@ import { OfferProperties } from './properties/OfferProperties';
 import { TabsProperties } from './properties/TabsProperties';
 import { MarqueeProperties } from './properties/MarqueeProperties';
 import { CollectionsProperties } from './properties/CollectionsProperties';
+import { CustomProperties } from './properties/CustomProperties';
 import { SpacingStylingPanel } from './properties/SpacingStylingPanel';
 
 const propertyComponents: Record<string, React.FC<{ config: any; onChange: (changes: any) => void }>> = {
@@ -33,6 +34,7 @@ const propertyComponents: Record<string, React.FC<{ config: any; onChange: (chan
   tabs: TabsProperties,
   marquee: MarqueeProperties,
   collections: CollectionsProperties,
+  custom: CustomProperties,
 };
 
 const sectionIcons: Record<SectionType, React.ElementType> = {
@@ -48,6 +50,7 @@ const sectionIcons: Record<SectionType, React.ElementType> = {
   hero: ImageIcon,
   tabs: FolderTree,
   marquee: MoveHorizontal,
+  custom: Code2,
 };
 
 export function PropertiesPanel() {

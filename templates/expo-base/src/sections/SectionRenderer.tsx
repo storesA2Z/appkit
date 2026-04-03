@@ -14,6 +14,7 @@ import OfferSection from "./OfferSection";
 import HeroSection from "./HeroSection";
 import TabsSection from "./TabsSection";
 import MarqueeSection from "./MarqueeSection";
+import { customSectionRegistry } from "./custom-registry";
 
 export interface SectionData {
   id: string;
@@ -25,43 +26,54 @@ interface SectionRendererProps {
   section: SectionData;
 }
 
+const builtInSections: Record<string, React.ComponentType<{ config: any }>> = {
+  banner: BannerSection,
+  categories: CategoriesSection,
+  products: ProductsSection,
+  collections: CollectionsSection,
+  header: HeaderSection,
+  video: VideoSection,
+  flash_sale: FlashSaleSection,
+  reviews: ReviewsSection,
+  offer: OfferSection,
+  hero: HeroSection,
+  tabs: TabsSection,
+  marquee: MarqueeSection,
+};
+
 export default function SectionRenderer({ section }: SectionRendererProps) {
   const { type, config } = section;
 
-  switch (type) {
-    case "banner":
-      return <BannerSection config={config as any} />;
-    case "categories":
-      return <CategoriesSection config={config as any} />;
-    case "products":
-      return <ProductsSection config={config as any} />;
-    case "collections":
-      return <CollectionsSection config={config as any} />;
-    case "header":
-      return <HeaderSection config={config as any} />;
-    case "video":
-      return <VideoSection config={config as any} />;
-    case "flash_sale":
-      return <FlashSaleSection config={config as any} />;
-    case "reviews":
-      return <ReviewsSection config={config as any} />;
-    case "offer":
-      return <OfferSection config={config as any} />;
-    case "hero":
-      return <HeroSection config={config as any} />;
-    case "tabs":
-      return <TabsSection config={config as any} />;
-    case "marquee":
-      return <MarqueeSection config={config as any} />;
-    default:
-      return (
-        <View style={styles.unknown}>
-          <Text style={styles.unknownText}>
-            Unknown section type: {type}
-          </Text>
-        </View>
-      );
+  if (type === "custom") {
+    const customConfig = (config as any).customConfig;
+    const componentName = customConfig?.componentName;
+    const CustomComponent = componentName
+      ? customSectionRegistry[componentName]
+      : null;
+
+    if (CustomComponent) {
+      return <CustomComponent {...(customConfig?.props || {})} />;
+    }
+
+    return (
+      <View style={styles.customFallback}>
+        <Text style={styles.customFallbackText}>
+          {customConfig?.fallbackText || `Custom: ${componentName || "unset"}`}
+        </Text>
+      </View>
+    );
   }
+
+  const BuiltIn = builtInSections[type];
+  if (BuiltIn) {
+    return <BuiltIn config={config as any} />;
+  }
+
+  return (
+    <View style={styles.unknown}>
+      <Text style={styles.unknownText}>Unknown section type: {type}</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -77,5 +89,20 @@ const styles = StyleSheet.create({
     color: theme.colors.darkGray,
     fontSize: 13,
     fontStyle: "italic",
+  },
+  customFallback: {
+    padding: theme.layout.spacing,
+    marginHorizontal: theme.layout.spacing,
+    marginBottom: theme.layout.spacing,
+    backgroundColor: theme.colors.lightGray,
+    borderRadius: theme.layout.borderRadius,
+    borderWidth: 1,
+    borderColor: theme.colors.mediumGray,
+    borderStyle: "dashed",
+    alignItems: "center",
+  },
+  customFallbackText: {
+    color: theme.colors.darkGray,
+    fontSize: 13,
   },
 });

@@ -3,7 +3,7 @@ import { SECTION_TYPES, type SectionType } from '@appkit/schema';
 import {
   Image, Grid, ShoppingBag, Layers, Type, Video,
   Clock, Star, Gift, ImageIcon, FolderTree, MoveHorizontal,
-  Search, GripVertical,
+  Search, GripVertical, Code2,
 } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
 
@@ -20,9 +20,10 @@ const sectionMeta: Record<SectionType, { label: string; icon: React.ElementType;
   flash_sale: { label: 'Flash Sale', icon: Clock, description: 'Countdown timer', group: 'Engagement' },
   reviews: { label: 'Reviews', icon: Star, description: 'Product reviews', group: 'Engagement' },
   offer: { label: 'Offer', icon: Gift, description: 'Promo card', group: 'Engagement' },
+  custom: { label: 'Custom Code', icon: Code2, description: 'Your own component', group: 'Custom' },
 };
 
-const groups = ['Content', 'Commerce', 'Engagement'] as const;
+const groups = ['Content', 'Commerce', 'Engagement', 'Custom'] as const;
 
 export function SectionLibrary() {
   const addSection = useAppkitStore((s) => s.addSection);
@@ -108,7 +109,7 @@ export function SectionLibrary() {
                   }`}
                 >
                   <GripVertical size={11} className="opacity-40 shrink-0" />
-                  <span className="truncate">{meta.label}</span>
+                  <span className="truncate">{meta?.label || section.type}</span>
                 </button>
               );
             })}

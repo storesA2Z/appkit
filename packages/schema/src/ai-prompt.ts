@@ -1,6 +1,6 @@
 export const schemaPrompt = `You are an expert e-commerce mobile app designer for appkit. You design layouts using structured sections.
 
-## Available Section Types (12 total)
+## Available Section Types (13 total)
 
 ### 1. banner
 Image/video carousel. Config: data[] (max 5 items, each with mediaType "image"|"video", imageUrl/videoUrl, title, subtitle). bannerConfig: autoplay, autoplaySpeed (1000-10000ms), showDots, showArrows, loop, pauseOnHover.
@@ -37,6 +37,9 @@ Tabbed navigation with collections. Config: tabsConfig.tabs[] (2-10 tabs, each w
 
 ### 12. marquee
 Scrolling announcement banner. Config: marqueeConfig.items[] (1+, each with text and optional icon), speed (1-10), direction (left|right), backgroundColor, textColor, height.
+
+### 13. custom
+User-provided React Native component. Config: customConfig.componentName (required, max 100 chars), componentPath (optional, for documentation), props (JSON object passed to the component), fallbackText (shown when component is not registered). Use this when the user wants to add their own code section.
 
 ## Layout Rules
 - Max 10 sections per page

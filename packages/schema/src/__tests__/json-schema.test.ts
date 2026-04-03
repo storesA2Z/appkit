@@ -8,12 +8,13 @@ describe('layoutJsonSchema', () => {
     expect(layoutJsonSchema.properties).toBeDefined();
   });
 
-  it('defines all 12 section types', () => {
+  it('defines all 13 section types', () => {
     const sectionSchema = layoutJsonSchema.properties.pages.additionalProperties.items;
     const typeEnum = sectionSchema.properties.type.enum;
-    expect(typeEnum).toHaveLength(12);
+    expect(typeEnum).toHaveLength(13);
     expect(typeEnum).toContain('banner');
     expect(typeEnum).toContain('marquee');
+    expect(typeEnum).toContain('custom');
   });
 });
 
@@ -23,7 +24,7 @@ describe('schemaPrompt', () => {
     expect(schemaPrompt.length).toBeGreaterThan(500);
   });
 
-  it('mentions all 12 section types', () => {
+  it('mentions all 13 section types', () => {
     expect(schemaPrompt).toContain('banner');
     expect(schemaPrompt).toContain('categories');
     expect(schemaPrompt).toContain('products');
