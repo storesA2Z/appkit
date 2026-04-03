@@ -1,0 +1,130 @@
+{
+  "pages": {
+    "home": [
+      {
+        "id": "hero-1",
+        "type": "hero",
+        "config": {
+          "type": "hero",
+          "heroConfig": {
+            "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800",
+            "title": "Tech Deals 2026",
+            "subtitle": "Up to 50% off on the latest gadgets",
+            "ctaText": "Shop Now",
+            "textPosition": "center",
+            "overlayOpacity": 0.5,
+            "height": 300
+          }
+        }
+      },
+      {
+        "id": "cats-1",
+        "type": "categories",
+        "config": {
+          "type": "categories",
+          "collectionIds": ["smartphones", "laptops", "tablets", "audio", "wearables", "accessories"],
+          "variant": "grid"
+        }
+      },
+      {
+        "id": "prod-1",
+        "type": "products",
+        "config": {
+          "type": "products",
+          "collectionId": "best-sellers",
+          "title": "Best Sellers",
+          "showSeeAll": true,
+          "sortBy": "mostPopular",
+          "variant": "grid",
+          "cardSize": "medium"
+        }
+      },
+      {
+        "id": "tabs-1",
+        "type": "tabs",
+        "config": {
+          "type": "tabs",
+          "tabsConfig": {
+            "tabs": [
+              { "id": "tab-phones", "title": "Smartphones", "collectionIds": ["smartphones-flagship", "smartphones-mid-range"] },
+              { "id": "tab-laptops", "title": "Laptops", "collectionIds": ["laptops-ultrabook", "laptops-gaming"] },
+              { "id": "tab-audio", "title": "Audio", "collectionIds": ["headphones", "speakers"] }
+            ],
+            "variant": "grid"
+          }
+        }
+      },
+      {
+        "id": "flash-1",
+        "type": "flash_sale",
+        "config": {
+          "type": "flash_sale",
+          "flashSaleConfig": {
+            "endDate": "2026-04-12T23:59:59Z",
+            "title": "Electronics Blowout",
+            "subtitle": "Doorbusters on top tech brands",
+            "ctaText": "Grab Deals"
+          }
+        }
+      },
+      {
+        "id": "reviews-1",
+        "type": "reviews",
+        "config": {
+          "type": "reviews",
+          "reviewsConfig": {
+            "displayMode": "top-rated",
+            "productLimit": 6,
+            "showRatings": true,
+            "title": "Top Rated Tech"
+          }
+        }
+      },
+      {
+        "id": "marquee-1",
+        "type": "marquee",
+        "config": {
+          "type": "marquee",
+          "marqueeConfig": {
+            "items": [
+              { "text": "Free shipping on all orders over $75" },
+              { "text": "2-year warranty on all devices" },
+              { "text": "Trade in your old device and save" },
+              { "text": "Price match guarantee on electronics" }
+            ],
+            "speed": 5,
+            "direction": "left",
+            "backgroundColor": "#0f172a",
+            "textColor": "#38bdf8"
+          }
+        }
+      }
+    ],
+    "explore": [],
+    "profile": [],
+    "search": []
+  },
+  "theme": {
+    "colors": {
+      "primary": "#0f172a",
+      "secondary": "#1e293b",
+      "accent": "#38bdf8",
+      "background": "#0a0f1e",
+      "text": "#e2e8f0"
+    },
+    "typography": {
+      "fontFamily": "Inter",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    "layout": {
+      "borderRadius": "8px",
+      "spacing": "16px"
+    }
+  },
+  "metadata": {
+    "name": "TechHub Electronics",
+    "description": "Premium electronics and gadgets store",
+    "version": "1.0.0"
+  }
+}

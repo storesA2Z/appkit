@@ -26,14 +26,40 @@ function createDefaultSectionConfig(type: SectionType): Section['config'] {
   }
 }
 
+export interface BackendConfig {
+  mode: 'demo' | 'api';
+  baseUrl: string;
+  endpoints: {
+    products: string;
+    categories: string;
+    collections: string;
+  };
+  auth: {
+    type: 'none' | 'bearer' | 'apikey';
+    headerName: string;
+    token: string;
+  };
+}
+
+function createDefaultBackendConfig(): BackendConfig {
+  return {
+    mode: 'demo',
+    baseUrl: '',
+    endpoints: { products: '/api/products', categories: '/api/categories', collections: '/api/collections' },
+    auth: { type: 'none', headerName: 'Authorization', token: '' },
+  };
+}
+
 interface AppkitState {
   projects: ProjectSummary[];
   currentProjectId: string | null;
   project: AppLayout;
+  backendConfig: BackendConfig;
   currentPage: PageType;
   selectedSectionId: string | null;
   history: AppLayout[];
   historyIndex: number;
+  showProjectSwitcher: boolean;
 
   addSection: (type: SectionType, index?: number) => void;
   updateSection: (id: string, configChanges: Record<string, any>) => void;
@@ -42,16 +68,23 @@ interface AppkitState {
   setPage: (page: PageType) => void;
   selectSection: (id: string | null) => void;
   setTheme: (theme: Partial<AppLayout['theme']>) => void;
+  setThemeColors: (colors: Partial<AppLayout['theme']['colors']>) => void;
+  setThemeTypography: (typo: Partial<AppLayout['theme']['typography']>) => void;
+  setThemeLayout: (layout: Partial<AppLayout['theme']['layout']>) => void;
   setMetadata: (meta: Partial<AppLayout['metadata']>) => void;
+  setBackendConfig: (config: Partial<BackendConfig>) => void;
   setProject: (layout: AppLayout) => void;
   undo: () => void;
   redo: () => void;
+  saveProject: () => void;
+  loadProject: (id: string) => void;
   saveToLocalStorage: () => void;
   loadFromLocalStorage: () => void;
   createProject: (name: string, storeType?: string) => void;
   openProject: (id: string) => void;
   duplicateProject: (id: string) => void;
   deleteProject: (id: string) => void;
+  setShowProjectSwitcher: (show: boolean) => void;
 }
 
 function pushHistory(state: AppkitState): Partial<AppkitState> {
@@ -69,10 +102,12 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
   projects: [],
   currentProjectId: null,
   project: initialProject,
+  backendConfig: createDefaultBackendConfig(),
   currentPage: 'home',
   selectedSectionId: null,
   history: [structuredClone(initialProject)],
   historyIndex: 0,
+  showProjectSwitcher: true,
 
   addSection: (type, index) => {
     set((state) => {
@@ -105,10 +140,7 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
       const page = state.currentPage;
       const sections = state.project.pages[page].map((s) => {
         if (s.id !== id) return s;
-        return {
-          ...s,
-          config: { ...s.config, ...configChanges },
-        };
+        return { ...s, config: { ...s.config, ...configChanges } };
       });
       const newProject = {
         ...state.project,
@@ -161,20 +193,58 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
   selectSection: (id) => set({ selectedSectionId: id }),
 
   setTheme: (theme) => {
-    set((state) => ({
-      project: {
+    set((state) => {
+      const newProject = {
         ...state.project,
         theme: { ...state.project.theme, ...theme },
-      },
-    }));
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  setThemeColors: (colors) => {
+    set((state) => {
+      const newProject = {
+        ...state.project,
+        theme: { ...state.project.theme, colors: { ...state.project.theme.colors, ...colors } },
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  setThemeTypography: (typo) => {
+    set((state) => {
+      const newProject = {
+        ...state.project,
+        theme: { ...state.project.theme, typography: { ...state.project.theme.typography, ...typo } },
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  setThemeLayout: (layout) => {
+    set((state) => {
+      const newProject = {
+        ...state.project,
+        theme: { ...state.project.theme, layout: { ...state.project.theme.layout, ...layout } },
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
   },
 
   setMetadata: (meta) => {
-    set((state) => ({
-      project: {
+    set((state) => {
+      const newProject = {
         ...state.project,
         metadata: { ...state.project.metadata, ...meta },
-      },
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  setBackendConfig: (config) => {
+    set((state) => ({
+      backendConfig: { ...state.backendConfig, ...config },
     }));
   },
 
@@ -202,27 +272,54 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
     });
   },
 
-  saveToLocalStorage: () => {
-    const { project, projects, currentProjectId } = get();
-    localStorage.setItem('appkit:project', JSON.stringify(project));
+  saveProject: () => {
+    const { project, currentProjectId, backendConfig } = get();
+    if (!currentProjectId) return;
+    localStorage.setItem(`appkit:project:${currentProjectId}`, JSON.stringify(project));
+    localStorage.setItem(`appkit:backend:${currentProjectId}`, JSON.stringify(backendConfig));
+    const projects = get().projects.map((p) =>
+      p.id === currentProjectId ? { ...p, updatedAt: new Date().toISOString() } : p
+    );
+    set({ projects });
     localStorage.setItem('appkit:projects', JSON.stringify(projects));
-    localStorage.setItem('appkit:currentProjectId', currentProjectId || '');
   },
 
-  loadFromLocalStorage: () => {
+  loadProject: (id) => {
     try {
-      const stored = localStorage.getItem('appkit:project');
+      const stored = localStorage.getItem(`appkit:project:${id}`);
       if (stored) {
         const project = JSON.parse(stored) as AppLayout;
         set({ project, history: [structuredClone(project)], historyIndex: 0 });
       }
+      const backendStored = localStorage.getItem(`appkit:backend:${id}`);
+      if (backendStored) {
+        set({ backendConfig: JSON.parse(backendStored) });
+      } else {
+        set({ backendConfig: createDefaultBackendConfig() });
+      }
+    } catch {}
+  },
+
+  saveToLocalStorage: () => {
+    get().saveProject();
+  },
+
+  loadFromLocalStorage: () => {
+    try {
       const storedProjects = localStorage.getItem('appkit:projects');
       if (storedProjects) {
-        set({ projects: JSON.parse(storedProjects) });
-      }
-      const storedId = localStorage.getItem('appkit:currentProjectId');
-      if (storedId) {
-        set({ currentProjectId: storedId });
+        const projects = JSON.parse(storedProjects) as ProjectSummary[];
+        set({ projects });
+        if (projects.length > 0) {
+          const lastId = localStorage.getItem('appkit:currentProjectId');
+          const targetId = lastId && projects.find((p) => p.id === lastId) ? lastId : projects[0].id;
+          set({ currentProjectId: targetId, showProjectSwitcher: false });
+          get().loadProject(targetId);
+        } else {
+          set({ showProjectSwitcher: true });
+        }
+      } else {
+        set({ showProjectSwitcher: true });
       }
     } catch {}
   },
@@ -230,19 +327,33 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
   createProject: (name, storeType) => {
     const id = nanoid(10);
     const now = new Date().toISOString();
+    const newLayout = createDefaultLayout();
+    newLayout.metadata.name = name;
+
     set((state) => ({
       projects: [...state.projects, { id, name, storeType, createdAt: now, updatedAt: now }],
       currentProjectId: id,
-      project: createDefaultLayout(),
-      history: [createDefaultLayout()],
+      project: newLayout,
+      backendConfig: createDefaultBackendConfig(),
+      history: [structuredClone(newLayout)],
       historyIndex: 0,
       selectedSectionId: null,
       currentPage: 'home' as PageType,
+      showProjectSwitcher: false,
     }));
+
+    localStorage.setItem(`appkit:project:${id}`, JSON.stringify(newLayout));
+    localStorage.setItem('appkit:currentProjectId', id);
+    const projects = get().projects;
+    localStorage.setItem('appkit:projects', JSON.stringify(projects));
   },
 
   openProject: (id) => {
-    set({ currentProjectId: id, selectedSectionId: null, currentPage: 'home' });
+    const { saveProject } = get();
+    saveProject();
+    set({ currentProjectId: id, selectedSectionId: null, currentPage: 'home', showProjectSwitcher: false });
+    localStorage.setItem('appkit:currentProjectId', id);
+    get().loadProject(id);
   },
 
   duplicateProject: (id) => {
@@ -251,15 +362,35 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
     if (!original) return;
     const newId = nanoid(10);
     const now = new Date().toISOString();
-    set((s) => ({
-      projects: [...s.projects, { ...original, id: newId, name: `${original.name} (copy)`, createdAt: now, updatedAt: now }],
-    }));
+
+    const sourceData = localStorage.getItem(`appkit:project:${id}`);
+    if (sourceData) {
+      localStorage.setItem(`appkit:project:${newId}`, sourceData);
+    }
+    const sourceBackend = localStorage.getItem(`appkit:backend:${id}`);
+    if (sourceBackend) {
+      localStorage.setItem(`appkit:backend:${newId}`, sourceBackend);
+    }
+
+    const newProject = { ...original, id: newId, name: `${original.name} (copy)`, createdAt: now, updatedAt: now };
+    set((s) => ({ projects: [...s.projects, newProject] }));
+    localStorage.setItem('appkit:projects', JSON.stringify(get().projects));
   },
 
   deleteProject: (id) => {
-    set((state) => ({
-      projects: state.projects.filter((p) => p.id !== id),
-      currentProjectId: state.currentProjectId === id ? null : state.currentProjectId,
-    }));
+    localStorage.removeItem(`appkit:project:${id}`);
+    localStorage.removeItem(`appkit:backend:${id}`);
+    set((state) => {
+      const projects = state.projects.filter((p) => p.id !== id);
+      localStorage.setItem('appkit:projects', JSON.stringify(projects));
+      const wasActive = state.currentProjectId === id;
+      return {
+        projects,
+        currentProjectId: wasActive ? null : state.currentProjectId,
+        showProjectSwitcher: wasActive ? true : state.showProjectSwitcher,
+      };
+    });
   },
+
+  setShowProjectSwitcher: (show) => set({ showProjectSwitcher: show }),
 }));
