@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, GripVertical, Plus } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
+import { SectionContextMenu } from './SectionContextMenu';
 import type { SectionType } from '@appkit/schema';
 
 type LeftTab = 'layers' | 'pages';
@@ -68,19 +69,20 @@ export function WidgetTree() {
                   {!group.collapsed && (
                     <div className="pl-4">
                       {groupSections.map((section) => section && (
-                        <button
-                          key={section.id}
-                          onClick={() => selectSection(section.id)}
-                          className={`w-full flex items-center gap-1.5 px-1.5 py-1 rounded text-left transition-colors ${
-                            selectedSectionId === section.id
-                              ? 'bg-ide-accent-dim text-ide-text-bright border-l-2 border-ide-accent'
-                              : 'text-ide-text-muted hover:bg-ide-hover hover:text-ide-text'
-                          }`}
-                        >
-                          <GripVertical size={9} className="opacity-30 shrink-0" />
-                          <span className="text-[9px]">{sectionIcons[section.type] ?? '📄'}</span>
-                          <span className="truncate">{section.type}</span>
-                        </button>
+                        <SectionContextMenu key={section.id} sectionId={section.id}>
+                          <button
+                            onClick={() => selectSection(section.id)}
+                            className={`w-full flex items-center gap-1.5 px-1.5 py-1 rounded text-left transition-colors ${
+                              selectedSectionId === section.id
+                                ? 'bg-ide-accent-dim text-ide-text-bright border-l-2 border-ide-accent'
+                                : 'text-ide-text-muted hover:bg-ide-hover hover:text-ide-text'
+                            }`}
+                          >
+                            <GripVertical size={9} className="opacity-30 shrink-0" />
+                            <span className="text-[9px]">{sectionIcons[section.type] ?? '📄'}</span>
+                            <span className="truncate">{section.type}</span>
+                          </button>
+                        </SectionContextMenu>
                       ))}
                     </div>
                   )}
@@ -89,19 +91,20 @@ export function WidgetTree() {
             })}
 
             {ungroupedSections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => selectSection(section.id)}
-                className={`w-full flex items-center gap-1.5 px-1.5 py-1 rounded text-left transition-colors ${
-                  selectedSectionId === section.id
-                    ? 'bg-ide-accent-dim text-ide-text-bright border-l-2 border-ide-accent'
-                    : 'text-ide-text-muted hover:bg-ide-hover hover:text-ide-text'
-                }`}
-              >
-                <GripVertical size={9} className="opacity-30 shrink-0" />
-                <span className="text-[9px]">{sectionIcons[section.type] ?? '📄'}</span>
-                <span className="truncate">{section.type}</span>
-              </button>
+              <SectionContextMenu key={section.id} sectionId={section.id}>
+                <button
+                  onClick={() => selectSection(section.id)}
+                  className={`w-full flex items-center gap-1.5 px-1.5 py-1 rounded text-left transition-colors ${
+                    selectedSectionId === section.id
+                      ? 'bg-ide-accent-dim text-ide-text-bright border-l-2 border-ide-accent'
+                      : 'text-ide-text-muted hover:bg-ide-hover hover:text-ide-text'
+                  }`}
+                >
+                  <GripVertical size={9} className="opacity-30 shrink-0" />
+                  <span className="text-[9px]">{sectionIcons[section.type] ?? '📄'}</span>
+                  <span className="truncate">{section.type}</span>
+                </button>
+              </SectionContextMenu>
             ))}
           </div>
 
