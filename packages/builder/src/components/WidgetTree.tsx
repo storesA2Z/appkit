@@ -6,6 +6,7 @@ import { SectionContextMenu } from './SectionContextMenu';
 import { AddPageDialog } from './AddPageDialog';
 import { CustomSectionWizard } from './CustomSectionWizard';
 import { SECTION_TYPES, type SectionType } from '@appkit/schema';
+import { SECTION_COLORS } from '../constants/section-colors';
 
 type LeftTab = 'layers' | 'pages';
 
@@ -58,7 +59,7 @@ export function WidgetTree() {
             <span className="font-semibold">{pageConfig?.label ?? currentPage}</span>
           </div>
 
-          <div className="pl-4">
+          <div className="pl-5">
             {groups.map((group) => {
               const groupSections = group.sectionIds
                 .map((sid) => sections.find((s) => s.id === sid))
@@ -66,14 +67,13 @@ export function WidgetTree() {
 
               return (
                 <div key={group.id} className="mb-1">
-                  <div className="flex items-center gap-1.5 px-1.5 py-1 text-ide-text rounded hover:bg-ide-hover cursor-pointer">
+                  <div className="flex items-center gap-1.5 px-1.5 py-1.5 text-ide-text rounded hover:bg-ide-hover cursor-pointer">
                     {group.collapsed ? <ChevronRight size={9} /> : <ChevronDown size={9} />}
-                    <span className="text-[9px]">📦</span>
-                    <span className="text-ide-text-muted">{group.name}</span>
-                    <span className="ml-auto text-[8px] text-ide-text-dim">{groupSections.length}</span>
+                    <span className="uppercase text-[10px] tracking-wider text-ide-text-dim">{group.name}</span>
+                    <span className="ml-auto text-[8px] text-ide-text-dim bg-ide-surface px-1 py-0.5 rounded">{groupSections.length}</span>
                   </div>
                   {!group.collapsed && (
-                    <div className="pl-4">
+                    <div className="pl-5">
                       {groupSections.map((section) => section && (
                         <SectionContextMenu key={section.id} sectionId={section.id}>
                           <button
@@ -84,9 +84,14 @@ export function WidgetTree() {
                                 : 'text-ide-text-muted hover:bg-ide-hover hover:text-ide-text'
                             }`}
                           >
-                            <GripVertical size={9} className="opacity-30 shrink-0" />
-                            <span className="text-[9px]">{sectionIcons[section.type] ?? '📄'}</span>
-                            <span className="truncate">{section.type}</span>
+                            <GripVertical size={9} className="text-ide-text-dim shrink-0" />
+                            <span
+                              className="w-1.5 h-1.5 rounded-full shrink-0"
+                              style={{ backgroundColor: SECTION_COLORS[section.type] ?? '#94a3b8' }}
+                            />
+                            <span className="truncate text-[12px]" style={{ color: `${SECTION_COLORS[section.type] ?? '#94a3b8'}cc` }}>
+                              {section.type.replace('_', ' ')}
+                            </span>
                           </button>
                         </SectionContextMenu>
                       ))}
@@ -112,9 +117,14 @@ export function WidgetTree() {
                       : 'text-ide-text-muted hover:bg-ide-hover hover:text-ide-text'
                   }`}
                 >
-                  <GripVertical size={9} className="opacity-30 shrink-0" />
-                  <span className="text-[9px]">{sectionIcons[section.type] ?? '📄'}</span>
-                  <span className="truncate">{section.type}</span>
+                  <GripVertical size={9} className="text-ide-text-dim hover:text-ide-text shrink-0" />
+                  <span
+                    className="w-1.5 h-1.5 rounded-full shrink-0"
+                    style={{ backgroundColor: SECTION_COLORS[section.type] ?? '#94a3b8' }}
+                  />
+                  <span className="truncate text-[12px]" style={{ color: `${SECTION_COLORS[section.type] ?? '#94a3b8'}cc` }}>
+                    {section.type.replace('_', ' ')}
+                  </span>
                 </button>
               </SectionContextMenu>
               </motion.div>
@@ -134,7 +144,10 @@ export function WidgetTree() {
                     onClick={() => { addSection(type); setShowSectionPicker(false); }}
                     className="w-full flex items-center gap-2 px-2.5 py-1.5 text-[10px] text-ide-text-muted hover:bg-ide-hover hover:text-ide-text-bright text-left transition-colors"
                   >
-                    <span className="text-[9px]">{sectionIcons[type]}</span>
+                    <span
+                      className="w-1.5 h-1.5 rounded-full shrink-0"
+                      style={{ backgroundColor: SECTION_COLORS[type] ?? '#94a3b8' }}
+                    />
                     <span className="capitalize">{type.replace('_', ' ')}</span>
                   </button>
                 ))}
