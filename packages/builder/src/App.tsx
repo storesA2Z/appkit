@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 import { SectionCanvas } from './components/SectionCanvas';
+import { CodeEditor } from './components/CodeEditor';
 import { PropertiesPanel } from './components/PropertiesPanel';
 import { Toolbar, type BuilderMode } from './components/Toolbar';
 import { StatusBar } from './components/StatusBar';
@@ -70,7 +71,7 @@ export default function App() {
 
           <Allotment.Pane>
             <main className="h-full overflow-hidden">
-              <SectionCanvas />
+              {mode === 'code' ? <CodeEditor /> : <SectionCanvas />}
             </main>
           </Allotment.Pane>
 

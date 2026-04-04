@@ -3,9 +3,10 @@ import { SECTION_TYPES, type SectionType } from '@appkit/schema';
 import {
   Image, Grid, ShoppingBag, Layers, Type, Video,
   Clock, Star, Gift, ImageIcon, FolderTree, MoveHorizontal,
-  Search, GripVertical, Code2,
+  Search, GripVertical, Code2, Wand2,
 } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
+import { CustomSectionWizard } from './CustomSectionWizard';
 
 const sectionMeta: Record<SectionType, { label: string; icon: React.ElementType; description: string; group: string }> = {
   hero: { label: 'Hero', icon: ImageIcon, description: 'Full-width hero image', group: 'Content' },
@@ -31,6 +32,7 @@ export function SectionLibrary() {
   const selectSection = useAppkitStore((s) => s.selectSection);
   const selectedSectionId = useAppkitStore((s) => s.selectedSectionId);
   const [search, setSearch] = useState('');
+  const [showWizard, setShowWizard] = useState(false);
 
   const filtered = SECTION_TYPES.filter((type) => {
     if (!search) return true;
@@ -88,6 +90,17 @@ export function SectionLibrary() {
           );
         })}
       </div>
+
+      <div className="px-3 pb-2">
+          <button
+            onClick={() => setShowWizard(true)}
+            className="w-full flex items-center justify-center gap-1.5 py-2 border border-dashed border-ide-accent-border rounded-lg text-ide-accent text-[11px] font-medium hover:bg-ide-accent-dim transition-colors"
+          >
+            <Wand2 size={12} /> Create with Wizard
+          </button>
+        </div>
+
+      <CustomSectionWizard open={showWizard} onClose={() => setShowWizard(false)} />
 
       {currentSections.length > 0 && (
         <div className="border-t border-sidebar-hover px-3 py-2 max-h-[200px] overflow-y-auto scrollbar-dark">
