@@ -21,9 +21,9 @@ fi
 echo "Installing code-server..."
 echo ""
 
-# Use npm — works on macOS (including ARM/Rosetta) and Linux
+# Use npm — clear pnpm user agent to avoid postinstall detection issues
 if command -v npm &> /dev/null; then
-  npm install -g code-server --unsafe-perm
+  npm_config_user_agent="" npm install -g code-server --unsafe-perm
 
   CS_BIN=$(which code-server 2>/dev/null || true)
   if [ -n "$CS_BIN" ]; then
