@@ -15,6 +15,7 @@
     "create-appkit": "workspace:*",
     "@appkit/ai": "workspace:*",
     "@appkit/builder": "workspace:*",
+    "@appkit/export": "workspace:*",
     "@appkit/preview": "workspace:*",
     "@appkit/schema": "workspace:*",
     "allotment": "^1.20.5",
