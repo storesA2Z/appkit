@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Copy, Trash2, FolderOpen, Store } from 'lucide-react';
+import { Plus, Copy, Trash2, FolderOpen, Store, X } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
 
 const storeTypes = [
@@ -17,43 +17,63 @@ export function ProjectSwitcher() {
   const duplicateProject = useAppkitStore((s) => s.duplicateProject);
   const deleteProject = useAppkitStore((s) => s.deleteProject);
   const currentProjectId = useAppkitStore((s) => s.currentProjectId);
+  const setShowProjectSwitcher = useAppkitStore((s) => s.setShowProjectSwitcher);
 
-  const [showCreate, setShowCreate] = useState(projects.length === 0);
+  const hasProjects = projects.length > 0;
+  const [showCreate, setShowCreate] = useState(!hasProjects);
   const [newName, setNewName] = useState('');
   const [newType, setNewType] = useState('fashion');
 
   const handleCreate = () => {
     if (!newName.trim()) return;
     createProject(newName.trim(), newType);
-    setNewName('');
-    setShowCreate(false);
+    // createProject sets showProjectSwitcher: false in the store, dismissing this component
+  };
+
+  const handleClose = () => {
+    if (hasProjects) setShowProjectSwitcher(false);
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-ide-panel rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden">
-        <div className="px-6 py-5 border-b border-surface-3 flex items-center justify-between">
+    <div
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+      onClick={handleClose}
+    >
+      <div
+        className="bg-ide-panel border border-ide-border-bright rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden animate-scale-in"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="px-6 py-5 border-b border-ide-border flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-ide-accent to-purple-700 flex items-center justify-center">
               <Store size={18} className="text-white" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-ide-text-bright">Your Projects</h2>
-              <p className="text-xs text-ide-text-muted">{projects.length} project{projects.length !== 1 ? 's' : ''}</p>
+              <p className="text-xs text-ide-text-dim">{projects.length} project{projects.length !== 1 ? 's' : ''}</p>
             </div>
           </div>
-          <button
-            onClick={() => setShowCreate(true)}
-            className="flex items-center gap-1.5 px-4 py-2 bg-ide-accent text-white text-sm font-semibold rounded-lg hover:bg-ide-accent transition-colors"
-          >
-            <Plus size={15} />
-            New Project
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowCreate(true)}
+              className="flex items-center gap-1.5 px-4 py-2 bg-ide-accent text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
+            >
+              <Plus size={15} />
+              New Project
+            </button>
+            {hasProjects && (
+              <button onClick={handleClose} className="p-2 hover:bg-ide-hover rounded-lg transition-colors">
+                <X size={16} className="text-ide-text-dim" />
+              </button>
+            )}
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto scrollbar-thin p-6">
+        <div className="flex-1 overflow-y-auto scrollbar-ide p-6">
+          {/* Create form */}
           {showCreate && (
-            <div className="mb-6 p-5 border-2 border-dashed border-ide-accent-border rounded-xl bg-ide-accent-dim animate-slide-up">
+            <div className="mb-6 p-5 border border-ide-border-bright rounded-xl bg-ide-bg">
               <h3 className="text-sm font-semibold text-ide-text-bright mb-3">Create New Project</h3>
               <input
                 type="text"
@@ -62,7 +82,7 @@ export function ProjectSwitcher() {
                 onChange={(e) => setNewName(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
                 autoFocus
-                className="w-full px-3 py-2.5 text-sm border border-ide-border rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-ide-accent"
+                className="w-full px-3 py-2.5 text-sm text-ide-text-bright bg-ide-panel border border-ide-border rounded-lg mb-3 placeholder:text-ide-text-dim outline-none focus:border-ide-accent focus:ring-1 focus:ring-ide-accent/30"
               />
               <div className="flex gap-2 mb-4 flex-wrap">
                 {storeTypes.map((t) => (
@@ -72,7 +92,7 @@ export function ProjectSwitcher() {
                     className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
                       newType === t.id
                         ? 'border-ide-accent bg-ide-accent-dim text-ide-accent'
-                        : 'border-ide-border text-ide-text hover:border-ide-border'
+                        : 'border-ide-border bg-ide-panel text-ide-text-muted hover:border-ide-border-bright hover:text-ide-text'
                     }`}
                   >
                     <span>{t.emoji}</span>
@@ -84,14 +104,14 @@ export function ProjectSwitcher() {
                 <button
                   onClick={handleCreate}
                   disabled={!newName.trim()}
-                  className="px-4 py-2 bg-ide-accent text-white text-sm font-semibold rounded-lg hover:bg-ide-accent disabled:opacity-40 transition-colors"
+                  className="px-5 py-2 bg-ide-accent text-white text-sm font-semibold rounded-lg hover:opacity-90 disabled:opacity-30 transition-opacity"
                 >
                   Create
                 </button>
-                {projects.length > 0 && (
+                {hasProjects && (
                   <button
-                    onClick={() => setShowCreate(false)}
-                    className="px-4 py-2 text-sm text-ide-text hover:text-ide-text-bright transition-colors"
+                    onClick={() => { setShowCreate(false); setNewName(''); }}
+                    className="px-4 py-2 text-sm text-ide-text-muted hover:text-ide-text-bright transition-colors"
                   >
                     Cancel
                   </button>
@@ -100,6 +120,7 @@ export function ProjectSwitcher() {
             </div>
           )}
 
+          {/* Empty state */}
           {projects.length === 0 && !showCreate && (
             <div className="text-center py-16">
               <div className="w-16 h-16 rounded-2xl bg-ide-hover flex items-center justify-center mx-auto mb-4">
@@ -110,6 +131,7 @@ export function ProjectSwitcher() {
             </div>
           )}
 
+          {/* Project grid */}
           <div className="grid grid-cols-2 gap-3">
             {projects.map((p) => {
               const isActive = currentProjectId === p.id;
@@ -119,10 +141,10 @@ export function ProjectSwitcher() {
               return (
                 <div
                   key={p.id}
-                  className={`group relative p-4 rounded-xl border-2 transition-all cursor-pointer ${
+                  className={`group relative p-4 rounded-xl border transition-all cursor-pointer ${
                     isActive
-                      ? 'border-ide-accent bg-ide-accent-dim shadow-dropdown'
-                      : 'border-surface-3 hover:border-ide-border hover:shadow-panel'
+                      ? 'border-ide-accent bg-ide-accent-dim'
+                      : 'border-ide-border hover:border-ide-border-bright hover:bg-ide-hover'
                   }`}
                   onClick={() => openProject(p.id)}
                 >
@@ -156,7 +178,7 @@ export function ProjectSwitcher() {
                     </button>
                     <button
                       onClick={() => { if (confirm(`Delete "${p.name}"?`)) deleteProject(p.id); }}
-                      className="p-1.5 rounded-md hover:bg-red-50 text-ide-text-dim hover:text-red-500"
+                      className="p-1.5 rounded-md hover:bg-red-500/10 text-ide-text-dim hover:text-red-400"
                       title="Delete"
                     >
                       <Trash2 size={12} />

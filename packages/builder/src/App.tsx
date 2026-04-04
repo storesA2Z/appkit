@@ -36,13 +36,15 @@ export default function App() {
 
   useKeyboardShortcuts();
 
+  useEffect(() => { loadFromLocalStorage(); }, []);
+
+  // Start tour only after ProjectSwitcher is dismissed
   useEffect(() => {
-    loadFromLocalStorage();
-    if (shouldShowTour) {
-      const timer = setTimeout(() => setShowTour(true), 1000);
+    if (!showProjectSwitcher && shouldShowTour && !showTour) {
+      const timer = setTimeout(() => setShowTour(true), 600);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [showProjectSwitcher]);
   useEffect(() => {
     const timer = setTimeout(() => saveToLocalStorage(), 2000);
     return () => clearTimeout(timer);
