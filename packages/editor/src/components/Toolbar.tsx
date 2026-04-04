@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, Download, MessageSquare, Play } from 'lucide-react';
+import { Layers, Download, MessageSquare, Play, Plus } from 'lucide-react';
 import { useEditorStore, type EditorMode } from '../store/editor-store';
 
 const modes: { id: EditorMode; label: string }[] = [
@@ -7,7 +7,11 @@ const modes: { id: EditorMode; label: string }[] = [
   { id: 'code', label: 'Code' },
 ];
 
-export function Toolbar() {
+interface ToolbarProps {
+  onNewProject?: () => void;
+}
+
+export function Toolbar({ onNewProject }: ToolbarProps) {
   const mode = useEditorStore((s) => s.mode);
   const setMode = useEditorStore((s) => s.setMode);
   const currentProject = useEditorStore((s) => s.currentProject);
@@ -31,6 +35,13 @@ export function Toolbar() {
         <span className="text-[11px] text-ide-text truncate max-w-[160px]">
           {currentProject?.name ?? 'No Project'}
         </span>
+        <button
+          onClick={onNewProject}
+          className="flex items-center gap-1 px-2 py-0.5 text-[10px] text-ide-accent hover:bg-ide-hover rounded transition-colors"
+          title="New Project"
+        >
+          <Plus size={11} /> New
+        </button>
       </div>
 
       <div className="flex bg-ide-surface rounded-full p-0.5">

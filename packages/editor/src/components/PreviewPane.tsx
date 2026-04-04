@@ -41,8 +41,8 @@ export function PreviewPane() {
               className="w-full h-full border-none"
               title="Expo Snack Preview"
               onLoad={() => setSnackConnected(true)}
-              allow="cross-origin-isolated"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              allow="cross-origin-isolated; clipboard-write"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-popups-to-escape-sandbox"
             />
           </div>
         </div>

@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "setup": "bash scripts/setup-vscode.sh"
   },
   "dependencies": {
     "create-appkit": "workspace:*",
