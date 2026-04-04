@@ -33,7 +33,14 @@ export function AiChatSidebar() {
     setMessages([...updatedMessages, { role: 'assistant', content: '' }]);
 
     try {
-      for await (const event of streamClaude(apiKey, updatedMessages, { layout: null as any, currentPage: '', actions: [] })) {
+      const aiContext = {
+          storeType: null,
+          brandGuidelines: null,
+          currentLayout: { pages: {}, theme: {} } as any,
+          currentPage: '',
+          selectedSectionId: null,
+        };
+      for await (const event of streamClaude(apiKey, updatedMessages, aiContext)) {
         if (event.type === 'text' && event.text) {
           assistantText += event.text;
           setMessages([...updatedMessages, { role: 'assistant', content: assistantText }]);
