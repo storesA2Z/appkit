@@ -8,6 +8,7 @@ import {
   type AppMetadata,
   type PageConfig,
   type SectionGroup,
+  type AppkitProjectMeta,
   SECTION_TYPES,
   PAGE_TYPES,
   createDefaultTheme,
@@ -142,5 +143,19 @@ describe('migrateLayout', () => {
     };
     const result = migrateLayout(newLayout as any);
     expect(result.pages.home.label).toBe('Home');
+  });
+});
+
+describe('AppkitProjectMeta', () => {
+  it('should accept valid project metadata', () => {
+    const meta: AppkitProjectMeta = {
+      name: 'My App',
+      id: 'proj_123',
+      schemaVersion: '3.0.0',
+      createdAt: '2026-04-04T00:00:00Z',
+      template: 'expo-router-tabs',
+    };
+    expect(meta.name).toBe('My App');
+    expect(meta.template).toBe('expo-router-tabs');
   });
 });

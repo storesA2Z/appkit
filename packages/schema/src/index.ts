@@ -1,4 +1,5 @@
 export * from './types';
+export type { AppkitProjectMeta } from './types';
 export * from './defaults';
 export * from './validation';
 export * from './migration';

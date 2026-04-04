@@ -350,3 +350,11 @@ export interface ProjectSummary {
   updatedAt: string;
   createdAt: string;
 }
+
+export interface AppkitProjectMeta {
+  name: string;
+  id: string;
+  schemaVersion: string;
+  createdAt: string;
+  template: string;
+}
