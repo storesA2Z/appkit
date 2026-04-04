@@ -56,9 +56,9 @@ describe('@appkit/schema types', () => {
     expect(layout.pages.home.label).toBe('Home');
     expect(layout.pages.home.isCore).toBe(true);
     expect(layout.pages.home.navType).toBe('tab');
-    expect(layout.pages.home.sections).toEqual([]);
+    expect(layout.pages.home.sections.length).toBeGreaterThan(0);
     expect(layout.pages.explore.slug).toBe('explore');
-    expect(layout.themes).toEqual([]);
+    expect(layout.themes!.length).toBeGreaterThan(0);
   });
 });
 

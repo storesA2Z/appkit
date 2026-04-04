@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronDown, ChevronRight, GripVertical, Plus } from 'lucide-react';
+import { ChevronDown, ChevronRight, GripVertical, Plus, Wand2 } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
 import { SectionContextMenu } from './SectionContextMenu';
 import { AddPageDialog } from './AddPageDialog';
-import type { SectionType } from '@appkit/schema';
+import { CustomSectionWizard } from './CustomSectionWizard';
+import { SECTION_TYPES, type SectionType } from '@appkit/schema';
 
 type LeftTab = 'layers' | 'pages';
 
@@ -17,6 +18,8 @@ const sectionIcons: Record<SectionType, string> = {
 export function WidgetTree() {
   const [activeTab, setActiveTab] = useState<LeftTab>('layers');
   const [showAddPage, setShowAddPage] = useState(false);
+  const [showSectionPicker, setShowSectionPicker] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
   const currentPage = useAppkitStore((s) => s.currentPage);
   const project = useAppkitStore((s) => s.project);
   const selectedSectionId = useAppkitStore((s) => s.selectedSectionId);
@@ -118,10 +121,35 @@ export function WidgetTree() {
             ))}
           </div>
 
-          <button
-            onClick={() => addSection('header')}
-            className="w-full mt-2 py-1.5 border border-dashed border-ide-accent-border rounded-md text-center text-ide-accent text-[10px] hover:bg-ide-accent-dim transition-colors"
-          >+ Add Section</button>
+          <div className="relative mt-2">
+            <button
+              onClick={() => setShowSectionPicker(!showSectionPicker)}
+              className="w-full py-1.5 border border-dashed border-ide-accent-border rounded-md text-center text-ide-accent text-[10px] hover:bg-ide-accent-dim transition-colors"
+            >+ Add Section</button>
+            {showSectionPicker && (
+              <div className="absolute left-0 right-0 top-full mt-1 bg-ide-panel border border-ide-border-bright rounded-lg shadow-dropdown z-20 max-h-[240px] overflow-y-auto scrollbar-ide">
+                {SECTION_TYPES.filter(t => t !== 'custom').map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => { addSection(type); setShowSectionPicker(false); }}
+                    className="w-full flex items-center gap-2 px-2.5 py-1.5 text-[10px] text-ide-text-muted hover:bg-ide-hover hover:text-ide-text-bright text-left transition-colors"
+                  >
+                    <span className="text-[9px]">{sectionIcons[type]}</span>
+                    <span className="capitalize">{type.replace('_', ' ')}</span>
+                  </button>
+                ))}
+                <div className="border-t border-ide-border my-0.5" />
+                <button
+                  onClick={() => { setShowSectionPicker(false); setShowWizard(true); }}
+                  className="w-full flex items-center gap-2 px-2.5 py-1.5 text-[10px] text-ide-accent hover:bg-ide-accent-dim text-left transition-colors"
+                >
+                  <Wand2 size={10} />
+                  <span>Custom Section Wizard</span>
+                </button>
+              </div>
+            )}
+          </div>
+          <CustomSectionWizard open={showWizard} onClose={() => setShowWizard(false)} />
         </div>
       )}
 

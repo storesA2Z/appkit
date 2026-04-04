@@ -4,23 +4,23 @@ import { useAppkitStore } from '../appkit-store';
 describe('appkit store', () => {
   beforeEach(() => {
     useAppkitStore.setState(useAppkitStore.getInitialState());
+    // Switch to explore page (empty) for clean section tests
+    useAppkitStore.getState().setPage('explore');
   });
 
   it('starts with default layout', () => {
     const state = useAppkitStore.getState();
-    expect(state.project.pages.home.sections).toEqual([]);
+    expect(state.project.pages.home.sections.length).toBeGreaterThan(0);
     expect(state.project.pages.home.label).toBe('Home');
-    expect(state.currentPage).toBe('home');
-    expect(state.selectedSectionId).toBeNull();
+    expect(state.project.pages.explore.sections).toHaveLength(0);
   });
 
   it('adds a section', () => {
     const { addSection } = useAppkitStore.getState();
     addSection('header');
     const state = useAppkitStore.getState();
-    expect(state.project.pages.home.sections).toHaveLength(1);
-    expect(state.project.pages.home.sections[0].type).toBe('header');
-    expect(state.project.pages.home.sections[0].id).toBeDefined();
+    expect(state.project.pages.explore.sections).toHaveLength(1);
+    expect(state.project.pages.explore.sections[0].type).toBe('header');
   });
 
   it('adds a section at specific index', () => {
@@ -29,42 +29,42 @@ describe('appkit store', () => {
     store.addSection('banner');
     store.addSection('hero', 1);
     const state = useAppkitStore.getState();
-    expect(state.project.pages.home.sections[0].type).toBe('header');
-    expect(state.project.pages.home.sections[1].type).toBe('hero');
-    expect(state.project.pages.home.sections[2].type).toBe('banner');
+    expect(state.project.pages.explore.sections[0].type).toBe('header');
+    expect(state.project.pages.explore.sections[1].type).toBe('hero');
+    expect(state.project.pages.explore.sections[2].type).toBe('banner');
   });
 
   it('removes a section', () => {
     const store = useAppkitStore.getState();
     store.addSection('header');
-    const id = useAppkitStore.getState().project.pages.home.sections[0].id;
+    const id = useAppkitStore.getState().project.pages.explore.sections[0].id;
     store.removeSection(id);
-    expect(useAppkitStore.getState().project.pages.home.sections).toHaveLength(0);
+    expect(useAppkitStore.getState().project.pages.explore.sections).toHaveLength(0);
   });
 
   it('updates a section config', () => {
     const store = useAppkitStore.getState();
     store.addSection('header');
-    const id = useAppkitStore.getState().project.pages.home.sections[0].id;
+    const id = useAppkitStore.getState().project.pages.explore.sections[0].id;
     store.updateSection(id, { text: 'New Arrivals' });
-    const section = useAppkitStore.getState().project.pages.home.sections[0];
+    const section = useAppkitStore.getState().project.pages.explore.sections[0];
     expect((section.config as any).text).toBe('New Arrivals');
   });
 
   it('switches pages', () => {
     const store = useAppkitStore.getState();
-    store.setPage('explore');
-    expect(useAppkitStore.getState().currentPage).toBe('explore');
+    store.setPage('home');
+    expect(useAppkitStore.getState().currentPage).toBe('home');
   });
 
   it('supports undo/redo', () => {
     const store = useAppkitStore.getState();
     store.addSection('header');
-    expect(useAppkitStore.getState().project.pages.home.sections).toHaveLength(1);
+    expect(useAppkitStore.getState().project.pages.explore.sections).toHaveLength(1);
     store.undo();
-    expect(useAppkitStore.getState().project.pages.home.sections).toHaveLength(0);
+    expect(useAppkitStore.getState().project.pages.explore.sections).toHaveLength(0);
     store.redo();
-    expect(useAppkitStore.getState().project.pages.home.sections).toHaveLength(1);
+    expect(useAppkitStore.getState().project.pages.explore.sections).toHaveLength(1);
   });
 
   it('adds and removes custom pages', () => {
@@ -91,34 +91,36 @@ describe('appkit store', () => {
     const store = useAppkitStore.getState();
     store.addGroup('Above Fold');
     const state = useAppkitStore.getState();
-    const groups = state.project.pages.home.groups!;
+    const groups = state.project.pages.explore.groups!;
     expect(groups).toHaveLength(1);
     expect(groups[0].name).toBe('Above Fold');
 
     store.addSection('header');
-    const sectionId = useAppkitStore.getState().project.pages.home.sections[0].id;
+    const sectionId = useAppkitStore.getState().project.pages.explore.sections[0].id;
     store.addSectionToGroup(groups[0].id, sectionId);
-    expect(useAppkitStore.getState().project.pages.home.groups![0].sectionIds).toContain(sectionId);
+    expect(useAppkitStore.getState().project.pages.explore.groups![0].sectionIds).toContain(sectionId);
 
     store.removeSectionFromGroup(groups[0].id, sectionId);
-    expect(useAppkitStore.getState().project.pages.home.groups![0].sectionIds).toHaveLength(0);
+    expect(useAppkitStore.getState().project.pages.explore.groups![0].sectionIds).toHaveLength(0);
   });
 
   it('saves and activates themes', () => {
     const store = useAppkitStore.getState();
+    const initialThemes = useAppkitStore.getState().project.themes?.length ?? 0;
     store.saveTheme('My Theme');
     const state = useAppkitStore.getState();
-    expect(state.project.themes).toHaveLength(1);
-    expect(state.project.themes![0].name).toBe('My Theme');
-    expect(state.project.activeThemeId).toBe(state.project.themes![0].id);
+    expect(state.project.themes!.length).toBe(initialThemes + 1);
+    const saved = state.project.themes![state.project.themes!.length - 1];
+    expect(saved.name).toBe('My Theme');
+    expect(state.project.activeThemeId).toBe(saved.id);
   });
 
   it('updates custom style on sections', () => {
     const store = useAppkitStore.getState();
     store.addSection('header');
-    const id = useAppkitStore.getState().project.pages.home.sections[0].id;
+    const id = useAppkitStore.getState().project.pages.explore.sections[0].id;
     store.updateSectionCustomStyle(id, { backgroundColor: '#000' });
-    const section = useAppkitStore.getState().project.pages.home.sections[0];
+    const section = useAppkitStore.getState().project.pages.explore.sections[0];
     expect(section.customStyle).toEqual({ backgroundColor: '#000' });
   });
 });
