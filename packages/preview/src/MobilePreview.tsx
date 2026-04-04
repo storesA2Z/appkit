@@ -65,38 +65,51 @@ export function MobilePreview({
         display: 'flex',
         justifyContent: 'space-around',
         alignItems: 'center',
-        padding: '10px 16px 6px',
-        borderTop: '1px solid #e5e7eb',
-        marginTop: 12,
+        padding: '8px 16px 4px',
+        borderTop: '1px solid #f3f4f6',
+        marginTop: 'auto',
         backgroundColor: '#fff',
       }}>
-        {(['Home', 'Explore', 'Profile', 'Search'] as const).map((tab) => {
-          const isActive = tab.toLowerCase() === page;
+        {([
+          { name: 'Home', icon: '🏠', activeIcon: '🏠' },
+          { name: 'Explore', icon: '🧭', activeIcon: '🧭' },
+          { name: 'Search', icon: '🔍', activeIcon: '🔍' },
+          { name: 'Profile', icon: '👤', activeIcon: '👤' },
+        ] as const).map((tab) => {
+          const isActive = tab.name.toLowerCase() === page;
           return (
             <div
-              key={tab}
+              key={tab.name}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: 3,
+                gap: 2,
+                padding: '2px 8px',
               }}
             >
               <div style={{
-                width: 22,
-                height: 22,
-                borderRadius: 6,
-                backgroundColor: isActive ? theme.colors.primary + '18' : '#f3f4f6',
-                transition: 'background-color 0.15s',
-              }} />
+                fontSize: 16,
+                filter: isActive ? 'none' : 'grayscale(1) opacity(0.4)',
+                transition: 'filter 0.15s',
+              }}>
+                {isActive ? tab.activeIcon : tab.icon}
+              </div>
               <span style={{
                 fontSize: 9,
-                fontWeight: isActive ? 600 : 400,
+                fontWeight: isActive ? 700 : 400,
                 color: isActive ? theme.colors.primary : '#9ca3af',
                 letterSpacing: '0.01em',
               }}>
-                {tab}
+                {tab.name}
               </span>
+              {isActive && (
+                <div style={{
+                  width: 4, height: 4, borderRadius: '50%',
+                  backgroundColor: theme.colors.primary,
+                  marginTop: -1,
+                }} />
+              )}
             </div>
           );
         })}

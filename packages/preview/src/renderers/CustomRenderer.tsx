@@ -10,42 +10,44 @@ export function CustomRenderer({ config, theme }: { config: CustomConfig; theme:
   return (
     <div style={{
       margin: '8px 14px',
-      padding: 20,
-      backgroundColor: '#f8fafc',
-      borderRadius: 12,
-      border: '2px dashed #cbd5e1',
+      padding: '18px 20px',
+      background: 'linear-gradient(135deg, #f0f4ff 0%, #faf5ff 100%)',
+      borderRadius: 14,
+      border: '2px dashed #c7d2fe',
       textAlign: 'center',
     }}>
       <div style={{
-        fontSize: 24,
-        marginBottom: 8,
-        opacity: 0.6,
+        width: 40, height: 40, borderRadius: 10,
+        background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        margin: '0 auto 10px',
+        fontSize: 18, color: '#fff', fontWeight: 700,
+        fontFamily: 'monospace',
       }}>
         {'</>'}
       </div>
       <div style={{
-        fontSize: 13,
-        fontWeight: 600,
+        fontSize: 13, fontWeight: 700,
         color: theme.colors.text,
-        fontFamily: 'monospace',
+        fontFamily: 'ui-monospace, SFMono-Regular, monospace',
       }}>
-        {name}
+        &lt;{name} /&gt;
       </div>
-      <div style={{
-        fontSize: 11,
-        color: '#64748b',
-        marginTop: 4,
-      }}>
+      <div style={{ fontSize: 11, color: '#6b7280', marginTop: 4, lineHeight: 1.4 }}>
         {fallback}
       </div>
       {propCount > 0 && (
         <div style={{
-          fontSize: 10,
-          color: '#94a3b8',
-          marginTop: 6,
-          fontFamily: 'monospace',
+          marginTop: 8,
+          display: 'inline-block',
+          padding: '3px 10px',
+          backgroundColor: '#e0e7ff',
+          borderRadius: 6,
+          fontSize: 10, fontWeight: 600,
+          color: '#4338ca',
+          fontFamily: 'ui-monospace, SFMono-Regular, monospace',
         }}>
-          {propCount} prop{propCount !== 1 ? 's' : ''} configured
+          {propCount} prop{propCount !== 1 ? 's' : ''}
         </div>
       )}
     </div>

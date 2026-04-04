@@ -36,8 +36,21 @@ describe('generateExpoProject', () => {
     expect(paths).toContain('package.json');
     expect(paths).toContain('App.tsx');
     expect(paths).toContain('app.json');
+    expect(paths).toContain('tsconfig.json');
     expect(paths).toContain('src/data/layout.json');
     expect(paths).toContain('src/theme/theme.ts');
+    expect(paths).toContain('src/navigation/BottomTabs.tsx');
+    expect(paths).toContain('src/screens/HomeScreen.tsx');
+    expect(paths).toContain('src/screens/ExploreScreen.tsx');
+    expect(paths).toContain('src/screens/SearchScreen.tsx');
+    expect(paths).toContain('src/screens/ProfileScreen.tsx');
+    expect(paths).toContain('src/sections/SectionRenderer.tsx');
+    expect(paths).toContain('src/sections/custom-registry.ts');
+    expect(paths).toContain('src/sections/BannerSection.tsx');
+    expect(paths).toContain('src/sections/HeroSection.tsx');
+    expect(paths).toContain('src/components/ProductCard.tsx');
+    expect(paths).toContain('src/data/mock-data.ts');
+    expect(files.length).toBeGreaterThanOrEqual(27);
   });
 
   it('layout.json contains the layout data', () => {

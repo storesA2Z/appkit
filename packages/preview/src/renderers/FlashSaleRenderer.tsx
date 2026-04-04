@@ -8,40 +8,58 @@ export function FlashSaleRenderer({ config, theme }: { config: FlashSaleConfig; 
 
   return (
     <div style={{
-      backgroundColor: bg,
-      padding: '14px 16px',
+      background: `linear-gradient(135deg, ${bg}, ${bg}dd)`,
+      padding: '16px 18px',
       color: textColor,
+      position: 'relative',
+      overflow: 'hidden',
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div style={{
+        position: 'absolute', top: -20, right: -20,
+        width: 100, height: 100, borderRadius: '50%',
+        backgroundColor: 'rgba(255,255,255,0.06)',
+      }} />
+      <div style={{
+        position: 'absolute', bottom: -30, left: 20,
+        width: 80, height: 80, borderRadius: '50%',
+        backgroundColor: 'rgba(255,255,255,0.04)',
+      }} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative' }}>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.01em' }}>{fc.title || 'Flash Sale'}</div>
-          {fc.subtitle && <div style={{ fontSize: 11, marginTop: 3, opacity: 0.85 }}>{fc.subtitle}</div>}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+            <span style={{ fontSize: 14 }}>⚡</span>
+            <div style={{ fontSize: 16, fontWeight: 800, letterSpacing: '-0.02em' }}>{fc.title || 'Flash Sale'}</div>
+          </div>
+          {fc.subtitle && <div style={{ fontSize: 11, marginTop: 2, opacity: 0.85, lineHeight: 1.4 }}>{fc.subtitle}</div>}
         </div>
-        <div style={{ display: 'flex', gap: 6 }}>
-          {[{ val: '08', label: 'hrs' }, { val: '42', label: 'min' }, { val: '17', label: 'sec' }].map(({ val, label }) => (
+        <div style={{ display: 'flex', gap: 5 }}>
+          {[{ val: '08', label: 'HRS' }, { val: '42', label: 'MIN' }, { val: '17', label: 'SEC' }].map(({ val, label }) => (
             <div key={label} style={{
-              backgroundColor: 'rgba(0,0,0,0.15)',
-              padding: '5px 8px',
-              borderRadius: 6,
+              backgroundColor: 'rgba(0,0,0,0.2)',
+              padding: '6px 8px',
+              borderRadius: 8,
               textAlign: 'center',
-              minWidth: 36,
+              minWidth: 38,
+              backdropFilter: 'blur(4px)',
             }}>
-              <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.2 }}>{val}</div>
-              <div style={{ fontSize: 8, fontWeight: 500, opacity: 0.7, textTransform: 'uppercase' }}>{label}</div>
+              <div style={{ fontSize: 16, fontWeight: 800, lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>{val}</div>
+              <div style={{ fontSize: 7, fontWeight: 700, opacity: 0.6, letterSpacing: '0.08em', marginTop: 1 }}>{label}</div>
             </div>
           ))}
         </div>
       </div>
       {fc.ctaText && (
         <div style={{
-          marginTop: 12,
-          padding: '7px 18px',
+          marginTop: 14,
+          padding: '8px 20px',
           backgroundColor: fc.styling?.ctaBackgroundColor || '#fff',
           color: fc.styling?.ctaTextColor || bg,
-          borderRadius: 6,
+          borderRadius: 8,
           fontSize: 12,
-          fontWeight: 600,
+          fontWeight: 700,
           display: 'inline-block',
+          letterSpacing: '0.01em',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
         }}>
           {fc.ctaText}
         </div>

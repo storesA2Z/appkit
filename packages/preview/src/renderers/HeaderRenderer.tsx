@@ -4,24 +4,25 @@ import type { HeaderConfig, ThemeConfig } from '@appkit/schema';
 export function HeaderRenderer({ config, theme }: { config: HeaderConfig; theme: ThemeConfig }) {
   return (
     <div style={{
-      padding: '14px 16px 6px',
+      padding: '18px 16px 8px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
     }}>
       <div style={{
-        fontSize: 16,
-        fontWeight: 700,
+        fontSize: 17,
+        fontWeight: 800,
         color: theme.colors.text,
-        letterSpacing: '-0.01em',
-        lineHeight: 1.3,
+        letterSpacing: '-0.02em',
+        lineHeight: 1.2,
       }}>
-        {config.text || 'Section Header'}
+        {config.text || 'Header'}
       </div>
       <div style={{
-        width: 28,
-        height: 3,
-        borderRadius: 2,
-        backgroundColor: theme.colors.primary,
-        marginTop: 6,
-        opacity: 0.6,
+        flex: 1,
+        height: 2,
+        background: `linear-gradient(90deg, ${theme.colors.primary}25, transparent)`,
+        borderRadius: 1,
       }} />
     </div>
   );

@@ -64,6 +64,8 @@ interface AppkitState {
 
   addSection: (type: SectionType, index?: number) => void;
   updateSection: (id: string, configChanges: Record<string, any>) => void;
+  updateSectionSpacing: (id: string, spacing: Record<string, any>) => void;
+  updateSectionStyling: (id: string, styling: Record<string, any>) => void;
   removeSection: (id: string) => void;
   reorderSections: (activeId: string, overId: string) => void;
   setPage: (page: PageType) => void;
@@ -142,6 +144,42 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
       const sections = state.project.pages[page].map((s) => {
         if (s.id !== id) return s;
         return { ...s, config: { ...s.config, ...configChanges } };
+      });
+      const newProject = {
+        ...state.project,
+        pages: { ...state.project.pages, [page]: sections },
+      };
+      return {
+        project: newProject,
+        ...pushHistory({ ...state, project: newProject }),
+      };
+    });
+  },
+
+  updateSectionSpacing: (id, spacing) => {
+    set((state) => {
+      const page = state.currentPage;
+      const sections = state.project.pages[page].map((s) => {
+        if (s.id !== id) return s;
+        return { ...s, spacing: { ...s.spacing, ...spacing } };
+      });
+      const newProject = {
+        ...state.project,
+        pages: { ...state.project.pages, [page]: sections },
+      };
+      return {
+        project: newProject,
+        ...pushHistory({ ...state, project: newProject }),
+      };
+    });
+  },
+
+  updateSectionStyling: (id, styling) => {
+    set((state) => {
+      const page = state.currentPage;
+      const sections = state.project.pages[page].map((s) => {
+        if (s.id !== id) return s;
+        return { ...s, styling: { ...s.styling, ...styling } };
       });
       const newProject = {
         ...state.project,

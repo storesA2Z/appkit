@@ -4,7 +4,7 @@ import {
   Image, Grid, ShoppingBag, Layers, Type, Video,
   Clock, Star, Gift, ImageIcon, FolderTree, MoveHorizontal, Code2,
 } from 'lucide-react';
-import type { SectionType } from '@appkit/schema';
+import type { SectionType, SpacingConfig, StylingConfig } from '@appkit/schema';
 import { useAppkitStore } from '../store/appkit-store';
 import { BannerProperties } from './properties/BannerProperties';
 import { ProductsProperties } from './properties/ProductsProperties';
@@ -57,6 +57,8 @@ export function PropertiesPanel() {
   const selectedSectionId = useAppkitStore((s) => s.selectedSectionId);
   const sections = useAppkitStore((s) => s.project.pages[s.currentPage]);
   const updateSection = useAppkitStore((s) => s.updateSection);
+  const updateSectionSpacing = useAppkitStore((s) => s.updateSectionSpacing);
+  const updateSectionStyling = useAppkitStore((s) => s.updateSectionStyling);
   const removeSection = useAppkitStore((s) => s.removeSection);
 
   const section = sections.find((s) => s.id === selectedSectionId);
@@ -109,8 +111,8 @@ export function PropertiesPanel() {
         <SpacingStylingPanel
           spacing={section.spacing}
           styling={section.styling}
-          onSpacingChange={() => {}}
-          onStylingChange={() => {}}
+          onSpacingChange={(spacing) => updateSectionSpacing(section.id, spacing)}
+          onStylingChange={(styling) => updateSectionStyling(section.id, styling)}
         />
       </div>
     </div>
