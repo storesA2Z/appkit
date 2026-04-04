@@ -1,14 +1,7 @@
 import { existsSync, readdirSync, readFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { scaffoldProject } from 'create-appkit/scaffold';
-
-export interface AppkitProject {
-  id: string;
-  name: string;
-  path: string;
-  createdAt: string;
-  schemaVersion: string;
-}
+import type { AppkitProject } from '../types';
 
 export class ProjectManager {
   private baseDir: string;

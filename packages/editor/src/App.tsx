@@ -17,13 +17,11 @@ export default function App() {
       <Toolbar />
 
       <div className="flex-1 overflow-hidden">
-        {mode === 'design' && (
-          <div className="h-full flex items-center justify-center text-ide-text-dim">
-            <p className="text-sm">Design mode — visual builder will be loaded here</p>
-          </div>
-        )}
+        <div className="h-full" style={{ display: mode === 'design' ? 'flex' : 'none', alignItems: 'center', justifyContent: 'center' }}>
+          <p className="text-sm text-ide-text-dim">Design mode — visual builder will be loaded here</p>
+        </div>
 
-        {mode === 'code' && (
+        <div className="h-full" style={{ display: mode === 'code' ? 'block' : 'none' }}>
           <Allotment>
             <Allotment.Pane minSize={300} preferredSize="55%">
               <VSCodePane />
@@ -39,7 +37,7 @@ export default function App() {
               </Allotment.Pane>
             )}
           </Allotment>
-        )}
+        </div>
       </div>
 
       <StatusBar />

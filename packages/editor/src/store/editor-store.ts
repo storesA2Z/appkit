@@ -1,14 +1,6 @@
 import { create } from 'zustand';
-
-export type EditorMode = 'design' | 'code';
-
-export interface AppkitProject {
-  id: string;
-  name: string;
-  path: string;
-  createdAt: string;
-  schemaVersion: string;
-}
+import type { EditorMode, AppkitProject } from '../types';
+export type { EditorMode, AppkitProject };
 
 interface EditorStoreState {
   mode: EditorMode;

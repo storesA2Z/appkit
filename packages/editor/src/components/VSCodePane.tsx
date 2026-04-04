@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { useEditorStore } from '../store/editor-store';
 
 export function VSCodePane() {
@@ -8,15 +8,7 @@ export function VSCodePane() {
   const vscodeReady = useEditorStore((s) => s.vscodeReady);
 
   const folderParam = currentProject ? `?folder=${encodeURIComponent(currentProject.path)}` : '';
-  const src = `http://localhost:${vscodePort}/${folderParam}`;
-
-  useEffect(() => {
-    const handleMessage = (e: MessageEvent) => {
-      if (e.origin !== `http://localhost:${vscodePort}`) return;
-    };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [vscodePort]);
+  const src = `http://localhost:${vscodePort}${folderParam}`;
 
   if (!currentProject) {
     return (
