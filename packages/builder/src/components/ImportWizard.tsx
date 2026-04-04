@@ -34,8 +34,6 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
     onClose();
   };
 
-  if (!open) return null;
-
   const handleFileUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -92,6 +90,8 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
       resetAndClose();
     }, 500);
   };
+
+  if (!open) return null;
 
   const stepIndex = { upload: 0, analysis: 1, mapping: 2, confirm: 3 };
 
