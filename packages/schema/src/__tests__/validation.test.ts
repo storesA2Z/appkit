@@ -12,7 +12,7 @@ describe('validateLayout', () => {
 
   it('rejects more than 10 sections per page', () => {
     const layout = createDefaultLayout();
-    layout.pages.home = Array.from({ length: 11 }, (_, i) => ({
+    layout.pages.home.sections = Array.from({ length: 11 }, (_, i) => ({
       id: `s${i}`,
       type: 'header' as const,
       config: { type: 'header' as const, text: `Header ${i}` },
@@ -24,13 +24,24 @@ describe('validateLayout', () => {
 
   it('rejects consecutive header sections', () => {
     const layout = createDefaultLayout();
-    layout.pages.home = [
+    layout.pages.home.sections = [
       { id: '1', type: 'header', config: { type: 'header', text: 'A' } },
       { id: '2', type: 'header', config: { type: 'header', text: 'B' } },
     ];
     const result = validateLayout(layout);
     expect(result.valid).toBe(false);
     expect(result.errors[0]).toContain('consecutive headers');
+  });
+
+  it('validates section with customStyle', () => {
+    const section: Section = {
+      id: 'test',
+      type: 'hero',
+      config: { type: 'hero', heroConfig: { imageUrl: 'https://example.com/img.jpg' } },
+      customStyle: { backgroundColor: '#000', borderRadius: 16 },
+    };
+    const result = validateSection(section);
+    expect(result.valid).toBe(true);
   });
 });
 

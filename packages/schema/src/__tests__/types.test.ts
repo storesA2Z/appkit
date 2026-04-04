@@ -50,6 +50,16 @@ describe('@appkit/schema types', () => {
     expect(meta.name).toBe('My App');
     expect(meta.version).toBe('1.0.0');
   });
+
+  it('creates default layout with PageConfig pages', () => {
+    const layout = createDefaultLayout();
+    expect(layout.pages.home.label).toBe('Home');
+    expect(layout.pages.home.isCore).toBe(true);
+    expect(layout.pages.home.navType).toBe('tab');
+    expect(layout.pages.home.sections).toEqual([]);
+    expect(layout.pages.explore.slug).toBe('explore');
+    expect(layout.themes).toEqual([]);
+  });
 });
 
 describe('PageConfig', () => {

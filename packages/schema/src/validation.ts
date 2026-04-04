@@ -214,16 +214,16 @@ export function validateSection(section: Section): ValidationResult {
 export function validateLayout(layout: AppLayout): ValidationResult {
   const allErrors: string[] = [];
 
-  for (const pageType of Object.keys(layout.pages) as Array<keyof typeof layout.pages>) {
-    const sections = layout.pages[pageType];
+  for (const [pageKey, pageConfig] of Object.entries(layout.pages)) {
+    const sections = pageConfig.sections;
 
     if (!Array.isArray(sections)) {
-      allErrors.push(`${pageType}: sections must be an array`);
+      allErrors.push(`${pageKey}: sections must be an array`);
       continue;
     }
 
     if (sections.length > 10) {
-      allErrors.push(`${pageType}: Maximum 10 sections allowed`);
+      allErrors.push(`${pageKey}: Maximum 10 sections allowed`);
       continue;
     }
 
@@ -232,13 +232,13 @@ export function validateLayout(layout: AppLayout): ValidationResult {
       const section = sections[i];
 
       if (section.type === 'header' && prevType === 'header') {
-        allErrors.push(`${pageType}: Cannot have consecutive headers at index ${i}`);
+        allErrors.push(`${pageKey}: Cannot have consecutive headers at index ${i}`);
       }
       prevType = section.type;
 
       const result = validateSection(section);
       if (!result.valid) {
-        allErrors.push(...result.errors.map((e) => `${pageType}[${i}]: ${e}`));
+        allErrors.push(...result.errors.map((e) => `${pageKey}[${i}]: ${e}`));
       }
     }
   }

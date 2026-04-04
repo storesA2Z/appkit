@@ -1,4 +1,4 @@
-import type { ThemeConfig, AppMetadata, AppLayout } from './types';
+import type { ThemeConfig, AppMetadata, AppLayout, PageConfig } from './types';
 
 export function createDefaultTheme(): ThemeConfig {
   return {
@@ -29,15 +29,21 @@ export function createDefaultMetadata(): AppMetadata {
   };
 }
 
+function createCorePage(label: string, slug: string, icon: string): PageConfig {
+  return { label, slug, icon, isCore: true, navType: 'tab', sections: [] };
+}
+
 export function createDefaultLayout(): AppLayout {
   return {
     pages: {
-      home: [],
-      explore: [],
-      profile: [],
-      search: [],
+      home: createCorePage('Home', 'home', '🏠'),
+      explore: createCorePage('Explore', 'explore', '🔍'),
+      profile: createCorePage('Profile', 'profile', '👤'),
+      search: createCorePage('Search', 'search', '🔎'),
     },
     theme: createDefaultTheme(),
+    themes: [],
+    activeThemeId: '',
     metadata: createDefaultMetadata(),
   };
 }

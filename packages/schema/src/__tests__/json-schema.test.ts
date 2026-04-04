@@ -9,7 +9,8 @@ describe('layoutJsonSchema', () => {
   });
 
   it('defines all 13 section types', () => {
-    const sectionSchema = layoutJsonSchema.properties.pages.additionalProperties.items;
+    const pageSchema = layoutJsonSchema.properties.pages.additionalProperties;
+    const sectionSchema = pageSchema.properties.sections.items;
     const typeEnum = sectionSchema.properties.type.enum;
     expect(typeEnum).toHaveLength(13);
     expect(typeEnum).toContain('banner');
