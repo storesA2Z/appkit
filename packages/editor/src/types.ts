@@ -16,3 +16,8 @@ export interface EditorState {
   vscodePort: number;
   snackConnected: boolean;
 }
+
+export interface FileChangeEvent {
+  path: string;
+  type: 'add' | 'change' | 'unlink';
+}
