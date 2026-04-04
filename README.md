@@ -1,37 +1,44 @@
 # AppKit
 
-Open-source drag-and-drop mobile app builder for React Native / Expo e-commerce apps.
+Open-source mobile app builder for React Native / Expo. Build apps visually, edit code in VS Code, preview live — all in the browser.
 
-Build production-ready mobile storefronts visually with a component-based layout editor, real-time phone preview, and optional AI assistance via Claude.
+AppKit combines a drag-and-drop visual builder with an embedded code editor (OpenVSCode Server) and live Expo preview. Design your app visually, switch to code when you need full control, and use AI to accelerate both.
 
 ## Features
 
-- **Visual builder** with drag-and-drop section reordering (dnd-kit)
-- **12 e-commerce section types**: banner, categories, products, collections, header, video, flash sale, reviews, offers, hero, tabs, marquee
-- **Live mobile preview** in a device frame with bottom tab navigation
-- **Per-section property editors** for fine-grained configuration
-- **Theme editor** for colors, typography, and layout spacing
-- **Multi-page support**: home, explore, search, profile
-- **Undo/redo** with full history stack
-- **Multi-project management** with localStorage persistence
-- **AI-powered builder** (optional) via Claude API — describe your store and let AI build the layout
-- **JSON import/export** for `.appkit.json` project files
-- **Expo project export** — generate a ready-to-run Expo project from your layout
-- **MCP server** for programmatic workspace access
-- **Keyboard shortcuts**: Ctrl+Z undo, Ctrl+Shift+Z redo, Delete to remove
+### Code Editor + Live Preview
+- **Embedded VS Code** (OpenVSCode Server) — full IDE experience in the browser
+- **Expo Snack live preview** in a phone-frame device simulator
+- **Resizable split panes** — Editor | Preview | AI Chat side by side
+- **File watcher** syncs edits to preview in real-time
+- **Real Expo Router projects** — scaffolded on disk, runs with `npx expo start`
+
+### Visual Builder
+- **Drag-and-drop sections** with 13 component types
+- **Design/Code mode toggle** — switch between visual and code editing without losing state
+- **Design-to-Code sync** — visual changes serialize to real Expo project files
+- **Per-section property editors** with live preview
+- **Theme system** with saved presets, undo/redo, multi-page support
+
+### AI Assistant
+- **Claude-powered chat sidebar** with streaming responses
+- **Context-aware** — understands your project structure
+- API key stays in your browser, sent directly to Anthropic
 
 ## Architecture
 
-Monorepo with 6 packages managed by pnpm + Turborepo:
+Monorepo with 8 packages managed by pnpm + Turborepo:
 
 ```
 packages/
-  schema/       # Types, validation, JSON Schema, AI prompt context
-  preview/      # React device frame + 12 section renderers
-  builder/      # Vite + React 18 app (Zustand store, dnd-kit, Tailwind CSS)
-  ai/           # Claude streaming client, tool definitions, chat panel
-  export/       # JSON and Expo project exporters
-  mcp-server/   # File-based workspace CRUD for MCP integration
+  editor/         # App shell: VS Code + Expo preview + AI chat (Vite + React)
+  builder/        # Visual drag-and-drop builder (Vite + React, Zustand, dnd-kit)
+  schema/         # Types, validation, JSON Schema, defaults
+  preview/        # Device frame + section renderers
+  ai/             # Claude streaming client and tool definitions
+  export/         # Expo project generator
+  create-appkit/  # Project scaffolder with Expo Router templates
+  mcp-server/     # MCP workspace for programmatic access
 ```
 
 ## Getting Started
@@ -46,7 +53,12 @@ packages/
 ```bash
 pnpm install
 pnpm build
-pnpm dev       # starts the builder at http://localhost:5173
+
+# Start the full editor (VS Code + Preview + AI)
+cd packages/editor && pnpm dev
+
+# Or start just the visual builder
+cd packages/builder && pnpm dev
 ```
 
 ### Run Tests
@@ -55,10 +67,11 @@ pnpm dev       # starts the builder at http://localhost:5173
 pnpm test
 ```
 
-### Typecheck
+### Create a New Project
 
 ```bash
-pnpm typecheck
+# Projects are scaffolded as real Expo Router apps
+# The editor creates them at ~/.appkit/projects/
 ```
 
 ## Section Types
@@ -66,94 +79,36 @@ pnpm typecheck
 | Type | Description |
 |------|-------------|
 | `banner` | Image/video carousel with autoplay |
+| `hero` | Full-width hero image with text overlay |
 | `categories` | Collection grid, list, or circular icons |
 | `products` | Product cards with sort and filter options |
 | `collections` | Multi-collection showcase |
-| `header` | Text header with optional subtitle and alignment |
+| `header` | Text header with optional subtitle |
 | `video` | Video player or shoppable video carousel |
 | `flash_sale` | Countdown timer with sale details |
-| `reviews` | Top-rated product reviews display |
+| `reviews` | Product reviews display |
 | `offer` | Promotional offer card with CTA |
-| `hero` | Full-width hero image with text overlay |
 | `tabs` | Tabbed content with multiple collections |
 | `marquee` | Scrolling announcement ticker |
+| `custom` | Your own React Native component |
 
-## AI Integration (Optional)
+## How It Works
 
-The builder includes an optional AI assistant powered by Claude. Enter your Anthropic API key in the builder to enable it. The AI can:
-
-- Build entire store layouts from a description
-- Add, update, and remove sections
-- Apply themes and configure sections
-- Follow e-commerce conversion best practices
-
-Your API key stays in your browser and is only sent directly to Anthropic's API.
-
-## Examples
-
-See `examples/` for complete store layouts:
-
-- **Fashion Store** — hero, circular categories, product grid, flash sale, reviews, marquee
-- **Grocery Store** — category grid, banner carousel, product list, flash sale, marquee
-
-## Export
-
-### JSON Export
-
-Export your layout as a `.appkit.json` file for sharing or version control.
-
-### Expo Export
-
-Generate a complete Expo project with:
-- `package.json` with all dependencies
-- `app.json` with Expo configuration
-- `App.tsx` with navigation setup
-- Layout data and theme configuration
+```
+Create Project → Expo Router app scaffolded to disk
+                      ↓
+Design Mode → drag-and-drop sections, configure properties
+                      ↓
+Sync to Code → visual layout serialized to real .tsx files
+                      ↓
+Code Mode → edit in VS Code, preview updates live via Snack
+                      ↓
+Export → download as .zip or run locally with npx expo start
+```
 
 ## MCP Server
 
-The `@appkit/mcp-server` package provides a file-based workspace for programmatic layout management via the [Model Context Protocol](https://modelcontextprotocol.io). Use it to integrate AppKit with any MCP-compatible client (Claude Desktop, Cursor, Windsurf, etc.).
-
-### Workspace API
-
-```typescript
-import { Workspace } from '@appkit/mcp-server';
-
-const workspace = new Workspace('./my-store');
-
-// Load or create a project
-const project = workspace.loadProject();
-
-// CRUD operations on sections
-workspace.addSection('home', {
-  id: 'hero-1',
-  type: 'hero',
-  config: {
-    type: 'hero',
-    heroConfig: {
-      imageUrl: 'https://example.com/hero.jpg',
-      title: 'Summer Sale',
-      subtitle: '50% off everything',
-      ctaText: 'Shop Now',
-      textPosition: 'center',
-      overlayOpacity: 0.4,
-      height: 280,
-    },
-  },
-});
-
-workspace.updateSection('home', 'hero-1', { title: 'Winter Sale' });
-workspace.removeSection('home', 'hero-1');
-
-// Get all sections for a page
-const sections = workspace.getSections('home');
-
-// Full layout read/write
-const layout = workspace.getLayout();
-workspace.setLayout(layout);
-```
-
-Projects are persisted as `layout.json` in the workspace directory, making them easy to version control.
+The `@appkit/mcp-server` package provides programmatic layout access via the [Model Context Protocol](https://modelcontextprotocol.io). Use it with Claude Desktop, Cursor, or any MCP-compatible client.
 
 ## License
 
