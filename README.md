@@ -74,6 +74,22 @@ cd packages/editor && pnpm dev
 cd packages/builder && pnpm dev
 ```
 
+### Pick a Template
+
+When you create a new project, choose from 5 starter templates:
+
+| Template | Description |
+|----------|-------------|
+| Blank Starter | Clean Expo Router app with tab navigation |
+| E-Commerce Store | Products, categories, cart, and promotions |
+| Restaurant | Menu, featured dishes, and order flow |
+| Portfolio | Project gallery, about page, and contact form |
+| SaaS Dashboard | Stats cards, activity feed, and settings |
+
+Every template generates a real Expo project — no lock-in.
+
+> **New to AppKit?** Read the **[User Guide](GUIDE.md)** for a full walkthrough from install to running app.
+
 ### Run Tests
 
 ```bash
