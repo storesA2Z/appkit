@@ -12,6 +12,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "create-appkit": "workspace:*",
     "@appkit/ai": "workspace:*",
     "@appkit/builder": "workspace:*",
     "@appkit/preview": "workspace:*",
