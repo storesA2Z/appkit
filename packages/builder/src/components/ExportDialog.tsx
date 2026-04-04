@@ -78,21 +78,21 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       <div
-        className="relative w-[680px] max-h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden animate-fade-in"
+        className="relative w-[680px] max-h-[85vh] bg-ide-panel rounded-2xl shadow-2xl overflow-hidden animate-fade-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-ide-border">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center">
               <FolderDown size={18} className="text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Export Project</h2>
-              <p className="text-xs text-gray-400">Choose how you want to use your layout</p>
+              <h2 className="text-lg font-bold text-ide-text-bright">Export Project</h2>
+              <p className="text-xs text-ide-text-dim">Choose how you want to use your layout</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+          <button onClick={onClose} className="p-2 text-ide-text-dim hover:text-ide-text hover:bg-ide-hover rounded-lg transition-colors">
             <X size={18} />
           </button>
         </div>
@@ -108,14 +108,14 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
                   isActive
-                    ? 'border-brand-500 bg-brand-50'
-                    : 'border-gray-100 bg-gray-50 hover:border-gray-200'
+                    ? 'border-ide-accent bg-ide-accent-dim'
+                    : 'border-ide-border bg-ide-bg hover:border-ide-border'
                 }`}
               >
-                <Icon size={18} className={isActive ? 'text-brand-600' : 'text-gray-400'} />
+                <Icon size={18} className={isActive ? 'text-ide-accent' : 'text-ide-text-dim'} />
                 <div className="text-left">
-                  <div className={`text-xs font-semibold ${isActive ? 'text-brand-700' : 'text-gray-700'}`}>{tab.label}</div>
-                  <div className="text-[10px] text-gray-400">{tab.desc}</div>
+                  <div className={`text-xs font-semibold ${isActive ? 'text-ide-accent' : 'text-ide-text'}`}>{tab.label}</div>
+                  <div className="text-[10px] text-ide-text-dim">{tab.desc}</div>
                 </div>
               </button>
             );
@@ -140,25 +140,25 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
               </div>
 
               <div className="space-y-2.5">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">After downloading:</p>
+                <p className="text-xs font-semibold text-ide-text-muted uppercase tracking-wider">After downloading:</p>
                 {[
                   { step: '1', cmd: `cd ${slug}`, desc: 'Open the project folder' },
                   { step: '2', cmd: 'npm install', desc: 'Install dependencies' },
                   { step: '3', cmd: 'npx expo start', desc: 'Start the dev server' },
                   { step: '4', cmd: 'Press i for iOS or a for Android', desc: 'Run on simulator' },
                 ].map((item) => (
-                  <div key={item.step} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                    <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[11px] font-bold text-gray-500 shrink-0">
+                  <div key={item.step} className="flex items-center gap-3 p-3 bg-ide-bg rounded-lg">
+                    <div className="w-6 h-6 rounded-full bg-ide-border flex items-center justify-center text-[11px] font-bold text-ide-text-muted shrink-0">
                       {item.step}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <code className="text-xs font-mono text-gray-800 bg-gray-100 px-2 py-0.5 rounded">{item.cmd}</code>
-                      <p className="text-[10px] text-gray-400 mt-0.5">{item.desc}</p>
+                      <code className="text-xs font-mono text-ide-text-bright bg-ide-hover px-2 py-0.5 rounded">{item.cmd}</code>
+                      <p className="text-[10px] text-ide-text-dim mt-0.5">{item.desc}</p>
                     </div>
                     {item.step !== '4' && (
                       <button
                         onClick={() => copyToClipboard(item.cmd, item.step)}
-                        className="p-1.5 text-gray-300 hover:text-gray-500 transition-colors"
+                        className="p-1.5 text-ide-text-dim hover:text-ide-text-muted transition-colors"
                       >
                         {copied === item.step ? <CheckCircle2 size={13} className="text-emerald-500" /> : <Copy size={13} />}
                       </button>
@@ -167,8 +167,8 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
                 ))}
               </div>
 
-              <div className="bg-gray-50 rounded-xl p-4 mt-3">
-                <p className="text-xs font-semibold text-gray-600 mb-2">What's included:</p>
+              <div className="bg-ide-bg rounded-xl p-4 mt-3">
+                <p className="text-xs font-semibold text-ide-text mb-2">What's included:</p>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
                   {[
                     '12 section components', '4 page screens',
@@ -177,7 +177,7 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
                     'Custom component registry', 'Mock data with images',
                     'TypeScript configured', 'Search with filtering',
                   ].map((item) => (
-                    <div key={item} className="flex items-center gap-1.5 text-[11px] text-gray-500">
+                    <div key={item} className="flex items-center gap-1.5 text-[11px] text-ide-text-muted">
                       <CheckCircle2 size={11} className="text-emerald-400 shrink-0" />
                       {item}
                     </div>
@@ -188,7 +188,7 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
               <button
                 onClick={handleDownloadExpo}
                 disabled={isExporting}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-colors disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-ide-toolbar text-white rounded-xl font-semibold text-sm hover:bg-ide-hover transition-colors disabled:opacity-50"
               >
                 <Download size={16} />
                 {isExporting ? 'Generating...' : `Download ${slug}.zip`}
@@ -212,15 +212,15 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
               </div>
 
               <div className="space-y-3">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Option A: Use the layout data</p>
-                <div className="bg-gray-900 rounded-xl p-4 font-mono text-xs text-gray-300 leading-relaxed overflow-x-auto">
-                  <div className="text-gray-500">{'// 1. Download layout.json and add to your project'}</div>
+                <p className="text-xs font-semibold text-ide-text-muted uppercase tracking-wider">Option A: Use the layout data</p>
+                <div className="bg-ide-toolbar rounded-xl p-4 font-mono text-xs text-ide-text-dim leading-relaxed overflow-x-auto">
+                  <div className="text-ide-text-muted">{'// 1. Download layout.json and add to your project'}</div>
                   <div className="text-emerald-400">{'import'} <span className="text-white">layout</span> {'from'} <span className="text-amber-300">{'"./layout.json"'}</span>;</div>
                   <br />
-                  <div className="text-gray-500">{'// 2. Render sections dynamically'}</div>
+                  <div className="text-ide-text-muted">{'// 2. Render sections dynamically'}</div>
                   <div className="text-emerald-400">{'const'} <span className="text-white">{'homeSections = layout.pages.home;'}</span></div>
                   <br />
-                  <div className="text-gray-500">{'// 3. Map section types to your own components'}</div>
+                  <div className="text-ide-text-muted">{'// 3. Map section types to your own components'}</div>
                   <div className="text-emerald-400">{'const'} <span className="text-white">{'sectionMap = {'}</span></div>
                   <div className="text-white pl-4">{'banner: MyBannerComponent,'}</div>
                   <div className="text-white pl-4">{'products: MyProductsComponent,'}</div>
@@ -238,17 +238,17 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
                 </button>
               </div>
 
-              <div className="border-t border-gray-100 pt-4 space-y-3">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Option B: Full export + cherry-pick</p>
-                <p className="text-xs text-gray-500 leading-relaxed">
-                  Download the full Expo project, then copy the <code className="bg-gray-100 px-1.5 py-0.5 rounded text-[11px]">src/sections/</code> folder
-                  and <code className="bg-gray-100 px-1.5 py-0.5 rounded text-[11px]">src/components/</code> folder into your existing project.
+              <div className="border-t border-ide-border pt-4 space-y-3">
+                <p className="text-xs font-semibold text-ide-text-muted uppercase tracking-wider">Option B: Full export + cherry-pick</p>
+                <p className="text-xs text-ide-text-muted leading-relaxed">
+                  Download the full Expo project, then copy the <code className="bg-ide-hover px-1.5 py-0.5 rounded text-[11px]">src/sections/</code> folder
+                  and <code className="bg-ide-hover px-1.5 py-0.5 rounded text-[11px]">src/components/</code> folder into your existing project.
                   Each section component is self-contained and only depends on the theme file.
                 </p>
                 <button
                   onClick={handleDownloadExpo}
                   disabled={isExporting}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-gray-200 text-gray-700 rounded-lg font-semibold text-xs hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-ide-border text-ide-text rounded-lg font-semibold text-xs hover:bg-ide-bg transition-colors"
                 >
                   <FolderDown size={14} />
                   {isExporting ? 'Generating...' : 'Download Full Project ZIP'}
@@ -267,34 +267,34 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
 
           {activeTab === 'json' && (
             <div className="space-y-4">
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+              <div className="bg-ide-bg border border-ide-border rounded-xl p-4">
                 <div className="flex items-start gap-3">
-                  <FileJson size={18} className="text-gray-500 mt-0.5 shrink-0" />
+                  <FileJson size={18} className="text-ide-text-muted mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-sm font-semibold text-gray-700">AppKit Project File</p>
-                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                      Exports the full project as <code className="bg-gray-200 px-1 py-0.5 rounded text-[10px]">.appkit.json</code> —
+                    <p className="text-sm font-semibold text-ide-text">AppKit Project File</p>
+                    <p className="text-xs text-ide-text-muted mt-1 leading-relaxed">
+                      Exports the full project as <code className="bg-ide-border px-1 py-0.5 rounded text-[10px]">.appkit.json</code> —
                       includes layout, theme, metadata, and schema version. You can import this file back into the builder later.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-gray-900 rounded-xl p-4 font-mono text-[11px] text-gray-300 max-h-[200px] overflow-y-auto leading-relaxed">
+              <div className="bg-ide-toolbar rounded-xl p-4 font-mono text-[11px] text-ide-text-dim max-h-[200px] overflow-y-auto leading-relaxed">
                 <pre>{exportAsJson(project, '1.0.0').slice(0, 600)}...</pre>
               </div>
 
               <div className="flex gap-3">
                 <button
                   onClick={handleDownloadJson}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 text-white rounded-lg font-semibold text-xs hover:bg-gray-800 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-ide-toolbar text-white rounded-lg font-semibold text-xs hover:bg-ide-hover transition-colors"
                 >
                   <Download size={14} />
                   Download .appkit.json
                 </button>
                 <button
                   onClick={() => copyToClipboard(exportAsJson(project, '1.0.0'), 'json')}
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-gray-200 text-gray-700 rounded-lg font-semibold text-xs hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-ide-border text-ide-text rounded-lg font-semibold text-xs hover:bg-ide-bg transition-colors"
                 >
                   {copied === 'json' ? <CheckCircle2 size={14} className="text-emerald-500" /> : <Copy size={14} />}
                   {copied === 'json' ? 'Copied!' : 'Copy'}

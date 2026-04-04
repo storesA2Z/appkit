@@ -29,7 +29,7 @@ export function TabsProperties({ config, onChange }: Props) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-gray-600">Tabs ({tabs.length}/10)</label>
+        <label className="text-xs font-medium text-ide-text">Tabs ({tabs.length}/10)</label>
         {tabs.length < 10 && (
           <button onClick={addTab} className="text-xs text-blue-600 hover:text-blue-800">+ Add Tab</button>
         )}
@@ -37,7 +37,7 @@ export function TabsProperties({ config, onChange }: Props) {
       {tabs.map((tab, i) => (
         <div key={tab.id} className="p-2 border rounded-md space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500">Tab {i + 1}</span>
+            <span className="text-xs text-ide-text-muted">Tab {i + 1}</span>
             <button onClick={() => removeTab(i)} className="text-xs text-red-500">Remove</button>
           </div>
           <input
@@ -58,7 +58,7 @@ export function TabsProperties({ config, onChange }: Props) {
         </div>
       ))}
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Variant</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Variant</label>
         <select value={tc.variant || 'grid'} onChange={(e) => onChange({ tabsConfig: { ...tc, variant: e.target.value as any } })} className="w-full px-2 py-1.5 text-sm border rounded-md">
           <option value="grid">Grid</option>
           <option value="horizontal">Horizontal</option>

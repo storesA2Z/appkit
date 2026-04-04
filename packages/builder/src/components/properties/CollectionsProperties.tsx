@@ -12,7 +12,7 @@ export function CollectionsProperties({ config, onChange }: Props) {
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Collection IDs ({ids.length}/20)</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Collection IDs ({ids.length}/20)</label>
         <textarea
           value={ids.join(', ')}
           onChange={(e) => onChange({ collectionIds: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) })}

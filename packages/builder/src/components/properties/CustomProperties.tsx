@@ -37,7 +37,7 @@ export function CustomProperties({ config, onChange }: Props) {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Component Name</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Component Name</label>
         <input
           type="text"
           value={cc.componentName || ''}
@@ -45,11 +45,11 @@ export function CustomProperties({ config, onChange }: Props) {
           placeholder="e.g. MyBrandStory"
           className="w-full px-2 py-1.5 text-sm border rounded-md font-mono"
         />
-        <p className="text-[10px] text-gray-400 mt-1">Must match the name registered in your section registry</p>
+        <p className="text-[10px] text-ide-text-dim mt-1">Must match the name registered in your section registry</p>
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Component Path (optional)</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Component Path (optional)</label>
         <input
           type="text"
           value={cc.componentPath || ''}
@@ -57,11 +57,11 @@ export function CustomProperties({ config, onChange }: Props) {
           placeholder="e.g. ./src/sections/MyBrandStory"
           className="w-full px-2 py-1.5 text-sm border rounded-md font-mono"
         />
-        <p className="text-[10px] text-gray-400 mt-1">Helps document where your component lives</p>
+        <p className="text-[10px] text-ide-text-dim mt-1">Helps document where your component lives</p>
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Props (JSON)</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Props (JSON)</label>
         <textarea
           value={propsText}
           onChange={(e) => handlePropsChange(e.target.value)}
@@ -75,7 +75,7 @@ export function CustomProperties({ config, onChange }: Props) {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Fallback Text</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Fallback Text</label>
         <input
           type="text"
           value={cc.fallbackText || ''}

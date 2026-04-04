@@ -10,7 +10,7 @@ export function HeaderProperties({ config, onChange }: Props) {
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Text</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Text</label>
         <input
           type="text"
           value={config.text || ''}

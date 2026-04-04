@@ -25,7 +25,7 @@ export function BannerProperties({ config, onChange }: Props) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-gray-600">Slides ({items.length}/5)</label>
+        <label className="text-xs font-medium text-ide-text">Slides ({items.length}/5)</label>
         {items.length < 5 && (
           <button onClick={addItem} className="text-xs text-blue-600 hover:text-blue-800">+ Add</button>
         )}
@@ -33,7 +33,7 @@ export function BannerProperties({ config, onChange }: Props) {
       {items.map((item, i) => (
         <div key={i} className="p-2 border rounded-md space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500">Slide {i + 1}</span>
+            <span className="text-xs text-ide-text-muted">Slide {i + 1}</span>
             <button onClick={() => removeItem(i)} className="text-xs text-red-500">Remove</button>
           </div>
           <select

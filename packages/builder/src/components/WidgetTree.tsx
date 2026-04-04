@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { ChevronDown, ChevronRight, GripVertical, Plus } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
 import { SectionContextMenu } from './SectionContextMenu';
@@ -92,8 +93,14 @@ export function WidgetTree() {
               );
             })}
 
-            {ungroupedSections.map((section) => (
-              <SectionContextMenu key={section.id} sectionId={section.id}>
+            {ungroupedSections.map((section, i) => (
+              <motion.div
+                key={section.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.03, duration: 0.15 }}
+              >
+              <SectionContextMenu sectionId={section.id}>
                 <button
                   onClick={() => selectSection(section.id)}
                   className={`w-full flex items-center gap-1.5 px-1.5 py-1 rounded text-left transition-colors ${
@@ -107,6 +114,7 @@ export function WidgetTree() {
                   <span className="truncate">{section.type}</span>
                 </button>
               </SectionContextMenu>
+              </motion.div>
             ))}
           </div>
 

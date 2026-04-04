@@ -15,7 +15,7 @@ export function MarqueeProperties({ config, onChange }: Props) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-gray-600">Items ({items.length})</label>
+        <label className="text-xs font-medium text-ide-text">Items ({items.length})</label>
         <button onClick={() => updateItems([...items, { text: '' }])} className="text-xs text-blue-600 hover:text-blue-800">+ Add</button>
       </div>
       {items.map((item, i) => (
@@ -31,11 +31,11 @@ export function MarqueeProperties({ config, onChange }: Props) {
         </div>
       ))}
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Speed (1-10)</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Speed (1-10)</label>
         <input type="number" min={1} max={10} value={mc.speed || 5} onChange={(e) => onChange({ marqueeConfig: { ...mc, speed: Number(e.target.value) } })} className="w-full px-2 py-1.5 text-sm border rounded-md" />
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Direction</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Direction</label>
         <select value={mc.direction || 'left'} onChange={(e) => onChange({ marqueeConfig: { ...mc, direction: e.target.value as any } })} className="w-full px-2 py-1.5 text-sm border rounded-md">
           <option value="left">Left</option>
           <option value="right">Right</option>

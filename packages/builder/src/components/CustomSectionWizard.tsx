@@ -190,7 +190,7 @@ export function CustomSectionWizard({ open, onClose }: CustomSectionWizardProps)
               </div>
 
               <div className="p-4 rounded-lg border border-ide-border" style={{ backgroundColor: bgColor, padding, borderRadius }}>
-                <div className="text-center text-xs text-gray-500">
+                <div className="text-center text-xs text-ide-text-muted">
                   Preview: {name || 'Custom Section'}
                   <div className="text-[10px] mt-1">{slots.length} slots · {template}</div>
                 </div>

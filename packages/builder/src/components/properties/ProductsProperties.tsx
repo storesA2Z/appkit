@@ -10,7 +10,7 @@ export function ProductsProperties({ config, onChange }: Props) {
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Collection ID</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Collection ID</label>
         <input
           type="text"
           value={config.collectionId || ''}
@@ -20,7 +20,7 @@ export function ProductsProperties({ config, onChange }: Props) {
         />
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Title</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Title</label>
         <input
           type="text"
           value={config.title || ''}
@@ -31,7 +31,7 @@ export function ProductsProperties({ config, onChange }: Props) {
         />
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Variant</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Variant</label>
         <select
           value={config.variant || 'default'}
           onChange={(e) => onChange({ variant: e.target.value as any })}
@@ -43,7 +43,7 @@ export function ProductsProperties({ config, onChange }: Props) {
         </select>
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Card Size</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Card Size</label>
         <select
           value={config.cardSize || 'medium'}
           onChange={(e) => onChange({ cardSize: e.target.value as any })}
@@ -55,7 +55,7 @@ export function ProductsProperties({ config, onChange }: Props) {
         </select>
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Sort By</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Sort By</label>
         <select
           value={config.sortBy || 'newest'}
           onChange={(e) => onChange({ sortBy: e.target.value as any })}

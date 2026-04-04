@@ -13,15 +13,15 @@ export function ReviewsProperties({ config, onChange }: Props) {
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Title</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Title</label>
         <input type="text" value={rc.title || ''} onChange={(e) => update({ title: e.target.value })} className="w-full px-2 py-1.5 text-sm border rounded-md" />
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Product Limit (1-50)</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Product Limit (1-50)</label>
         <input type="number" min={1} max={50} value={rc.productLimit || 10} onChange={(e) => update({ productLimit: Number(e.target.value) })} className="w-full px-2 py-1.5 text-sm border rounded-md" />
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Card Style</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Card Style</label>
         <select value={rc.cardStyle || 'default'} onChange={(e) => update({ cardStyle: e.target.value })} className="w-full px-2 py-1.5 text-sm border rounded-md">
           <option value="default">Default</option>
           <option value="minimal">Minimal</option>

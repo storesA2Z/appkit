@@ -33,13 +33,13 @@ export function BackendConfigPanel() {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="px-4 py-3 border-b border-surface-3">
-        <h3 className="text-sm font-semibold text-gray-900">Backend Connection</h3>
-        <p className="text-[10px] text-gray-400 mt-0.5">Connect your product API or use demo data</p>
+        <h3 className="text-sm font-semibold text-ide-text-bright">Backend Connection</h3>
+        <p className="text-[10px] text-ide-text-dim mt-0.5">Connect your product API or use demo data</p>
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-6 animate-fade-in">
         <section>
-          <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">Mode</h4>
+          <h4 className="text-[11px] font-semibold uppercase tracking-wider text-ide-text-dim mb-3">Mode</h4>
           <div className="flex gap-2">
             {(['demo', 'api'] as const).map((mode) => (
               <button
@@ -47,15 +47,15 @@ export function BackendConfigPanel() {
                 onClick={() => setBackendConfig({ mode })}
                 className={`flex-1 py-2.5 text-xs font-medium rounded-lg border-2 transition-all ${
                   config.mode === mode
-                    ? 'border-brand-400 bg-brand-50 text-brand-700'
-                    : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                    ? 'border-ide-accent bg-ide-accent-dim text-ide-accent'
+                    : 'border-ide-border text-ide-text-muted hover:border-ide-border'
                 }`}
               >
                 {mode === 'demo' ? '🧪 Demo Mode' : '🔗 API Mode'}
               </button>
             ))}
           </div>
-          <p className="text-[10px] text-gray-400 mt-2">
+          <p className="text-[10px] text-ide-text-dim mt-2">
             {config.mode === 'demo'
               ? 'Uses built-in mock data. No backend required.'
               : 'Connects to your REST API for real product data.'}
@@ -65,27 +65,27 @@ export function BackendConfigPanel() {
         {config.mode === 'api' && (
           <>
             <section>
-              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">Base URL</h4>
+              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-ide-text-dim mb-3">Base URL</h4>
               <input
                 type="text"
                 value={config.baseUrl}
                 onChange={(e) => setBackendConfig({ baseUrl: e.target.value })}
                 placeholder="https://api.mystore.com"
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-400"
+                className="w-full px-3 py-2 text-sm border border-ide-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-ide-accent"
               />
             </section>
 
             <section>
-              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">Endpoints</h4>
+              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-ide-text-dim mb-3">Endpoints</h4>
               <div className="space-y-2">
                 {(['products', 'categories', 'collections'] as const).map((key) => (
                   <div key={key}>
-                    <label className="block text-xs font-medium text-gray-600 mb-1 capitalize">{key}</label>
+                    <label className="block text-xs font-medium text-ide-text mb-1 capitalize">{key}</label>
                     <input
                       type="text"
                       value={config.endpoints[key]}
                       onChange={(e) => updateEndpoint(key, e.target.value)}
-                      className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg font-mono"
+                      className="w-full px-2 py-1.5 text-xs border border-ide-border rounded-lg font-mono"
                     />
                   </div>
                 ))}
@@ -93,14 +93,14 @@ export function BackendConfigPanel() {
             </section>
 
             <section>
-              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">Authentication</h4>
+              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-ide-text-dim mb-3">Authentication</h4>
               <div className="space-y-2.5">
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Auth Type</label>
+                  <label className="block text-xs font-medium text-ide-text mb-1">Auth Type</label>
                   <select
                     value={config.auth.type}
                     onChange={(e) => updateAuth({ type: e.target.value as BackendConfig['auth']['type'] })}
-                    className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg"
+                    className="w-full px-3 py-2 text-sm border border-ide-border rounded-lg"
                   >
                     <option value="none">None</option>
                     <option value="bearer">Bearer Token</option>
@@ -110,22 +110,22 @@ export function BackendConfigPanel() {
                 {config.auth.type !== 'none' && (
                   <>
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Header Name</label>
+                      <label className="block text-xs font-medium text-ide-text mb-1">Header Name</label>
                       <input
                         type="text"
                         value={config.auth.headerName}
                         onChange={(e) => updateAuth({ headerName: e.target.value })}
-                        className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg font-mono"
+                        className="w-full px-2 py-1.5 text-xs border border-ide-border rounded-lg font-mono"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Token / Key</label>
+                      <label className="block text-xs font-medium text-ide-text mb-1">Token / Key</label>
                       <input
                         type="password"
                         value={config.auth.token}
                         onChange={(e) => updateAuth({ token: e.target.value })}
                         placeholder="Enter your token..."
-                        className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg"
+                        className="w-full px-2 py-1.5 text-xs border border-ide-border rounded-lg"
                       />
                     </div>
                   </>
@@ -134,10 +134,10 @@ export function BackendConfigPanel() {
             </section>
 
             <section>
-              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">Compatible APIs</h4>
+              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-ide-text-dim mb-3">Compatible APIs</h4>
               <div className="space-y-1.5">
                 {['StoresA2Z Cloud', 'Shopify Storefront API', 'WooCommerce REST API', 'Custom REST API'].map((name) => (
-                  <div key={name} className="text-xs text-gray-500 flex items-center gap-2">
+                  <div key={name} className="text-xs text-ide-text-muted flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                     {name}
                   </div>
@@ -150,7 +150,7 @@ export function BackendConfigPanel() {
         {config.mode === 'api' && config.baseUrl && (
           <button
             onClick={handleExportConfig}
-            className="w-full py-2.5 text-xs font-semibold bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+            className="w-full py-2.5 text-xs font-semibold bg-ide-toolbar text-white rounded-lg hover:bg-ide-hover transition-colors"
           >
             Export api.config.json
           </button>

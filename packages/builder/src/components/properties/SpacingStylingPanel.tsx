@@ -12,11 +12,11 @@ export function SpacingStylingPanel({ spacing = {}, styling = {}, onSpacingChang
   return (
     <div className="space-y-4 pt-4 border-t">
       <details className="group">
-        <summary className="text-xs font-medium text-gray-600 cursor-pointer">Spacing</summary>
+        <summary className="text-xs font-medium text-ide-text cursor-pointer">Spacing</summary>
         <div className="mt-2 grid grid-cols-2 gap-2">
           {(['marginTop', 'marginBottom', 'paddingTop', 'paddingBottom'] as const).map((key) => (
             <div key={key}>
-              <label className="block text-xs text-gray-500">{key}</label>
+              <label className="block text-xs text-ide-text-muted">{key}</label>
               <input
                 type="number"
                 min={0}
@@ -30,10 +30,10 @@ export function SpacingStylingPanel({ spacing = {}, styling = {}, onSpacingChang
       </details>
 
       <details className="group">
-        <summary className="text-xs font-medium text-gray-600 cursor-pointer">Styling</summary>
+        <summary className="text-xs font-medium text-ide-text cursor-pointer">Styling</summary>
         <div className="mt-2 space-y-2">
           <div>
-            <label className="block text-xs text-gray-500">Background Color</label>
+            <label className="block text-xs text-ide-text-muted">Background Color</label>
             <input
               type="color"
               value={styling.backgroundColor || '#ffffff'}
@@ -42,7 +42,7 @@ export function SpacingStylingPanel({ spacing = {}, styling = {}, onSpacingChang
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-500">Border Radius</label>
+            <label className="block text-xs text-ide-text-muted">Border Radius</label>
             <input
               type="number"
               min={0}

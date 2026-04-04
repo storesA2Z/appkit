@@ -65,11 +65,11 @@ export function PropertiesPanel() {
   if (!section) {
     return (
       <div className="h-full flex flex-col items-center justify-center px-8 text-center">
-        <div className="w-12 h-12 rounded-2xl bg-surface-2 flex items-center justify-center mb-4">
-          <MousePointerClick size={20} className="text-gray-400" />
+        <div className="w-12 h-12 rounded-2xl bg-ide-hover flex items-center justify-center mb-4">
+          <MousePointerClick size={20} className="text-ide-text-dim" />
         </div>
-        <p className="text-sm font-medium text-gray-500">No section selected</p>
-        <p className="text-xs text-gray-400 mt-1">Click a section in the preview or add one from the left panel</p>
+        <p className="text-sm font-medium text-ide-text-muted">No section selected</p>
+        <p className="text-xs text-ide-text-dim mt-1">Click a section in the preview or add one from the left panel</p>
       </div>
     );
   }
@@ -82,18 +82,18 @@ export function PropertiesPanel() {
       <div className="px-4 py-3 border-b border-surface-3 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           {SectionIcon && (
-            <div className="w-7 h-7 rounded-lg bg-brand-50 flex items-center justify-center">
-              <SectionIcon size={14} className="text-brand-600" />
+            <div className="w-7 h-7 rounded-lg bg-ide-accent-dim flex items-center justify-center">
+              <SectionIcon size={14} className="text-ide-accent" />
             </div>
           )}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 capitalize">{section.type.replace('_', ' ')}</h3>
-            <p className="text-[10px] text-gray-400">{section.id}</p>
+            <h3 className="text-sm font-semibold text-ide-text-bright capitalize">{section.type.replace('_', ' ')}</h3>
+            <p className="text-[10px] text-ide-text-dim">{section.id}</p>
           </div>
         </div>
         <button
           onClick={() => removeSection(section.id)}
-          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+          className="p-1.5 text-ide-text-dim hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
           title="Delete section"
         >
           <Trash2 size={14} />

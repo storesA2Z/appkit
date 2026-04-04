@@ -12,7 +12,7 @@ export function CategoriesProperties({ config, onChange }: Props) {
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Collection IDs ({ids.length}/6)</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Collection IDs ({ids.length}/6)</label>
         <input
           type="text"
           value={ids.join(', ')}
@@ -22,7 +22,7 @@ export function CategoriesProperties({ config, onChange }: Props) {
         />
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Variant</label>
+        <label className="block text-xs font-medium text-ide-text mb-1">Variant</label>
         <select
           value={config.variant || 'grid'}
           onChange={(e) => onChange({ variant: e.target.value as any })}

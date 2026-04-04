@@ -23,12 +23,12 @@ export function DraggableSection({ id, label, isSelected, onClick }: DraggableSe
       ref={setNodeRef}
       style={style}
       className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-pointer ${
-        isSelected ? 'bg-blue-100 text-blue-700 ring-1 ring-blue-300' : 'bg-white hover:bg-gray-50'
+        isSelected ? 'bg-blue-100 text-blue-700 ring-1 ring-blue-300' : 'bg-ide-panel hover:bg-ide-bg'
       }`}
       onClick={onClick}
     >
       <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
-        <GripVertical size={14} className="text-gray-400" />
+        <GripVertical size={14} className="text-ide-text-dim" />
       </button>
       <span>{label}</span>
     </div>

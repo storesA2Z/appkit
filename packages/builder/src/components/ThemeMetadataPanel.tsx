@@ -4,19 +4,19 @@ import { useAppkitStore } from '../store/appkit-store';
 function ColorInput({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-xs text-gray-600">{label}</span>
+      <span className="text-xs text-ide-text">{label}</span>
       <div className="flex items-center gap-2">
         <input
           type="color"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-7 h-7 rounded-md border border-gray-200 cursor-pointer p-0.5"
+          className="w-7 h-7 rounded-md border border-ide-border cursor-pointer p-0.5"
         />
         <input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-20 px-2 py-1 text-xs border border-gray-200 rounded-md font-mono"
+          className="w-20 px-2 py-1 text-xs border border-ide-border rounded-md font-mono"
         />
       </div>
     </div>
@@ -34,50 +34,50 @@ export function ThemeMetadataPanel() {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="px-4 py-3 border-b border-surface-3">
-        <h3 className="text-sm font-semibold text-gray-900">Theme & App Settings</h3>
+        <h3 className="text-sm font-semibold text-ide-text-bright">Theme & App Settings</h3>
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-6 animate-fade-in">
         <section>
-          <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">App Metadata</h4>
+          <h4 className="text-[11px] font-semibold uppercase tracking-wider text-ide-text-dim mb-3">App Metadata</h4>
           <div className="space-y-2.5">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">App Name</label>
+              <label className="block text-xs font-medium text-ide-text mb-1">App Name</label>
               <input
                 type="text"
                 value={metadata.name}
                 onChange={(e) => setMetadata({ name: e.target.value })}
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-400"
+                className="w-full px-3 py-2 text-sm border border-ide-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-ide-accent"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Description</label>
+              <label className="block text-xs font-medium text-ide-text mb-1">Description</label>
               <textarea
                 value={metadata.description}
                 onChange={(e) => setMetadata({ description: e.target.value })}
                 rows={2}
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-400 resize-none"
+                className="w-full px-3 py-2 text-sm border border-ide-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-ide-accent resize-none"
               />
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Icon URL</label>
+                <label className="block text-xs font-medium text-ide-text mb-1">Icon URL</label>
                 <input
                   type="text"
                   value={metadata.icon || ''}
                   onChange={(e) => setMetadata({ icon: e.target.value })}
                   placeholder="https://..."
-                  className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg"
+                  className="w-full px-2 py-1.5 text-xs border border-ide-border rounded-lg"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Splash URL</label>
+                <label className="block text-xs font-medium text-ide-text mb-1">Splash URL</label>
                 <input
                   type="text"
                   value={metadata.splash || ''}
                   onChange={(e) => setMetadata({ splash: e.target.value })}
                   placeholder="https://..."
-                  className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg"
+                  className="w-full px-2 py-1.5 text-xs border border-ide-border rounded-lg"
                 />
               </div>
             </div>
@@ -85,7 +85,7 @@ export function ThemeMetadataPanel() {
         </section>
 
         <section>
-          <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">Colors</h4>
+          <h4 className="text-[11px] font-semibold uppercase tracking-wider text-ide-text-dim mb-3">Colors</h4>
           <div className="space-y-2.5">
             <ColorInput label="Primary" value={theme.colors.primary} onChange={(v) => setThemeColors({ primary: v })} />
             <ColorInput label="Secondary" value={theme.colors.secondary} onChange={(v) => setThemeColors({ secondary: v })} />
@@ -96,14 +96,14 @@ export function ThemeMetadataPanel() {
         </section>
 
         <section>
-          <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">Typography</h4>
+          <h4 className="text-[11px] font-semibold uppercase tracking-wider text-ide-text-dim mb-3">Typography</h4>
           <div className="space-y-2.5">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Font Family</label>
+              <label className="block text-xs font-medium text-ide-text mb-1">Font Family</label>
               <select
                 value={theme.typography.fontFamily}
                 onChange={(e) => setThemeTypography({ fontFamily: e.target.value })}
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg"
+                className="w-full px-3 py-2 text-sm border border-ide-border rounded-lg"
               >
                 <option value="Inter">Inter</option>
                 <option value="Roboto">Roboto</option>
@@ -115,20 +115,20 @@ export function ThemeMetadataPanel() {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Font Size</label>
+                <label className="block text-xs font-medium text-ide-text mb-1">Font Size</label>
                 <input
                   type="text"
                   value={theme.typography.fontSize}
                   onChange={(e) => setThemeTypography({ fontSize: e.target.value })}
-                  className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg"
+                  className="w-full px-2 py-1.5 text-xs border border-ide-border rounded-lg"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Font Weight</label>
+                <label className="block text-xs font-medium text-ide-text mb-1">Font Weight</label>
                 <select
                   value={theme.typography.fontWeight}
                   onChange={(e) => setThemeTypography({ fontWeight: e.target.value })}
-                  className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg"
+                  className="w-full px-2 py-1.5 text-xs border border-ide-border rounded-lg"
                 >
                   <option value="300">Light (300)</option>
                   <option value="400">Regular (400)</option>
@@ -142,24 +142,24 @@ export function ThemeMetadataPanel() {
         </section>
 
         <section>
-          <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">Layout</h4>
+          <h4 className="text-[11px] font-semibold uppercase tracking-wider text-ide-text-dim mb-3">Layout</h4>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Border Radius</label>
+              <label className="block text-xs font-medium text-ide-text mb-1">Border Radius</label>
               <input
                 type="text"
                 value={theme.layout.borderRadius}
                 onChange={(e) => setThemeLayout({ borderRadius: e.target.value })}
-                className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg"
+                className="w-full px-2 py-1.5 text-xs border border-ide-border rounded-lg"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Spacing</label>
+              <label className="block text-xs font-medium text-ide-text mb-1">Spacing</label>
               <input
                 type="text"
                 value={theme.layout.spacing}
                 onChange={(e) => setThemeLayout({ spacing: e.target.value })}
-                className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg"
+                className="w-full px-2 py-1.5 text-xs border border-ide-border rounded-lg"
               />
             </div>
           </div>
