@@ -1,6 +1,7 @@
 import React from 'react';
 import { Undo2, Redo2, Download, Upload, FolderOpen, Layers } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
+import { ThemeSelector } from './ThemeSelector';
 
 export type BuilderMode = 'design' | 'code' | 'preview';
 
@@ -88,6 +89,8 @@ export function Toolbar({ mode, onModeChange, onShowExport, onShowCommandPalette
       </div>
 
       <div className="flex items-center gap-1.5">
+        <ThemeSelector />
+        <span className="w-px h-4 bg-ide-border" />
         <div className="flex items-center gap-1 px-2 py-1 bg-ide-hover rounded text-[10px] text-ide-text">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
           Saved

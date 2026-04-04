@@ -12,10 +12,11 @@ import { BackendConfigPanel } from './components/BackendConfigPanel';
 import { ExportDialog } from './components/ExportDialog';
 import { WidgetTree } from './components/WidgetTree';
 import { CommandPalette } from './components/CommandPalette';
+import { CustomCssPanel } from './components/CustomCssPanel';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useAppkitStore } from './store/appkit-store';
 
-export type RightPanelTab = 'props' | 'style' | 'ai' | 'backend';
+export type RightPanelTab = 'props' | 'style' | 'css' | 'ai';
 
 export default function App() {
   const loadFromLocalStorage = useAppkitStore((s) => s.loadFromLocalStorage);
@@ -76,7 +77,7 @@ export default function App() {
           <Allotment.Pane minSize={240} preferredSize={280}>
             <aside className="h-full bg-ide-panel border-l border-ide-border flex flex-col overflow-hidden">
               <div className="flex border-b border-ide-border text-[10px]">
-                {(['props', 'style', 'ai', 'backend'] as const).map((tab) => (
+                {(['props', 'style', 'css', 'ai'] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setRightTab(tab)}
@@ -91,8 +92,8 @@ export default function App() {
               <div className="flex-1 overflow-y-auto scrollbar-ide">
                 {rightTab === 'props' && <PropertiesPanel />}
                 {rightTab === 'style' && <ThemeMetadataPanel />}
+                {rightTab === 'css' && <CustomCssPanel />}
                 {rightTab === 'ai' && <AiPanel />}
-                {rightTab === 'backend' && <BackendConfigPanel />}
               </div>
             </aside>
           </Allotment.Pane>

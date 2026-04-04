@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, GripVertical, Plus } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
 import { SectionContextMenu } from './SectionContextMenu';
+import { AddPageDialog } from './AddPageDialog';
 import type { SectionType } from '@appkit/schema';
 
 type LeftTab = 'layers' | 'pages';
@@ -14,6 +15,7 @@ const sectionIcons: Record<SectionType, string> = {
 
 export function WidgetTree() {
   const [activeTab, setActiveTab] = useState<LeftTab>('layers');
+  const [showAddPage, setShowAddPage] = useState(false);
   const currentPage = useAppkitStore((s) => s.currentPage);
   const project = useAppkitStore((s) => s.project);
   const selectedSectionId = useAppkitStore((s) => s.selectedSectionId);
@@ -135,6 +137,11 @@ export function WidgetTree() {
               </button>
             );
           })}
+          <button
+            onClick={() => setShowAddPage(true)}
+            className="w-full mt-2 py-1.5 border border-dashed border-ide-accent-border rounded-md text-center text-ide-accent text-[10px] hover:bg-ide-accent-dim transition-colors"
+          >+ Add Page</button>
+          <AddPageDialog open={showAddPage} onClose={() => setShowAddPage(false)} />
         </div>
       )}
     </div>
