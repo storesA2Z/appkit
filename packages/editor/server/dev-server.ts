@@ -29,7 +29,8 @@ function startVSCodeServer(): void {
 
   if (!binary) {
     console.log('\n⚠️  OpenVSCode Server not found.');
-    console.log('   Install it with: bash packages/editor/scripts/setup-vscode.sh');
+    console.log('   Install it with: pnpm setup:vscode  (from packages/editor/)');
+    console.log('   Or run: bash scripts/setup-vscode.sh');
     console.log('   The editor will start without VS Code — you can still use the preview.\n');
     return;
   }

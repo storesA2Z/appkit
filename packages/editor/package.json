@@ -10,7 +10,7 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
-    "setup": "bash scripts/setup-vscode.sh"
+    "setup:vscode": "bash scripts/setup-vscode.sh"
   },
   "dependencies": {
     "create-appkit": "workspace:*",
