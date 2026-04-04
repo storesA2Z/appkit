@@ -13,33 +13,54 @@ const VITE_PORT = 5200;
 let vscodeProcess: ChildProcess | null = null;
 let fileWatcher: FileWatcher | null = null;
 
-function findOpenVSCode(): string | null {
-  const candidates = [
+interface VSCodeBinary {
+  path: string;
+  type: 'openvscode-server' | 'code-server';
+}
+
+function findVSCodeBinary(): VSCodeBinary | null {
+  // Check for openvscode-server
+  const openvscodeCandidates = [
     resolve(process.cwd(), 'node_modules', '.bin', 'openvscode-server'),
     resolve(process.env.HOME ?? '', '.appkit', 'openvscode-server', 'bin', 'openvscode-server'),
   ];
-  for (const candidate of candidates) {
-    if (existsSync(candidate)) return candidate;
+  for (const candidate of openvscodeCandidates) {
+    if (existsSync(candidate)) return { path: candidate, type: 'openvscode-server' };
   }
+
+  // Check for code-server
+  const codeServerCandidates = [
+    resolve(process.env.HOME ?? '', '.appkit', 'openvscode-server', 'bin', 'code-server'),
+  ];
+  for (const candidate of codeServerCandidates) {
+    if (existsSync(candidate)) return { path: candidate, type: 'code-server' };
+  }
+
+  // Check global code-server (installed via brew or npm)
+  try {
+    const { execSync } = require('node:child_process');
+    const globalPath = execSync('which code-server 2>/dev/null', { encoding: 'utf-8' }).trim();
+    if (globalPath && existsSync(globalPath)) return { path: globalPath, type: 'code-server' };
+  } catch { /* not found */ }
+
   return null;
 }
 
 function startVSCodeServer(): void {
-  const binary = findOpenVSCode();
+  const binary = findVSCodeBinary();
 
   if (!binary) {
-    console.log('\n⚠️  OpenVSCode Server not found.');
-    console.log('   Install it with: pnpm setup:vscode  (from packages/editor/)');
-    console.log('   Or run: bash scripts/setup-vscode.sh');
+    console.log('\n⚠️  VS Code web server not found.');
+    console.log('   Install it with: pnpm run setup:vscode  (from packages/editor/)');
     console.log('   The editor will start without VS Code — you can still use the preview.\n');
     return;
   }
 
-  vscodeProcess = spawn(binary, [
-    '--port', String(VSCODE_PORT),
-    '--without-connection-token',
-    '--host', '127.0.0.1',
-  ], {
+  const args = binary.type === 'code-server'
+    ? ['--port', String(VSCODE_PORT), '--auth', 'none', '--disable-telemetry', '--bind-addr', `127.0.0.1:${VSCODE_PORT}`]
+    : ['--port', String(VSCODE_PORT), '--without-connection-token', '--host', '127.0.0.1'];
+
+  vscodeProcess = spawn(binary.path, args, {
     stdio: 'pipe',
     env: { ...process.env },
   });
@@ -58,7 +79,7 @@ function startVSCodeServer(): void {
     console.error(`[vscode] Failed to start: ${err.message}`);
   });
 
-  console.log(`[appkit] OpenVSCode Server starting on port ${VSCODE_PORT}`);
+  console.log(`[appkit] ${binary.type} starting on port ${VSCODE_PORT}`);
 }
 
 export async function startFileWatcher(projectPath: string): Promise<void> {

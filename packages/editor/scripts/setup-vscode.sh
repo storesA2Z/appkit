@@ -1,106 +1,111 @@
 #!/bin/bash
-# Download and install OpenVSCode Server for AppKit
-# Uses the official Gitpod releases from GitHub.
+# Download and install a web-based VS Code for AppKit.
+# macOS: installs code-server via Homebrew
+# Linux: downloads openvscode-server from Gitpod
 
 set -e
 
 INSTALL_DIR="$HOME/.appkit/openvscode-server"
-VERSION="1.96.2"
-
-# Detect platform
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 
-case "$ARCH" in
-  x86_64)  ARCH="x64" ;;
-  aarch64|arm64) ARCH="arm64" ;;
-  *)
-    echo "Unsupported architecture: $ARCH"
-    exit 1
-    ;;
-esac
-
-case "$OS" in
-  linux)  PLATFORM="linux" ;;
-  darwin) PLATFORM="darwin" ;;
-  *)
-    echo "Unsupported OS: $OS"
-    exit 1
-    ;;
-esac
-
-FILENAME="openvscode-server-v${VERSION}-${PLATFORM}-${ARCH}"
-URL="https://github.com/nicedoc/openvscode-server/releases/download/v${VERSION}/${FILENAME}.tar.gz"
-# Fallback to official Gitpod releases
-GITPOD_URL="https://github.com/nicedoc/openvscode-server/releases/download/openvscode-server-v${VERSION}/${FILENAME}.tar.gz"
-
-if [ -f "$INSTALL_DIR/bin/openvscode-server" ]; then
-  echo "OpenVSCode Server already installed at $INSTALL_DIR"
+# Check if already installed
+if [ -f "$INSTALL_DIR/bin/openvscode-server" ] || [ -f "$INSTALL_DIR/bin/code-server" ]; then
+  echo "VS Code web server already installed at $INSTALL_DIR"
   echo "To reinstall, remove $INSTALL_DIR and run again."
   exit 0
 fi
 
-echo "Downloading OpenVSCode Server v${VERSION} for ${PLATFORM}-${ARCH}..."
-echo ""
+# Also check if code-server is globally available
+if command -v code-server &> /dev/null; then
+  echo "code-server is already installed globally: $(which code-server)"
+  echo "AppKit will use it automatically."
+  exit 0
+fi
 
-mkdir -p "$INSTALL_DIR"
-TMP_DIR=$(mktemp -d)
+mkdir -p "$INSTALL_DIR/bin"
 
-download_failed=true
+if [ "$OS" = "darwin" ]; then
+  # macOS — use Homebrew
+  echo "macOS detected."
+  echo ""
 
-# Try downloading — try multiple URL patterns since release naming varies
-for try_url in "$URL" "$GITPOD_URL"; do
-  echo "Trying: $try_url"
-  if command -v curl &> /dev/null; then
-    if curl -fsSL "$try_url" -o "$TMP_DIR/openvscode.tar.gz" 2>/dev/null; then
-      download_failed=false
-      break
-    fi
-  elif command -v wget &> /dev/null; then
-    if wget -q "$try_url" -O "$TMP_DIR/openvscode.tar.gz" 2>/dev/null; then
-      download_failed=false
-      break
+  if command -v brew &> /dev/null; then
+    echo "Installing code-server via Homebrew..."
+    brew install code-server
+
+    # Create a symlink so AppKit can find it
+    BREW_BIN=$(which code-server 2>/dev/null || true)
+    if [ -n "$BREW_BIN" ]; then
+      ln -sf "$BREW_BIN" "$INSTALL_DIR/bin/code-server"
+      echo ""
+      echo "code-server installed and linked to $INSTALL_DIR/bin/code-server"
+      echo "Restart 'pnpm dev' in packages/editor to use it."
+      exit 0
     fi
   fi
-done
 
-if [ "$download_failed" = true ]; then
-  rm -rf "$TMP_DIR"
+  echo "Homebrew not found or install failed."
   echo ""
-  echo "Could not download OpenVSCode Server automatically."
+  echo "Install manually:"
+  echo "  brew install code-server"
   echo ""
-  echo "Manual install options:"
-  echo "  1. npm install -g @nicedoc/openvscode-server"
-  echo "     Then symlink: mkdir -p $INSTALL_DIR/bin && ln -s \$(which openvscode-server) $INSTALL_DIR/bin/openvscode-server"
+  echo "Or with npm:"
+  echo "  npm install -g code-server"
   echo ""
-  echo "  2. Download from: https://github.com/nicedoc/openvscode-server/releases"
-  echo "     Extract to: $INSTALL_DIR/"
-  echo ""
-  echo "AppKit works without VS Code — the preview and design mode still function."
+  echo "Then restart 'pnpm dev' in packages/editor."
   exit 1
-fi
 
-echo "Extracting..."
-tar -xzf "$TMP_DIR/openvscode.tar.gz" -C "$TMP_DIR"
+elif [ "$OS" = "linux" ]; then
+  # Linux — download openvscode-server from Gitpod
+  case "$ARCH" in
+    x86_64)  ARCH="x64" ;;
+    aarch64|arm64) ARCH="arm64" ;;
+    *)
+      echo "Unsupported architecture: $ARCH"
+      exit 1
+      ;;
+  esac
 
-# Find the extracted directory (name varies by release)
-EXTRACTED=$(find "$TMP_DIR" -maxdepth 1 -type d -name "openvscode-server*" | head -1)
+  VERSION="1.96.2"
+  FILENAME="openvscode-server-v${VERSION}-linux-${ARCH}"
+  URL="https://github.com/gitpod-io/openvscode-server/releases/download/openvscode-server-v${VERSION}/${FILENAME}.tar.gz"
 
-if [ -z "$EXTRACTED" ]; then
-  echo "Error: Could not find extracted directory"
+  echo "Downloading OpenVSCode Server v${VERSION} for linux-${ARCH}..."
+  echo "URL: $URL"
+  echo ""
+
+  TMP_DIR=$(mktemp -d)
+
+  if command -v curl &> /dev/null; then
+    curl -fSL "$URL" -o "$TMP_DIR/openvscode.tar.gz"
+  elif command -v wget &> /dev/null; then
+    wget "$URL" -O "$TMP_DIR/openvscode.tar.gz"
+  else
+    echo "Error: curl or wget required"
+    exit 1
+  fi
+
+  echo "Extracting..."
+  tar -xzf "$TMP_DIR/openvscode.tar.gz" -C "$TMP_DIR"
+
+  EXTRACTED=$(find "$TMP_DIR" -maxdepth 1 -type d -name "openvscode-server*" | head -1)
+  if [ -z "$EXTRACTED" ]; then
+    echo "Error: Could not find extracted directory"
+    rm -rf "$TMP_DIR"
+    exit 1
+  fi
+
+  cp -r "$EXTRACTED"/* "$INSTALL_DIR/"
   rm -rf "$TMP_DIR"
-  exit 1
-fi
-
-# Move contents to install dir
-cp -r "$EXTRACTED"/* "$INSTALL_DIR/"
-rm -rf "$TMP_DIR"
-
-# Make binary executable
-if [ -f "$INSTALL_DIR/bin/openvscode-server" ]; then
   chmod +x "$INSTALL_DIR/bin/openvscode-server"
-fi
 
-echo ""
-echo "OpenVSCode Server installed to $INSTALL_DIR"
-echo "Restart 'pnpm dev' in packages/editor to use it."
+  echo ""
+  echo "OpenVSCode Server installed to $INSTALL_DIR"
+  echo "Restart 'pnpm dev' in packages/editor to use it."
+
+else
+  echo "Unsupported OS: $OS"
+  echo "Install code-server manually: npm install -g code-server"
+  exit 1
+fi
