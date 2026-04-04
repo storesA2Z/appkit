@@ -50,10 +50,10 @@ export function Toolbar({ mode, onModeChange, onShowExport, onShowImport, onShow
   };
 
   return (
-    <header className="h-10 bg-ide-toolbar border-b border-ide-border flex items-center px-3 justify-between shrink-0 z-10">
+    <header className="h-11 bg-ide-toolbar border-b border-ide-border flex items-center px-4 justify-between shrink-0 z-10">
       <div className="flex items-center gap-2.5">
         <div className="flex items-center gap-1.5">
-          <div className="w-5 h-5 rounded-md bg-gradient-to-br from-ide-accent to-brand-700 flex items-center justify-center">
+          <div className="w-5 h-5 rounded-md bg-gradient-to-br from-ide-accent to-purple-700 flex items-center justify-center">
             <Layers size={11} className="text-white" />
           </div>
           <span className="font-bold text-xs tracking-tight text-ide-text-bright">appkit</span>
@@ -77,13 +77,13 @@ export function Toolbar({ mode, onModeChange, onShowExport, onShowImport, onShow
         </div>
       </div>
 
-      <div data-tour="mode-switcher" className="flex bg-ide-hover rounded-md p-0.5">
+      <div data-tour="mode-switcher" className="flex bg-ide-surface rounded-full p-0.5">
         {modes.map((m) => (
           <button
             key={m.id}
             onClick={() => onModeChange(m.id)}
-            className={`px-3 py-1 text-[11px] font-medium rounded transition-all ${
-              mode === m.id ? 'bg-ide-accent-dim text-ide-accent' : 'text-ide-text hover:text-ide-text-bright'
+            className={`px-3.5 py-1 text-[11px] font-medium rounded-full transition-all ${
+              mode === m.id ? 'bg-ide-accent text-white shadow-glow' : 'text-ide-text hover:text-ide-text-bright'
             }`}
           >{m.label}</button>
         ))}
