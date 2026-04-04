@@ -22,7 +22,7 @@ export function SpacingStylingPanel({ spacing = {}, styling = {}, onSpacingChang
                 min={0}
                 value={spacing[key] || 0}
                 onChange={(e) => onSpacingChange({ ...spacing, [key]: Number(e.target.value) })}
-                className="w-full px-2 py-1 text-xs border rounded"
+                className="w-full px-2 py-1 text-xs bg-ide-bg border border-ide-border rounded text-ide-text-bright focus:border-ide-accent focus:outline-none"
               />
             </div>
           ))}
@@ -48,7 +48,7 @@ export function SpacingStylingPanel({ spacing = {}, styling = {}, onSpacingChang
               min={0}
               value={styling.borderRadius || 0}
               onChange={(e) => onStylingChange({ ...styling, borderRadius: Number(e.target.value) })}
-              className="w-full px-2 py-1 text-xs border rounded"
+              className="w-full px-2 py-1 text-xs bg-ide-bg border border-ide-border rounded text-ide-text-bright focus:border-ide-accent focus:outline-none"
             />
           </div>
         </div>

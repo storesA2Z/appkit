@@ -16,7 +16,7 @@ export function ProductsProperties({ config, onChange }: Props) {
           value={config.collectionId || ''}
           onChange={(e) => onChange({ collectionId: e.target.value })}
           placeholder="collection-id"
-          className="w-full px-2 py-1.5 text-sm border rounded-md"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none"
         />
       </div>
       <div>
@@ -27,7 +27,7 @@ export function ProductsProperties({ config, onChange }: Props) {
           onChange={(e) => onChange({ title: e.target.value })}
           placeholder="Section title (max 50)"
           maxLength={50}
-          className="w-full px-2 py-1.5 text-sm border rounded-md"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none"
         />
       </div>
       <div>
@@ -35,7 +35,7 @@ export function ProductsProperties({ config, onChange }: Props) {
         <select
           value={config.variant || 'default'}
           onChange={(e) => onChange({ variant: e.target.value as any })}
-          className="w-full px-2 py-1.5 text-sm border rounded-md"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none"
         >
           {['default', 'circular', 'flashSale', 'justForYou', 'grid', 'list', 'minimalist'].map((v) => (
             <option key={v} value={v}>{v}</option>
@@ -47,7 +47,7 @@ export function ProductsProperties({ config, onChange }: Props) {
         <select
           value={config.cardSize || 'medium'}
           onChange={(e) => onChange({ cardSize: e.target.value as any })}
-          className="w-full px-2 py-1.5 text-sm border rounded-md"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none"
         >
           <option value="small">Small</option>
           <option value="medium">Medium</option>
@@ -59,7 +59,7 @@ export function ProductsProperties({ config, onChange }: Props) {
         <select
           value={config.sortBy || 'newest'}
           onChange={(e) => onChange({ sortBy: e.target.value as any })}
-          className="w-full px-2 py-1.5 text-sm border rounded-md"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none"
         >
           {['newest', 'oldest', 'priceLowToHigh', 'priceHighToLow', 'highestRated', 'nameAsc', 'nameDesc', 'mostPopular', 'mostBought'].map((v) => (
             <option key={v} value={v}>{v}</option>

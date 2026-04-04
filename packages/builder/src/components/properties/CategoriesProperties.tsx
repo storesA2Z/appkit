@@ -18,7 +18,7 @@ export function CategoriesProperties({ config, onChange }: Props) {
           value={ids.join(', ')}
           onChange={(e) => onChange({ collectionIds: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) })}
           placeholder="id1, id2, id3"
-          className="w-full px-2 py-1.5 text-sm border rounded-md"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none"
         />
       </div>
       <div>
@@ -26,7 +26,7 @@ export function CategoriesProperties({ config, onChange }: Props) {
         <select
           value={config.variant || 'grid'}
           onChange={(e) => onChange({ variant: e.target.value as any })}
-          className="w-full px-2 py-1.5 text-sm border rounded-md"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none"
         >
           {['grid', 'horizontal', 'carousel', 'large-cards', 'circular'].map((v) => (
             <option key={v} value={v}>{v}</option>

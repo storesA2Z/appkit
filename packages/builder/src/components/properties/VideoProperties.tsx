@@ -11,15 +11,15 @@ export function VideoProperties({ config, onChange }: Props) {
     <div className="space-y-3">
       <div>
         <label className="block text-xs font-medium text-ide-text mb-1">Video URL</label>
-        <input type="text" value={config.videoUrl || ''} onChange={(e) => onChange({ videoUrl: e.target.value })} placeholder="https://..." className="w-full px-2 py-1.5 text-sm border rounded-md" />
+        <input type="text" value={config.videoUrl || ''} onChange={(e) => onChange({ videoUrl: e.target.value })} placeholder="https://..." className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none" />
       </div>
       <div>
         <label className="block text-xs font-medium text-ide-text mb-1">Title</label>
-        <input type="text" value={config.title || ''} onChange={(e) => onChange({ title: e.target.value })} className="w-full px-2 py-1.5 text-sm border rounded-md" />
+        <input type="text" value={config.title || ''} onChange={(e) => onChange({ title: e.target.value })} className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none" />
       </div>
       <div>
         <label className="block text-xs font-medium text-ide-text mb-1">Aspect Ratio</label>
-        <select value={config.aspectRatio || '16:9'} onChange={(e) => onChange({ aspectRatio: e.target.value as any })} className="w-full px-2 py-1.5 text-sm border rounded-md">
+        <select value={config.aspectRatio || '16:9'} onChange={(e) => onChange({ aspectRatio: e.target.value as any })} className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none">
           {['16:9', '4:3', '1:1', '9:16', 'auto'].map((v) => <option key={v} value={v}>{v}</option>)}
         </select>
       </div>

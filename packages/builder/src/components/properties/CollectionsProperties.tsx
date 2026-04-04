@@ -18,7 +18,7 @@ export function CollectionsProperties({ config, onChange }: Props) {
           onChange={(e) => onChange({ collectionIds: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) })}
           placeholder="id1, id2, id3"
           rows={3}
-          className="w-full px-2 py-1.5 text-sm border rounded-md"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none"
         />
       </div>
     </div>

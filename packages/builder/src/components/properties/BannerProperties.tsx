@@ -25,21 +25,21 @@ export function BannerProperties({ config, onChange }: Props) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-ide-text">Slides ({items.length}/5)</label>
+        <label className="text-[11px] font-medium text-ide-text-bright">Slides ({items.length}/5)</label>
         {items.length < 5 && (
-          <button onClick={addItem} className="text-xs text-blue-600 hover:text-blue-800">+ Add</button>
+          <button onClick={addItem} className="text-xs text-ide-accent hover:text-ide-text-bright">+ Add</button>
         )}
       </div>
       {items.map((item, i) => (
-        <div key={i} className="p-2 border rounded-md space-y-2">
+        <div key={i} className="p-2 border border-ide-border rounded-md bg-ide-panel space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs text-ide-text-muted">Slide {i + 1}</span>
-            <button onClick={() => removeItem(i)} className="text-xs text-red-500">Remove</button>
+            <button onClick={() => removeItem(i)} className="text-xs text-red-400">Remove</button>
           </div>
           <select
             value={item.mediaType}
             onChange={(e) => updateItem(i, { mediaType: e.target.value })}
-            className="w-full px-2 py-1 text-xs border rounded"
+            className="w-full px-2 py-1 text-xs bg-ide-bg border border-ide-border rounded text-ide-text-bright focus:border-ide-accent focus:outline-none"
           >
             <option value="image">Image</option>
             <option value="video">Video</option>
@@ -49,14 +49,14 @@ export function BannerProperties({ config, onChange }: Props) {
             value={item.imageUrl || ''}
             onChange={(e) => updateItem(i, { imageUrl: e.target.value })}
             placeholder="Image URL"
-            className="w-full px-2 py-1 text-xs border rounded"
+            className="w-full px-2 py-1 text-xs bg-ide-bg border border-ide-border rounded text-ide-text-bright focus:border-ide-accent focus:outline-none"
           />
           <input
             type="text"
             value={item.title || ''}
             onChange={(e) => updateItem(i, { title: e.target.value })}
             placeholder="Title"
-            className="w-full px-2 py-1 text-xs border rounded"
+            className="w-full px-2 py-1 text-xs bg-ide-bg border border-ide-border rounded text-ide-text-bright focus:border-ide-accent focus:outline-none"
           />
         </div>
       ))}

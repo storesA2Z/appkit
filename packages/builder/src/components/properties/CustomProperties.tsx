@@ -30,7 +30,7 @@ export function CustomProperties({ config, onChange }: Props) {
     <div className="space-y-4">
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
         <p className="text-xs text-blue-700 font-medium mb-1">Custom Component</p>
-        <p className="text-[11px] text-blue-600 leading-relaxed">
+        <p className="text-[11px] text-ide-accent leading-relaxed">
           Register your own React Native component in the Expo template's section registry,
           then reference it by name here. Props are passed as-is to your component.
         </p>
@@ -43,7 +43,7 @@ export function CustomProperties({ config, onChange }: Props) {
           value={cc.componentName || ''}
           onChange={(e) => updateCustomConfig({ componentName: e.target.value })}
           placeholder="e.g. MyBrandStory"
-          className="w-full px-2 py-1.5 text-sm border rounded-md font-mono"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none font-mono"
         />
         <p className="text-[10px] text-ide-text-dim mt-1">Must match the name registered in your section registry</p>
       </div>
@@ -55,7 +55,7 @@ export function CustomProperties({ config, onChange }: Props) {
           value={cc.componentPath || ''}
           onChange={(e) => updateCustomConfig({ componentPath: e.target.value })}
           placeholder="e.g. ./src/sections/MyBrandStory"
-          className="w-full px-2 py-1.5 text-sm border rounded-md font-mono"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none font-mono"
         />
         <p className="text-[10px] text-ide-text-dim mt-1">Helps document where your component lives</p>
       </div>
@@ -67,8 +67,8 @@ export function CustomProperties({ config, onChange }: Props) {
           onChange={(e) => handlePropsChange(e.target.value)}
           rows={6}
           spellCheck={false}
-          className={`w-full px-2 py-1.5 text-sm border rounded-md font-mono resize-y ${
-            propsError ? 'border-red-300 bg-red-50' : ''
+          className={`w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none font-mono resize-y ${
+            propsError ? 'border-red-400 bg-red-500/10' : ''
           }`}
         />
         {propsError && <p className="text-[10px] text-red-500 mt-0.5">{propsError}</p>}
@@ -81,7 +81,7 @@ export function CustomProperties({ config, onChange }: Props) {
           value={cc.fallbackText || ''}
           onChange={(e) => updateCustomConfig({ fallbackText: e.target.value })}
           placeholder="Shown in builder preview"
-          className="w-full px-2 py-1.5 text-sm border rounded-md"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none"
         />
       </div>
     </div>

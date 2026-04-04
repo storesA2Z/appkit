@@ -16,7 +16,7 @@ export function HeaderProperties({ config, onChange }: Props) {
           value={config.text || ''}
           onChange={(e) => onChange({ text: e.target.value })}
           placeholder="Section header text"
-          className="w-full px-2 py-1.5 text-sm border rounded-md"
+          className="w-full px-2 py-1.5 text-sm bg-ide-bg border border-ide-border rounded-md text-ide-text-bright focus:border-ide-accent focus:outline-none"
         />
       </div>
     </div>
