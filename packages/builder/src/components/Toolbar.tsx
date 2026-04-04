@@ -1,12 +1,14 @@
 import React from 'react';
-import { Undo2, Redo2, Download, Sparkles, Settings2, Layers, Palette, Server, FolderOpen } from 'lucide-react';
+import { Undo2, Redo2, Download, Upload, Sparkles, Settings2, Layers, Palette, Server, FolderOpen } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
+import { importFromJson } from '@appkit/export';
 import { PageTabs } from './PageTabs';
 import type { RightPanel } from '../App';
 
 interface ToolbarProps {
   rightPanel: RightPanel;
   onSetRightPanel: (panel: RightPanel) => void;
+  onShowExport: () => void;
 }
 
 const panels: { id: RightPanel; label: string; icon: React.ElementType }[] = [
@@ -16,27 +18,35 @@ const panels: { id: RightPanel; label: string; icon: React.ElementType }[] = [
   { id: 'ai', label: 'AI', icon: Sparkles },
 ];
 
-export function Toolbar({ rightPanel, onSetRightPanel }: ToolbarProps) {
+export function Toolbar({ rightPanel, onSetRightPanel, onShowExport }: ToolbarProps) {
   const undo = useAppkitStore((s) => s.undo);
   const redo = useAppkitStore((s) => s.redo);
   const historyIndex = useAppkitStore((s) => s.historyIndex);
   const historyLength = useAppkitStore((s) => s.history.length);
-  const project = useAppkitStore((s) => s.project);
+  const setProject = useAppkitStore((s) => s.setProject);
   const setShowProjectSwitcher = useAppkitStore((s) => s.setShowProjectSwitcher);
   const currentProjectId = useAppkitStore((s) => s.currentProjectId);
   const projects = useAppkitStore((s) => s.projects);
 
   const currentProject = projects.find((p) => p.id === currentProjectId);
 
-  const handleExportJson = () => {
-    const json = JSON.stringify({ version: '1.0.0', ...project }, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${project.metadata.name || 'appkit-project'}.appkit.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleImport = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json,.appkit.json';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const text = await file.text();
+      try {
+        const parsed = JSON.parse(text);
+        const layout = parsed.layout || parsed;
+        if (layout.pages && layout.theme && layout.metadata) {
+          setProject(layout);
+        }
+      } catch {}
+    };
+    input.click();
   };
 
   return (
@@ -105,7 +115,16 @@ export function Toolbar({ rightPanel, onSetRightPanel }: ToolbarProps) {
         <div className="w-px h-6 bg-surface-3 mx-0.5" />
 
         <button
-          onClick={handleExportJson}
+          onClick={handleImport}
+          className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 hover:text-gray-700 hover:bg-surface-1 rounded-lg transition-colors"
+          title="Import .appkit.json"
+        >
+          <Upload size={13} />
+          Import
+        </button>
+
+        <button
+          onClick={onShowExport}
           className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
         >
           <Download size={13} />

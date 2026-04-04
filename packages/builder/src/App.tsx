@@ -7,6 +7,7 @@ import { AiPanel } from './components/AiPanel';
 import { ProjectSwitcher } from './components/ProjectSwitcher';
 import { ThemeMetadataPanel } from './components/ThemeMetadataPanel';
 import { BackendConfigPanel } from './components/BackendConfigPanel';
+import { ExportDialog } from './components/ExportDialog';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useAppkitStore } from './store/appkit-store';
 
@@ -18,6 +19,7 @@ export default function App() {
   const project = useAppkitStore((s) => s.project);
   const showProjectSwitcher = useAppkitStore((s) => s.showProjectSwitcher);
   const [rightPanel, setRightPanel] = useState<RightPanel>('properties');
+  const [showExport, setShowExport] = useState(false);
 
   useKeyboardShortcuts();
 
@@ -33,10 +35,12 @@ export default function App() {
   return (
     <div className="h-screen flex flex-col bg-surface-2 select-none">
       {showProjectSwitcher && <ProjectSwitcher />}
+      {showExport && <ExportDialog onClose={() => setShowExport(false)} />}
 
       <Toolbar
         rightPanel={rightPanel}
         onSetRightPanel={setRightPanel}
+        onShowExport={() => setShowExport(true)}
       />
 
       <div className="flex-1 flex overflow-hidden">
