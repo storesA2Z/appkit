@@ -6,4 +6,4 @@ dist/
 .env
 .env.local
 .worktrees/
-docs/superpowers/
+docs/
