@@ -33,7 +33,7 @@ export function ThemeMetadataPanel() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="px-4 py-3 border-b border-surface-3">
+      <div className="px-4 py-3 border-b border-ide-border">
         <h3 className="text-sm font-semibold text-ide-text-bright">Theme & App Settings</h3>
       </div>
 

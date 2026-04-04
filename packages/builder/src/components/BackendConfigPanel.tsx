@@ -32,7 +32,7 @@ export function BackendConfigPanel() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="px-4 py-3 border-b border-surface-3">
+      <div className="px-4 py-3 border-b border-ide-border">
         <h3 className="text-sm font-semibold text-ide-text-bright">Backend Connection</h3>
         <p className="text-[10px] text-ide-text-dim mt-0.5">Connect your product API or use demo data</p>
       </div>
