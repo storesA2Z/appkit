@@ -1,24 +1,23 @@
 import React from 'react';
-import { Undo2, Redo2, Download, Upload, Sparkles, Settings2, Layers, Palette, Server, FolderOpen } from 'lucide-react';
+import { Undo2, Redo2, Download, Upload, FolderOpen, Layers } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
-import { importFromJson } from '@appkit/export';
-import { PageTabs } from './PageTabs';
-import type { RightPanel } from '../App';
+
+export type BuilderMode = 'design' | 'code' | 'preview';
 
 interface ToolbarProps {
-  rightPanel: RightPanel;
-  onSetRightPanel: (panel: RightPanel) => void;
+  mode: BuilderMode;
+  onModeChange: (mode: BuilderMode) => void;
   onShowExport: () => void;
+  onShowCommandPalette: () => void;
 }
 
-const panels: { id: RightPanel; label: string; icon: React.ElementType }[] = [
-  { id: 'properties', label: 'Properties', icon: Settings2 },
-  { id: 'theme', label: 'Theme', icon: Palette },
-  { id: 'backend', label: 'Backend', icon: Server },
-  { id: 'ai', label: 'AI', icon: Sparkles },
+const modes: { id: BuilderMode; label: string }[] = [
+  { id: 'design', label: 'Design' },
+  { id: 'code', label: 'Code' },
+  { id: 'preview', label: 'Preview' },
 ];
 
-export function Toolbar({ rightPanel, onSetRightPanel, onShowExport }: ToolbarProps) {
+export function Toolbar({ mode, onModeChange, onShowExport, onShowCommandPalette }: ToolbarProps) {
   const undo = useAppkitStore((s) => s.undo);
   const redo = useAppkitStore((s) => s.redo);
   const historyIndex = useAppkitStore((s) => s.historyIndex);
@@ -27,7 +26,6 @@ export function Toolbar({ rightPanel, onSetRightPanel, onShowExport }: ToolbarPr
   const setShowProjectSwitcher = useAppkitStore((s) => s.setShowProjectSwitcher);
   const currentProjectId = useAppkitStore((s) => s.currentProjectId);
   const projects = useAppkitStore((s) => s.projects);
-
   const currentProject = projects.find((p) => p.id === currentProjectId);
 
   const handleImport = () => {
@@ -50,85 +48,56 @@ export function Toolbar({ rightPanel, onSetRightPanel, onShowExport }: ToolbarPr
   };
 
   return (
-    <header className="h-14 bg-white border-b border-surface-3 flex items-center px-4 justify-between shrink-0 shadow-panel z-10">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center">
-            <Layers size={14} className="text-white" />
+    <header className="h-10 bg-ide-toolbar border-b border-ide-border flex items-center px-3 justify-between shrink-0 z-10">
+      <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-1.5">
+          <div className="w-5 h-5 rounded-md bg-gradient-to-br from-ide-accent to-brand-700 flex items-center justify-center">
+            <Layers size={11} className="text-white" />
           </div>
-          <span className="font-bold text-[15px] tracking-tight text-gray-900">AppKit</span>
+          <span className="font-bold text-xs tracking-tight text-ide-text-bright">appkit</span>
         </div>
-
-        <div className="w-px h-6 bg-surface-3" />
-
+        <span className="w-px h-4 bg-ide-border" />
         <button
           onClick={() => setShowProjectSwitcher(true)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-surface-1 rounded-lg transition-colors max-w-[160px]"
-          title="Switch project"
+          className="flex items-center gap-1 px-2 py-1 text-[11px] text-ide-text hover:text-ide-text-bright hover:bg-ide-hover rounded transition-colors max-w-[140px]"
         >
-          <FolderOpen size={13} className="shrink-0" />
+          <FolderOpen size={11} className="shrink-0" />
           <span className="truncate">{currentProject?.name || 'Projects'}</span>
         </button>
-
-        <div className="w-px h-6 bg-surface-3" />
-
+        <span className="w-px h-4 bg-ide-border" />
         <div className="flex items-center gap-0.5">
-          <button
-            onClick={undo}
-            disabled={historyIndex <= 0}
-            className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-surface-1 disabled:opacity-25 disabled:hover:bg-transparent transition-colors"
-            title="Undo (Ctrl+Z)"
-          >
-            <Undo2 size={16} />
+          <button onClick={undo} disabled={historyIndex <= 0} className="p-1.5 rounded text-ide-text hover:text-ide-text-bright hover:bg-ide-hover disabled:opacity-20 transition-colors">
+            <Undo2 size={13} />
           </button>
-          <button
-            onClick={redo}
-            disabled={historyIndex >= historyLength - 1}
-            className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-surface-1 disabled:opacity-25 disabled:hover:bg-transparent transition-colors"
-            title="Redo (Ctrl+Shift+Z)"
-          >
-            <Redo2 size={16} />
+          <button onClick={redo} disabled={historyIndex >= historyLength - 1} className="p-1.5 rounded text-ide-text hover:text-ide-text-bright hover:bg-ide-hover disabled:opacity-20 transition-colors">
+            <Redo2 size={13} />
           </button>
         </div>
       </div>
 
-      <PageTabs />
+      <div className="flex bg-ide-hover rounded-md p-0.5">
+        {modes.map((m) => (
+          <button
+            key={m.id}
+            onClick={() => onModeChange(m.id)}
+            className={`px-3 py-1 text-[11px] font-medium rounded transition-all ${
+              mode === m.id ? 'bg-ide-accent-dim text-ide-accent' : 'text-ide-text hover:text-ide-text-bright'
+            }`}
+          >{m.label}</button>
+        ))}
+      </div>
 
       <div className="flex items-center gap-1.5">
-        <div className="flex items-center bg-surface-1 rounded-lg p-0.5">
-          {panels.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={() => onSetRightPanel(id)}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium rounded-md transition-all ${
-                rightPanel === id
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <Icon size={12} />
-              {label}
-            </button>
-          ))}
+        <div className="flex items-center gap-1 px-2 py-1 bg-ide-hover rounded text-[10px] text-ide-text">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          Saved
         </div>
-
-        <div className="w-px h-6 bg-surface-3 mx-0.5" />
-
-        <button
-          onClick={handleImport}
-          className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 hover:text-gray-700 hover:bg-surface-1 rounded-lg transition-colors"
-          title="Import .appkit.json"
-        >
-          <Upload size={13} />
-          Import
+        <button onClick={onShowCommandPalette} className="px-2 py-1 bg-ide-hover rounded text-[10px] text-ide-text-dim hover:text-ide-text transition-colors">⌘K</button>
+        <button onClick={handleImport} className="flex items-center gap-1 px-2 py-1 text-[11px] text-ide-text hover:text-ide-text-bright hover:bg-ide-hover rounded transition-colors">
+          <Upload size={11} /> Import
         </button>
-
-        <button
-          onClick={onShowExport}
-          className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
-        >
-          <Download size={13} />
-          Export
+        <button onClick={onShowExport} className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold bg-ide-accent text-white rounded-md hover:opacity-90 transition-opacity">
+          <Download size={11} /> Export
         </button>
       </div>
     </header>

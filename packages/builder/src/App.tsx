@@ -1,64 +1,105 @@
 import React, { useEffect, useState } from 'react';
-import { SectionLibrary } from './components/SectionLibrary';
+import { Allotment } from 'allotment';
+import 'allotment/dist/style.css';
 import { SectionCanvas } from './components/SectionCanvas';
 import { PropertiesPanel } from './components/PropertiesPanel';
-import { Toolbar } from './components/Toolbar';
+import { Toolbar, type BuilderMode } from './components/Toolbar';
+import { StatusBar } from './components/StatusBar';
 import { AiPanel } from './components/AiPanel';
 import { ProjectSwitcher } from './components/ProjectSwitcher';
 import { ThemeMetadataPanel } from './components/ThemeMetadataPanel';
 import { BackendConfigPanel } from './components/BackendConfigPanel';
 import { ExportDialog } from './components/ExportDialog';
+import { WidgetTree } from './components/WidgetTree';
+import { CommandPalette } from './components/CommandPalette';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useAppkitStore } from './store/appkit-store';
 
-export type RightPanel = 'properties' | 'ai' | 'theme' | 'backend';
+export type RightPanelTab = 'props' | 'style' | 'ai' | 'backend';
 
 export default function App() {
   const loadFromLocalStorage = useAppkitStore((s) => s.loadFromLocalStorage);
   const saveToLocalStorage = useAppkitStore((s) => s.saveToLocalStorage);
   const project = useAppkitStore((s) => s.project);
   const showProjectSwitcher = useAppkitStore((s) => s.showProjectSwitcher);
-  const [rightPanel, setRightPanel] = useState<RightPanel>('properties');
+  const [mode, setMode] = useState<BuilderMode>('design');
+  const [rightTab, setRightTab] = useState<RightPanelTab>('props');
   const [showExport, setShowExport] = useState(false);
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
 
   useKeyboardShortcuts();
 
-  useEffect(() => {
-    loadFromLocalStorage();
-  }, []);
-
+  useEffect(() => { loadFromLocalStorage(); }, []);
   useEffect(() => {
     const timer = setTimeout(() => saveToLocalStorage(), 2000);
     return () => clearTimeout(timer);
   }, [project]);
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowCommandPalette((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
   return (
-    <div className="h-screen flex flex-col bg-surface-2 select-none">
+    <div className="h-screen flex flex-col bg-ide-bg select-none">
       {showProjectSwitcher && <ProjectSwitcher />}
       {showExport && <ExportDialog onClose={() => setShowExport(false)} />}
+      <CommandPalette open={showCommandPalette} onClose={() => setShowCommandPalette(false)} />
 
       <Toolbar
-        rightPanel={rightPanel}
-        onSetRightPanel={setRightPanel}
+        mode={mode}
+        onModeChange={setMode}
         onShowExport={() => setShowExport(true)}
+        onShowCommandPalette={() => setShowCommandPalette(true)}
       />
 
-      <div className="flex-1 flex overflow-hidden">
-        <aside className="w-[260px] bg-sidebar-bg shrink-0 flex flex-col overflow-hidden">
-          <SectionLibrary />
-        </aside>
+      <div className="flex-1 overflow-hidden">
+        <Allotment>
+          <Allotment.Pane minSize={200} preferredSize={240}>
+            <aside className="h-full bg-ide-panel border-r border-ide-border flex flex-col overflow-hidden">
+              <WidgetTree />
+            </aside>
+          </Allotment.Pane>
 
-        <main className="flex-1 overflow-hidden">
-          <SectionCanvas />
-        </main>
+          <Allotment.Pane>
+            <main className="h-full overflow-hidden">
+              <SectionCanvas />
+            </main>
+          </Allotment.Pane>
 
-        <aside className="w-[320px] bg-white border-l border-surface-3 shrink-0 flex flex-col overflow-hidden">
-          {rightPanel === 'ai' && <AiPanel />}
-          {rightPanel === 'theme' && <ThemeMetadataPanel />}
-          {rightPanel === 'backend' && <BackendConfigPanel />}
-          {rightPanel === 'properties' && <PropertiesPanel />}
-        </aside>
+          <Allotment.Pane minSize={240} preferredSize={280}>
+            <aside className="h-full bg-ide-panel border-l border-ide-border flex flex-col overflow-hidden">
+              <div className="flex border-b border-ide-border text-[10px]">
+                {(['props', 'style', 'ai', 'backend'] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setRightTab(tab)}
+                    className={`flex-1 py-2 text-center capitalize transition-colors ${
+                      rightTab === tab
+                        ? 'text-ide-accent border-b-[1.5px] border-ide-accent font-semibold'
+                        : 'text-ide-text-dim hover:text-ide-text'
+                    }`}
+                  >{tab}</button>
+                ))}
+              </div>
+              <div className="flex-1 overflow-y-auto scrollbar-ide">
+                {rightTab === 'props' && <PropertiesPanel />}
+                {rightTab === 'style' && <ThemeMetadataPanel />}
+                {rightTab === 'ai' && <AiPanel />}
+                {rightTab === 'backend' && <BackendConfigPanel />}
+              </div>
+            </aside>
+          </Allotment.Pane>
+        </Allotment>
       </div>
+
+      <StatusBar />
     </div>
   );
 }
