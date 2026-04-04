@@ -132,7 +132,7 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
                   <div>
                     <p className="text-sm font-semibold text-emerald-800">Complete Expo Project</p>
                     <p className="text-xs text-emerald-600 mt-1 leading-relaxed">
-                      Downloads a ZIP with a fully runnable Expo app including all {project.pages.home.length + project.pages.explore.length + project.pages.profile.length + project.pages.search.length} sections,
+                      Downloads a ZIP with a fully runnable Expo app including all {Object.values(project.pages).reduce((sum, p) => sum + p.sections.length, 0)} sections,
                       4 screens, bottom tab navigation, 12 section components, theme, mock data, and custom component registry.
                     </p>
                   </div>

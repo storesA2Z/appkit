@@ -10,7 +10,7 @@ describe('exportAsJson', () => {
     const parsed = JSON.parse(json);
     expect(parsed.$schema).toContain('appkit');
     expect(parsed.version).toBe('1.0.0');
-    expect(parsed.layout.pages.home).toEqual([]);
+    expect(parsed.layout.pages.home.sections).toEqual([]);
   });
 });
 
@@ -19,7 +19,7 @@ describe('importFromJson', () => {
     const layout = createDefaultLayout();
     const json = exportAsJson(layout);
     const project = importFromJson(json);
-    expect(project.layout.pages.home).toEqual([]);
+    expect(project.layout.pages.home.sections).toEqual([]);
     expect(project.version).toBe('1.0.0');
   });
 

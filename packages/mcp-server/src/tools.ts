@@ -1,5 +1,5 @@
 import type { Workspace } from './workspace';
-import type { PageType, Section, SectionType } from '@appkit/schema';
+import type { Section } from '@appkit/schema';
 import { validateSection } from '@appkit/schema';
 
 export interface ToolResult {
@@ -15,11 +15,11 @@ export function createToolHandlers(workspace: Workspace) {
       return { success: true, data: workspace.loadProject() };
     },
 
-    listSections: (page: PageType): ToolResult => {
+    listSections: (page: string): ToolResult => {
       return { success: true, data: workspace.getSections(page) };
     },
 
-    addSection: (page: PageType, section: Section, index?: number): ToolResult => {
+    addSection: (page: string, section: Section, index?: number): ToolResult => {
       const validation = validateSection(section);
       if (!validation.valid) {
         return { success: false, error: 'Validation failed', errors: validation.errors };
@@ -28,12 +28,12 @@ export function createToolHandlers(workspace: Workspace) {
       return { success: true, data: { id: section.id } };
     },
 
-    updateSection: (page: PageType, sectionId: string, changes: Record<string, any>): ToolResult => {
+    updateSection: (page: string, sectionId: string, changes: Record<string, any>): ToolResult => {
       workspace.updateSection(page, sectionId, changes);
       return { success: true };
     },
 
-    removeSection: (page: PageType, sectionId: string): ToolResult => {
+    removeSection: (page: string, sectionId: string): ToolResult => {
       workspace.removeSection(page, sectionId);
       return { success: true };
     },

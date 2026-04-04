@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import type { AppProject, AppLayout, Section, PageType, SectionType } from '@appkit/schema';
-import { createDefaultLayout } from '@appkit/schema';
+import type { AppProject, AppLayout, Section } from '@appkit/schema';
+import { createDefaultLayout, migrateLayout } from '@appkit/schema';
 
 export class Workspace {
   private dir: string;
@@ -28,7 +28,11 @@ export class Workspace {
       return defaultProject;
     }
     const content = readFileSync(this.projectPath, 'utf-8');
-    return JSON.parse(content);
+    const raw = JSON.parse(content);
+    if (raw.layout) {
+      raw.layout = migrateLayout(raw.layout);
+    }
+    return raw;
   }
 
   saveProject(project: AppProject): void {
@@ -45,32 +49,38 @@ export class Workspace {
     this.saveProject(project);
   }
 
-  getSections(page: PageType): Section[] {
-    return this.getLayout().pages[page];
+  getSections(page: string): Section[] {
+    return this.getLayout().pages[page]?.sections ?? [];
   }
 
-  addSection(page: PageType, section: Section, index?: number): void {
+  addSection(page: string, section: Section, index?: number): void {
     const layout = this.getLayout();
+    const pageConfig = layout.pages[page];
+    if (!pageConfig) return;
     if (index !== undefined) {
-      layout.pages[page].splice(index, 0, section);
+      pageConfig.sections.splice(index, 0, section);
     } else {
-      layout.pages[page].push(section);
+      pageConfig.sections.push(section);
     }
     this.setLayout(layout);
   }
 
-  updateSection(page: PageType, sectionId: string, changes: Record<string, any>): void {
+  updateSection(page: string, sectionId: string, changes: Record<string, any>): void {
     const layout = this.getLayout();
-    layout.pages[page] = layout.pages[page].map((s) => {
+    const pageConfig = layout.pages[page];
+    if (!pageConfig) return;
+    pageConfig.sections = pageConfig.sections.map((s) => {
       if (s.id !== sectionId) return s;
       return { ...s, config: { ...s.config, ...changes } };
     });
     this.setLayout(layout);
   }
 
-  removeSection(page: PageType, sectionId: string): void {
+  removeSection(page: string, sectionId: string): void {
     const layout = this.getLayout();
-    layout.pages[page] = layout.pages[page].filter((s) => s.id !== sectionId);
+    const pageConfig = layout.pages[page];
+    if (!pageConfig) return;
+    pageConfig.sections = pageConfig.sections.filter((s) => s.id !== sectionId);
     this.setLayout(layout);
   }
 }

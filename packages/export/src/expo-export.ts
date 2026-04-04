@@ -226,7 +226,7 @@ import layoutData from "../data/layout.json";
 import SectionRenderer, { SectionData } from "../sections/SectionRenderer";
 import theme from "../theme/theme";
 
-const sections: SectionData[] = (layoutData.pages.${page} || []) as SectionData[];
+const sections: SectionData[] = ((layoutData.pages as any).${page}?.sections || []) as SectionData[];
 
 export default function ${capitalized}Screen() {
   return (
@@ -258,7 +258,7 @@ import ProductCard from "../components/ProductCard";
 import theme from "../theme/theme";
 import { products, categories } from "../data/mock-data";
 
-const searchSections: SectionData[] = (layoutData.pages.search || []) as SectionData[];
+const searchSections: SectionData[] = ((layoutData.pages as any).search?.sections || []) as SectionData[];
 
 export default function SearchScreen() {
   const [query, setQuery] = useState("");
@@ -339,7 +339,7 @@ import layoutData from "../data/layout.json";
 import SectionRenderer, { SectionData } from "../sections/SectionRenderer";
 import theme from "../theme/theme";
 
-const profileSections: SectionData[] = (layoutData.pages.profile || []) as SectionData[];
+const profileSections: SectionData[] = ((layoutData.pages as any).profile?.sections || []) as SectionData[];
 
 const menuItems = [
   { label: "My Orders", icon: "\\u{1F4E6}" },

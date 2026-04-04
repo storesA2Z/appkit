@@ -1,5 +1,4 @@
 import React from 'react';
-import { PAGE_TYPES, type PageType } from '@appkit/schema';
 import { Home, Compass, User, Search } from 'lucide-react';
 import { useAppkitStore } from '../store/appkit-store';
 
@@ -17,15 +16,15 @@ export function PageTabs() {
 
   return (
     <div className="flex items-center gap-0.5 bg-surface-1 rounded-lg p-0.5">
-      {PAGE_TYPES.map((page) => {
-        const Icon = pageIcons[page];
-        const count = pages[page].length;
-        const isActive = currentPage === page;
+      {Object.entries(pages).map(([slug, pageConfig]) => {
+        const Icon = pageIcons[slug];
+        const count = pageConfig.sections.length;
+        const isActive = currentPage === slug;
 
         return (
           <button
-            key={page}
-            onClick={() => setPage(page as PageType)}
+            key={slug}
+            onClick={() => setPage(slug)}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all ${
               isActive
                 ? 'bg-white text-gray-900 shadow-sm'
@@ -33,7 +32,7 @@ export function PageTabs() {
             }`}
           >
             {Icon && <Icon size={13} />}
-            {page}
+            {pageConfig.label}
             {count > 0 && (
               <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold leading-none ${
                 isActive ? 'bg-brand-100 text-brand-700' : 'bg-surface-3 text-gray-500'

@@ -2,11 +2,14 @@ import { create } from 'zustand';
 import { nanoid } from 'nanoid';
 import {
   type AppLayout,
-  type PageType,
   type SectionType,
   type Section,
   type ProjectSummary,
+  type NavType,
+  type ThemeConfig,
+  type SavedTheme,
   createDefaultLayout,
+  migrateLayout,
 } from '@appkit/schema';
 
 function createDefaultSectionConfig(type: SectionType): Section['config'] {
@@ -56,19 +59,45 @@ interface AppkitState {
   currentProjectId: string | null;
   project: AppLayout;
   backendConfig: BackendConfig;
-  currentPage: PageType;
+  currentPage: string;
   selectedSectionId: string | null;
   history: AppLayout[];
   historyIndex: number;
   showProjectSwitcher: boolean;
 
+  // Section actions
   addSection: (type: SectionType, index?: number) => void;
   updateSection: (id: string, configChanges: Record<string, any>) => void;
   updateSectionSpacing: (id: string, spacing: Record<string, any>) => void;
   updateSectionStyling: (id: string, styling: Record<string, any>) => void;
+  updateSectionCustomStyle: (id: string, customStyle: Record<string, any>) => void;
   removeSection: (id: string) => void;
   reorderSections: (activeId: string, overId: string) => void;
-  setPage: (page: PageType) => void;
+
+  // Page actions
+  setPage: (page: string) => void;
+  addPage: (label: string, slug: string, navType: NavType, icon?: string) => void;
+  removePage: (slug: string) => void;
+  renamePage: (slug: string, label: string) => void;
+  setPageNavType: (slug: string, navType: NavType) => void;
+
+  // Section group actions
+  addGroup: (name: string) => void;
+  removeGroup: (groupId: string) => void;
+  renameGroup: (groupId: string, name: string) => void;
+  addSectionToGroup: (groupId: string, sectionId: string) => void;
+  removeSectionFromGroup: (groupId: string, sectionId: string) => void;
+  toggleGroupCollapse: (groupId: string) => void;
+
+  // Theme library actions
+  saveTheme: (name: string) => void;
+  deleteTheme: (themeId: string) => void;
+  setActiveTheme: (themeId: string) => void;
+  addVariant: (themeId: string, name: string, overrides: Partial<ThemeConfig>) => void;
+  removeVariant: (themeId: string, variantId: string) => void;
+  setActiveVariant: (variantId: string | null) => void;
+
+  // Other
   selectSection: (id: string | null) => void;
   setTheme: (theme: Partial<AppLayout['theme']>) => void;
   setThemeColors: (colors: Partial<AppLayout['theme']['colors']>) => void;
@@ -99,6 +128,21 @@ function pushHistory(state: AppkitState): Partial<AppkitState> {
   };
 }
 
+/** Helper to update sections on the current page */
+function updatePageSections(
+  state: AppkitState,
+  updater: (sections: Section[]) => Section[],
+): { project: AppLayout } & Partial<AppkitState> {
+  const page = state.currentPage;
+  const pageConfig = state.project.pages[page];
+  const sections = updater(pageConfig.sections);
+  const newProject = {
+    ...state.project,
+    pages: { ...state.project.pages, [page]: { ...pageConfig, sections } },
+  };
+  return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+}
+
 const initialProject = createDefaultLayout();
 
 export const useAppkitStore = create<AppkitState>()((set, get) => ({
@@ -112,6 +156,8 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
   historyIndex: 0,
   showProjectSwitcher: true,
 
+  // === Section actions ===
+
   addSection: (type, index) => {
     set((state) => {
       const section: Section = {
@@ -120,7 +166,8 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
         config: createDefaultSectionConfig(type),
       };
       const page = state.currentPage;
-      const sections = [...state.project.pages[page]];
+      const pageConfig = state.project.pages[page];
+      const sections = [...pageConfig.sections];
       if (index !== undefined) {
         sections.splice(index, 0, section);
       } else {
@@ -128,7 +175,7 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
       }
       const newProject = {
         ...state.project,
-        pages: { ...state.project.pages, [page]: sections },
+        pages: { ...state.project.pages, [page]: { ...pageConfig, sections } },
       };
       return {
         project: newProject,
@@ -139,79 +186,41 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
   },
 
   updateSection: (id, configChanges) => {
-    set((state) => {
-      const page = state.currentPage;
-      const sections = state.project.pages[page].map((s) => {
-        if (s.id !== id) return s;
-        return { ...s, config: { ...s.config, ...configChanges } };
-      });
-      const newProject = {
-        ...state.project,
-        pages: { ...state.project.pages, [page]: sections },
-      };
-      return {
-        project: newProject,
-        ...pushHistory({ ...state, project: newProject }),
-      };
-    });
+    set((state) => updatePageSections(state, (sections) =>
+      sections.map((s) => s.id !== id ? s : { ...s, config: { ...s.config, ...configChanges } })
+    ));
   },
 
   updateSectionSpacing: (id, spacing) => {
-    set((state) => {
-      const page = state.currentPage;
-      const sections = state.project.pages[page].map((s) => {
-        if (s.id !== id) return s;
-        return { ...s, spacing: { ...s.spacing, ...spacing } };
-      });
-      const newProject = {
-        ...state.project,
-        pages: { ...state.project.pages, [page]: sections },
-      };
-      return {
-        project: newProject,
-        ...pushHistory({ ...state, project: newProject }),
-      };
-    });
+    set((state) => updatePageSections(state, (sections) =>
+      sections.map((s) => s.id !== id ? s : { ...s, spacing: { ...s.spacing, ...spacing } })
+    ));
   },
 
   updateSectionStyling: (id, styling) => {
-    set((state) => {
-      const page = state.currentPage;
-      const sections = state.project.pages[page].map((s) => {
-        if (s.id !== id) return s;
-        return { ...s, styling: { ...s.styling, ...styling } };
-      });
-      const newProject = {
-        ...state.project,
-        pages: { ...state.project.pages, [page]: sections },
-      };
-      return {
-        project: newProject,
-        ...pushHistory({ ...state, project: newProject }),
-      };
-    });
+    set((state) => updatePageSections(state, (sections) =>
+      sections.map((s) => s.id !== id ? s : { ...s, styling: { ...s.styling, ...styling } })
+    ));
+  },
+
+  updateSectionCustomStyle: (id, customStyle) => {
+    set((state) => updatePageSections(state, (sections) =>
+      sections.map((s) => s.id !== id ? s : { ...s, customStyle: { ...s.customStyle, ...customStyle } })
+    ));
   },
 
   removeSection: (id) => {
-    set((state) => {
-      const page = state.currentPage;
-      const sections = state.project.pages[page].filter((s) => s.id !== id);
-      const newProject = {
-        ...state.project,
-        pages: { ...state.project.pages, [page]: sections },
-      };
-      return {
-        project: newProject,
-        selectedSectionId: state.selectedSectionId === id ? null : state.selectedSectionId,
-        ...pushHistory({ ...state, project: newProject }),
-      };
-    });
+    set((state) => ({
+      ...updatePageSections(state, (sections) => sections.filter((s) => s.id !== id)),
+      selectedSectionId: state.selectedSectionId === id ? null : state.selectedSectionId,
+    }));
   },
 
   reorderSections: (activeId, overId) => {
     set((state) => {
       const page = state.currentPage;
-      const sections = [...state.project.pages[page]];
+      const pageConfig = state.project.pages[page];
+      const sections = [...pageConfig.sections];
       const oldIndex = sections.findIndex((s) => s.id === activeId);
       const newIndex = sections.findIndex((s) => s.id === overId);
       if (oldIndex === -1 || newIndex === -1) return state;
@@ -219,7 +228,7 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
       sections.splice(newIndex, 0, moved);
       const newProject = {
         ...state.project,
-        pages: { ...state.project.pages, [page]: sections },
+        pages: { ...state.project.pages, [page]: { ...pageConfig, sections } },
       };
       return {
         project: newProject,
@@ -228,7 +237,242 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
     });
   },
 
+  // === Page actions ===
+
   setPage: (page) => set({ currentPage: page, selectedSectionId: null }),
+
+  addPage: (label, slug, navType, icon) => {
+    set((state) => {
+      const newProject = {
+        ...state.project,
+        pages: {
+          ...state.project.pages,
+          [slug]: { label, slug, icon, isCore: false, navType, sections: [] },
+        },
+      };
+      return {
+        project: newProject,
+        currentPage: slug,
+        ...pushHistory({ ...state, project: newProject }),
+      };
+    });
+  },
+
+  removePage: (slug) => {
+    set((state) => {
+      const page = state.project.pages[slug];
+      if (!page || page.isCore) return state;
+      const { [slug]: _, ...rest } = state.project.pages;
+      const newProject = { ...state.project, pages: rest };
+      return {
+        project: newProject,
+        currentPage: state.currentPage === slug ? 'home' : state.currentPage,
+        ...pushHistory({ ...state, project: newProject }),
+      };
+    });
+  },
+
+  renamePage: (slug, label) => {
+    set((state) => {
+      const page = state.project.pages[slug];
+      if (!page) return state;
+      const newProject = {
+        ...state.project,
+        pages: { ...state.project.pages, [slug]: { ...page, label } },
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  setPageNavType: (slug, navType) => {
+    set((state) => {
+      const page = state.project.pages[slug];
+      if (!page) return state;
+      const newProject = {
+        ...state.project,
+        pages: { ...state.project.pages, [slug]: { ...page, navType } },
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  // === Section group actions ===
+
+  addGroup: (name) => {
+    set((state) => {
+      const page = state.currentPage;
+      const pageConfig = state.project.pages[page];
+      const groups = [...(pageConfig.groups ?? []), { id: nanoid(10), name, sectionIds: [], collapsed: false }];
+      const newProject = {
+        ...state.project,
+        pages: { ...state.project.pages, [page]: { ...pageConfig, groups } },
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  removeGroup: (groupId) => {
+    set((state) => {
+      const page = state.currentPage;
+      const pageConfig = state.project.pages[page];
+      const groups = (pageConfig.groups ?? []).filter((g) => g.id !== groupId);
+      const newProject = {
+        ...state.project,
+        pages: { ...state.project.pages, [page]: { ...pageConfig, groups } },
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  renameGroup: (groupId, name) => {
+    set((state) => {
+      const page = state.currentPage;
+      const pageConfig = state.project.pages[page];
+      const groups = (pageConfig.groups ?? []).map((g) =>
+        g.id === groupId ? { ...g, name } : g
+      );
+      const newProject = {
+        ...state.project,
+        pages: { ...state.project.pages, [page]: { ...pageConfig, groups } },
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  addSectionToGroup: (groupId, sectionId) => {
+    set((state) => {
+      const page = state.currentPage;
+      const pageConfig = state.project.pages[page];
+      const groups = (pageConfig.groups ?? []).map((g) =>
+        g.id === groupId ? { ...g, sectionIds: [...g.sectionIds, sectionId] } : g
+      );
+      const newProject = {
+        ...state.project,
+        pages: { ...state.project.pages, [page]: { ...pageConfig, groups } },
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  removeSectionFromGroup: (groupId, sectionId) => {
+    set((state) => {
+      const page = state.currentPage;
+      const pageConfig = state.project.pages[page];
+      const groups = (pageConfig.groups ?? []).map((g) =>
+        g.id === groupId ? { ...g, sectionIds: g.sectionIds.filter((id) => id !== sectionId) } : g
+      );
+      const newProject = {
+        ...state.project,
+        pages: { ...state.project.pages, [page]: { ...pageConfig, groups } },
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  toggleGroupCollapse: (groupId) => {
+    set((state) => {
+      const page = state.currentPage;
+      const pageConfig = state.project.pages[page];
+      const groups = (pageConfig.groups ?? []).map((g) =>
+        g.id === groupId ? { ...g, collapsed: !g.collapsed } : g
+      );
+      const newProject = {
+        ...state.project,
+        pages: { ...state.project.pages, [page]: { ...pageConfig, groups } },
+      };
+      return { project: newProject };
+    });
+  },
+
+  // === Theme library actions ===
+
+  saveTheme: (name) => {
+    set((state) => {
+      const theme: SavedTheme = {
+        id: nanoid(10),
+        name,
+        base: structuredClone(state.project.theme),
+        variants: [],
+        createdAt: new Date().toISOString(),
+      };
+      const themes = [...(state.project.themes ?? []), theme];
+      const newProject = { ...state.project, themes, activeThemeId: theme.id };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  deleteTheme: (themeId) => {
+    set((state) => {
+      const themes = (state.project.themes ?? []).filter((t) => t.id !== themeId);
+      const activeThemeId = state.project.activeThemeId === themeId ? '' : state.project.activeThemeId;
+      const newProject = { ...state.project, themes, activeThemeId };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  setActiveTheme: (themeId) => {
+    set((state) => {
+      const theme = (state.project.themes ?? []).find((t) => t.id === themeId);
+      if (!theme) return state;
+      const newProject = {
+        ...state.project,
+        theme: structuredClone(theme.base),
+        activeThemeId: themeId,
+        activeVariantId: undefined,
+      };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  addVariant: (themeId, name, overrides) => {
+    set((state) => {
+      const themes = (state.project.themes ?? []).map((t) => {
+        if (t.id !== themeId) return t;
+        return { ...t, variants: [...t.variants, { id: nanoid(10), name, overrides }] };
+      });
+      const newProject = { ...state.project, themes };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  removeVariant: (themeId, variantId) => {
+    set((state) => {
+      const themes = (state.project.themes ?? []).map((t) => {
+        if (t.id !== themeId) return t;
+        return { ...t, variants: t.variants.filter((v) => v.id !== variantId) };
+      });
+      const activeVariantId = state.project.activeVariantId === variantId ? undefined : state.project.activeVariantId;
+      const newProject = { ...state.project, themes, activeVariantId };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  setActiveVariant: (variantId) => {
+    set((state) => {
+      if (!variantId) {
+        // Remove variant, revert to base theme
+        const theme = (state.project.themes ?? []).find((t) => t.id === state.project.activeThemeId);
+        if (!theme) return state;
+        const newProject = { ...state.project, theme: structuredClone(theme.base), activeVariantId: undefined };
+        return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+      }
+      const activeTheme = (state.project.themes ?? []).find((t) => t.id === state.project.activeThemeId);
+      if (!activeTheme) return state;
+      const variant = activeTheme.variants.find((v) => v.id === variantId);
+      if (!variant) return state;
+      const mergedTheme: ThemeConfig = {
+        ...structuredClone(activeTheme.base),
+        colors: { ...activeTheme.base.colors, ...variant.overrides.colors },
+        typography: { ...activeTheme.base.typography, ...variant.overrides.typography },
+        layout: { ...activeTheme.base.layout, ...variant.overrides.layout },
+      };
+      const newProject = { ...state.project, theme: mergedTheme, activeVariantId: variantId };
+      return { project: newProject, ...pushHistory({ ...state, project: newProject }) };
+    });
+  },
+
+  // === Other ===
+
   selectSection: (id) => set({ selectedSectionId: id }),
 
   setTheme: (theme) => {
@@ -287,7 +531,7 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
     }));
   },
 
-  setProject: (layout) => set({ project: layout }),
+  setProject: (layout) => set({ project: migrateLayout(layout) }),
 
   undo: () => {
     set((state) => {
@@ -327,7 +571,8 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
     try {
       const stored = localStorage.getItem(`appkit:project:${id}`);
       if (stored) {
-        const project = JSON.parse(stored) as AppLayout;
+        const raw = JSON.parse(stored);
+        const project = migrateLayout(raw);
         set({ project, history: [structuredClone(project)], historyIndex: 0 });
       }
       const backendStored = localStorage.getItem(`appkit:backend:${id}`);
@@ -377,7 +622,7 @@ export const useAppkitStore = create<AppkitState>()((set, get) => ({
       history: [structuredClone(newLayout)],
       historyIndex: 0,
       selectedSectionId: null,
-      currentPage: 'home' as PageType,
+      currentPage: 'home',
       showProjectSwitcher: false,
     }));
 

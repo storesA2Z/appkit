@@ -8,7 +8,7 @@ export function SectionCanvas() {
   const selectedSectionId = useAppkitStore((s) => s.selectedSectionId);
   const selectSection = useAppkitStore((s) => s.selectSection);
 
-  const sections = project.pages[currentPage];
+  const sections = project.pages[currentPage]?.sections ?? [];
 
   return (
     <div className="flex-1 flex items-start justify-center overflow-y-auto dot-grid py-10 px-6">

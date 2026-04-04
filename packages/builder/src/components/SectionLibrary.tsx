@@ -27,7 +27,7 @@ const groups = ['Content', 'Commerce', 'Engagement', 'Custom'] as const;
 
 export function SectionLibrary() {
   const addSection = useAppkitStore((s) => s.addSection);
-  const currentSections = useAppkitStore((s) => s.project.pages[s.currentPage]);
+  const currentSections = useAppkitStore((s) => s.project.pages[s.currentPage]?.sections ?? []);
   const selectSection = useAppkitStore((s) => s.selectSection);
   const selectedSectionId = useAppkitStore((s) => s.selectedSectionId);
   const [search, setSearch] = useState('');

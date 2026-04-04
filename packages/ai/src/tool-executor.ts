@@ -1,5 +1,5 @@
 import type { ToolCall } from './claude-client';
-import type { AppLayout, SectionType, PageType } from '@appkit/schema';
+import type { AppLayout, SectionType } from '@appkit/schema';
 
 export interface StoreActions {
   addSection: (type: SectionType, index?: number) => void;
@@ -8,8 +8,8 @@ export interface StoreActions {
   reorderSections: (activeId: string, overId: string) => void;
   setTheme: (theme: Partial<AppLayout['theme']>) => void;
   setMetadata: (meta: Partial<AppLayout['metadata']>) => void;
-  setPage: (page: PageType) => void;
-  getState: () => { project: AppLayout; currentPage: PageType };
+  setPage: (page: string) => void;
+  getState: () => { project: AppLayout; currentPage: string };
 }
 
 export function executeToolCall(
@@ -26,7 +26,7 @@ export function executeToolCall(
         return {
           result: JSON.stringify({
             currentPage: state.currentPage,
-            sections: state.project.pages[page as PageType],
+            sections: state.project.pages[page]?.sections ?? [],
             theme: state.project.theme,
             metadata: state.project.metadata,
           }),
@@ -50,8 +50,8 @@ export function executeToolCall(
         actions.addSection(input.type, input.position);
         if (input.config) {
           const state = actions.getState();
-          const page = (input.page || state.currentPage) as PageType;
-          const sections = state.project.pages[page];
+          const page = input.page || state.currentPage;
+          const sections = state.project.pages[page]?.sections ?? [];
           const added = sections[sections.length - 1];
           if (added) {
             actions.updateSection(added.id, input.config);

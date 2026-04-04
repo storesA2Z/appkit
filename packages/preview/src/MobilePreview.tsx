@@ -1,12 +1,12 @@
 import React from 'react';
-import type { Section, ThemeConfig, PageType } from '@appkit/schema';
+import type { Section, ThemeConfig } from '@appkit/schema';
 import { DeviceFrame } from './DeviceFrame';
 import { SectionRenderer } from './renderers/SectionRenderer';
 
 export interface MobilePreviewProps {
   layout: Section[];
   theme: ThemeConfig;
-  page: PageType;
+  page: string;
   selectedId?: string | null;
   onSectionClick?: (id: string) => void;
   device?: string;

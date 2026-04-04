@@ -55,7 +55,7 @@ const sectionIcons: Record<SectionType, React.ElementType> = {
 
 export function PropertiesPanel() {
   const selectedSectionId = useAppkitStore((s) => s.selectedSectionId);
-  const sections = useAppkitStore((s) => s.project.pages[s.currentPage]);
+  const sections = useAppkitStore((s) => s.project.pages[s.currentPage]?.sections ?? []);
   const updateSection = useAppkitStore((s) => s.updateSection);
   const updateSectionSpacing = useAppkitStore((s) => s.updateSectionSpacing);
   const updateSectionStyling = useAppkitStore((s) => s.updateSectionStyling);

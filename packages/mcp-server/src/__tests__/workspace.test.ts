@@ -20,7 +20,7 @@ describe('Workspace', () => {
   it('creates default project on first load', () => {
     const project = workspace.loadProject();
     expect(project.version).toBe('1.0.0');
-    expect(project.layout.pages.home).toEqual([]);
+    expect(project.layout.pages.home.sections).toEqual([]);
   });
 
   it('adds a section', () => {

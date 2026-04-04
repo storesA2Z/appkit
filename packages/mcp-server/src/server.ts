@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { Workspace } from './workspace.js';
 import { registerResources } from './resources.js';
 import { SECTION_TYPES, PAGE_TYPES, validateSection } from '@appkit/schema';
-import type { PageType, SectionType, Section } from '@appkit/schema';
+import type { SectionType, Section } from '@appkit/schema';
 
 const workspaceDir = process.argv.find((arg, i) => process.argv[i - 1] === '--workspace') || process.cwd();
 
@@ -24,7 +24,7 @@ server.tool('get_project', 'Get the full project including layout, theme, and me
 server.tool('list_sections', 'List all sections on a page', {
   page: z.enum(PAGE_TYPES as unknown as [string, ...string[]]).describe('Page name'),
 }, async ({ page }) => {
-  const sections = workspace.getSections(page as PageType);
+  const sections = workspace.getSections(page);
   return { content: [{ type: 'text', text: JSON.stringify(sections, null, 2) }] };
 });
 
@@ -40,7 +40,7 @@ server.tool('add_section', 'Add a new section to a page', {
   if (!validation.valid) {
     return { content: [{ type: 'text', text: JSON.stringify({ error: 'Validation failed', errors: validation.errors }) }] };
   }
-  workspace.addSection(page as PageType, section, index);
+  workspace.addSection(page, section, index);
   return { content: [{ type: 'text', text: JSON.stringify({ success: true, id }) }] };
 });
 
@@ -49,7 +49,7 @@ server.tool('update_section', 'Update a section config', {
   sectionId: z.string(),
   changes: z.record(z.any()).describe('Config fields to merge'),
 }, async ({ page, sectionId, changes }) => {
-  workspace.updateSection(page as PageType, sectionId, changes);
+  workspace.updateSection(page, sectionId, changes);
   return { content: [{ type: 'text', text: JSON.stringify({ success: true }) }] };
 });
 
@@ -57,7 +57,7 @@ server.tool('remove_section', 'Remove a section from a page', {
   page: z.enum(PAGE_TYPES as unknown as [string, ...string[]]),
   sectionId: z.string(),
 }, async ({ page, sectionId }) => {
-  workspace.removeSection(page as PageType, sectionId);
+  workspace.removeSection(page, sectionId);
   return { content: [{ type: 'text', text: JSON.stringify({ success: true }) }] };
 });
 

@@ -1,20 +1,23 @@
-import { schemaPrompt, type AppLayout, type PageType } from '@appkit/schema';
+import { schemaPrompt, type AppLayout } from '@appkit/schema';
 
 export interface AiContext {
   storeType: string | null;
   brandGuidelines: string | null;
   currentLayout: AppLayout;
-  currentPage: PageType;
+  currentPage: string;
   selectedSectionId: string | null;
 }
 
 export function buildSystemPrompt(context: AiContext): string {
+  const pageConfig = context.currentLayout.pages[context.currentPage];
+  const sections = pageConfig?.sections ?? [];
+
   const parts = [
     schemaPrompt,
     '',
     '## Current State',
     `Current page: ${context.currentPage}`,
-    `Sections on current page: ${context.currentLayout.pages[context.currentPage].length}`,
+    `Sections on current page: ${sections.length}`,
     `Theme: primary=${context.currentLayout.theme.colors.primary}, accent=${context.currentLayout.theme.colors.accent}`,
     `App name: ${context.currentLayout.metadata.name}`,
   ];
@@ -28,7 +31,7 @@ export function buildSystemPrompt(context: AiContext): string {
   }
 
   if (context.selectedSectionId) {
-    const section = context.currentLayout.pages[context.currentPage].find(
+    const section = sections.find(
       (s) => s.id === context.selectedSectionId
     );
     if (section) {
@@ -39,7 +42,7 @@ export function buildSystemPrompt(context: AiContext): string {
   parts.push(
     '',
     '## Current Layout JSON',
-    JSON.stringify(context.currentLayout.pages[context.currentPage], null, 2),
+    JSON.stringify(sections, null, 2),
   );
 
   return parts.join('\n');
