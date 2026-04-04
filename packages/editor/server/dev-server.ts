@@ -4,8 +4,8 @@ import { resolve, join } from 'node:path';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { FileWatcher } from '../src/services/file-watcher';
 import { writeDesignToProject } from '../src/services/schema-sync';
-import { scaffoldProject } from 'create-appkit/src/scaffold';
-import { getTemplates } from 'create-appkit/src/templates';
+import { scaffoldProject } from 'create-appkit/scaffold';
+import { getTemplates } from 'create-appkit/templates';
 
 const VSCODE_PORT = 3100;
 const VITE_PORT = 5200;
