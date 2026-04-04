@@ -1,4 +1,5 @@
 import type { AppLayout, ThemeConfig } from '@appkit/schema';
+import { generateReadme } from './readme-generator';
 
 export interface ExpoProjectFile {
   path: string;
@@ -8,6 +9,7 @@ export interface ExpoProjectFile {
 export function generateExpoProject(layout: AppLayout): ExpoProjectFile[] {
   const files: ExpoProjectFile[] = [];
 
+  files.push({ path: 'README.md', content: generateReadme(layout) });
   files.push({ path: 'src/data/layout.json', content: JSON.stringify(layout, null, 2) });
   files.push({ path: 'src/theme/theme.ts', content: generateThemeFile() });
   files.push({ path: 'package.json', content: generatePackageJson(layout.metadata.name) });
