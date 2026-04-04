@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Section, ThemeConfig } from '@appkit/schema';
-import { DeviceFrame } from './DeviceFrame';
+import { DeviceFrame, type DeviceType } from './DeviceFrame';
 import { SectionRenderer } from './renderers/SectionRenderer';
 
 export interface MobilePreviewProps {
@@ -9,7 +9,7 @@ export interface MobilePreviewProps {
   page: string;
   selectedId?: string | null;
   onSectionClick?: (id: string) => void;
-  device?: string;
+  device?: DeviceType;
   scale?: number;
 }
 
@@ -19,10 +19,11 @@ export function MobilePreview({
   page,
   selectedId,
   onSectionClick,
+  device = 'iphone',
   scale = 0.85,
 }: MobilePreviewProps) {
   return (
-    <DeviceFrame scale={scale}>
+    <DeviceFrame scale={scale} device={device}>
       {layout.length === 0 ? (
         <div style={{
           display: 'flex',
