@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import BuilderApp from '@appkit/builder/src/App';
 import { useAppkitStore } from '@appkit/builder/src/store/appkit-store';
 import { useEditorStore } from '../store/editor-store';
-import { writeDesignToProject } from '../services/schema-sync';
 import { ArrowRightLeft } from 'lucide-react';
 
 export function DesignModeWrapper() {
@@ -10,14 +9,23 @@ export function DesignModeWrapper() {
   const [syncing, setSyncing] = useState(false);
   const [lastSync, setLastSync] = useState<string | null>(null);
 
-  const handleSyncToCode = useCallback(() => {
+  const handleSyncToCode = useCallback(async () => {
     if (!currentProject) return;
 
     setSyncing(true);
     try {
       const layout = useAppkitStore.getState().project;
-      const fileCount = writeDesignToProject(layout, currentProject.path);
-      setLastSync(`Synced ${fileCount} files`);
+      const res = await fetch('/api/sync-design', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ layout, projectPath: currentProject.path }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setLastSync(`Synced ${data.fileCount} files`);
+      } else {
+        setLastSync(`Error: ${data.error}`);
+      }
     } catch (err: any) {
       setLastSync(`Error: ${err.message}`);
     }

@@ -1,8 +1,9 @@
 import { spawn, type ChildProcess } from 'node:child_process';
-import { createServer } from 'vite';
+import { createServer, type Plugin } from 'vite';
 import { resolve } from 'node:path';
 import { existsSync } from 'node:fs';
 import { FileWatcher } from '../src/services/file-watcher';
+import { writeDesignToProject } from '../src/services/schema-sync';
 
 const VSCODE_PORT = 3100;
 const VITE_PORT = 5200;
@@ -81,10 +82,40 @@ export async function startFileWatcher(projectPath: string): Promise<void> {
   console.log(`[appkit] File watcher active for ${projectPath}`);
 }
 
+function syncApiPlugin(): Plugin {
+  return {
+    name: 'appkit-sync-api',
+    configureServer(server) {
+      server.middlewares.use('/api/sync-design', (req, res) => {
+        if (req.method !== 'POST') {
+          res.statusCode = 405;
+          res.end('Method not allowed');
+          return;
+        }
+
+        let body = '';
+        req.on('data', (chunk: Buffer) => { body += chunk.toString(); });
+        req.on('end', () => {
+          try {
+            const { layout, projectPath } = JSON.parse(body);
+            const fileCount = writeDesignToProject(layout, projectPath);
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ ok: true, fileCount }));
+          } catch (err: any) {
+            res.statusCode = 500;
+            res.end(JSON.stringify({ ok: false, error: err.message }));
+          }
+        });
+      });
+    },
+  };
+}
+
 async function startVite(): Promise<void> {
   const server = await createServer({
     configFile: resolve(process.cwd(), 'vite.config.ts'),
     server: { port: VITE_PORT },
+    plugins: [syncApiPlugin()],
   });
   await server.listen();
   console.log(`[appkit] Editor UI ready at http://localhost:${VITE_PORT}`);
