@@ -242,6 +242,7 @@ export interface Section {
   spacing?: SpacingConfig;
   styling?: StylingConfig;
   visibility?: VisibilityRules;
+  customStyle?: Record<string, any>;
 }
 
 export interface ThemeConfig {
@@ -271,9 +272,61 @@ export interface AppMetadata {
   splash?: string;
 }
 
+export type NavType = 'tab' | 'stack' | 'drawer';
+
+export interface SectionGroup {
+  id: string;
+  name: string;
+  sectionIds: string[];
+  collapsed?: boolean;
+}
+
+export interface PageConfig {
+  label: string;
+  slug: string;
+  icon?: string;
+  isCore: boolean;
+  navType: NavType;
+  sections: Section[];
+  groups?: SectionGroup[];
+}
+
+export interface SavedTheme {
+  id: string;
+  name: string;
+  base: ThemeConfig;
+  variants: ThemeVariant[];
+  createdAt: string;
+}
+
+export interface ThemeVariant {
+  id: string;
+  name: string;
+  overrides: Partial<ThemeConfig>;
+}
+
+export type SlotType = 'image' | 'text' | 'button' | 'divider' | 'icon';
+export type LayoutTemplate = 'full-width' | 'two-column' | 'horizontal-scroll' | 'text-image';
+
+export interface WizardSlot {
+  id: string;
+  type: SlotType;
+  label: string;
+  config: Record<string, any>;
+}
+
+export interface WizardLayout {
+  template: LayoutTemplate;
+  slots: WizardSlot[];
+  style: Record<string, any>;
+}
+
 export interface AppLayout {
-  pages: Record<PageType, Section[]>;
+  pages: Record<string, PageConfig>;
   theme: ThemeConfig;
+  themes?: SavedTheme[];
+  activeThemeId?: string;
+  activeVariantId?: string;
   metadata: AppMetadata;
 }
 
