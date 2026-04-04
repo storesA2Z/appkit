@@ -6,6 +6,7 @@ import { VSCodePane } from './components/VSCodePane';
 import { PreviewPane } from './components/PreviewPane';
 import { AiChatSidebar } from './components/AiChatSidebar';
 import { StatusBar } from './components/StatusBar';
+import { DesignModeWrapper } from './components/DesignModeWrapper';
 import { useEditorStore } from './store/editor-store';
 
 export default function App() {
@@ -17,8 +18,8 @@ export default function App() {
       <Toolbar />
 
       <div className="flex-1 overflow-hidden">
-        <div className="h-full" style={{ display: mode === 'design' ? 'flex' : 'none', alignItems: 'center', justifyContent: 'center' }}>
-          <p className="text-sm text-ide-text-dim">Design mode — visual builder will be loaded here</p>
+        <div className="h-full" style={{ display: mode === 'design' ? 'block' : 'none' }}>
+          <DesignModeWrapper />
         </div>
 
         <div className="h-full" style={{ display: mode === 'code' ? 'block' : 'none' }}>
