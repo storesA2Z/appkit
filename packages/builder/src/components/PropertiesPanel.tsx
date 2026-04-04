@@ -20,6 +20,7 @@ import { MarqueeProperties } from './properties/MarqueeProperties';
 import { CollectionsProperties } from './properties/CollectionsProperties';
 import { CustomProperties } from './properties/CustomProperties';
 import { SpacingStylingPanel } from './properties/SpacingStylingPanel';
+import { SECTION_COLORS } from '../constants/section-colors';
 
 const propertyComponents: Record<string, React.FC<{ config: any; onChange: (changes: any) => void }>> = {
   banner: BannerProperties,
@@ -79,11 +80,14 @@ export function PropertiesPanel() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="px-4 py-3 border-b border-surface-3 flex items-center justify-between">
+      <div className="px-4 py-3 border-b border-ide-border flex items-center justify-between" style={{ borderLeftWidth: '3px', borderLeftColor: SECTION_COLORS[section.type as SectionType] ?? '#6366f1' }}>
         <div className="flex items-center gap-2.5">
           {SectionIcon && (
-            <div className="w-7 h-7 rounded-lg bg-ide-accent-dim flex items-center justify-center">
-              <SectionIcon size={14} className="text-ide-accent" />
+            <div
+              className="w-7 h-7 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: `${SECTION_COLORS[section.type as SectionType] ?? '#6366f1'}20` }}
+            >
+              <SectionIcon size={14} style={{ color: SECTION_COLORS[section.type as SectionType] ?? '#6366f1' }} />
             </div>
           )}
           <div>
@@ -93,14 +97,14 @@ export function PropertiesPanel() {
         </div>
         <button
           onClick={() => removeSection(section.id)}
-          className="p-1.5 text-ide-text-dim hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+          className="p-1.5 text-ide-text-dim hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
           title="Delete section"
         >
           <Trash2 size={14} />
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-5 animate-fade-in">
+      <div className="flex-1 overflow-y-auto scrollbar-ide p-4 space-y-5 animate-fade-in">
         {PropertyComponent && (
           <PropertyComponent
             config={section.config}
