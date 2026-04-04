@@ -98,9 +98,9 @@ export default function App() {
                   <button
                     key={tab}
                     onClick={() => setRightTab(tab)}
-                    className={`flex-1 py-2 text-center capitalize transition-colors ${
+                    className={`flex-1 py-2.5 text-center capitalize transition-colors ${
                       rightTab === tab
-                        ? 'text-ide-accent border-b-[1.5px] border-ide-accent font-semibold'
+                        ? 'text-ide-accent border-b-2 border-ide-accent font-semibold'
                         : 'text-ide-text-dim hover:text-ide-text'
                     }`}
                   >{tab}</button>
