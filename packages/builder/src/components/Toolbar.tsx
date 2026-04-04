@@ -77,7 +77,7 @@ export function Toolbar({ mode, onModeChange, onShowExport, onShowImport, onShow
         </div>
       </div>
 
-      <div className="flex bg-ide-hover rounded-md p-0.5">
+      <div data-tour="mode-switcher" className="flex bg-ide-hover rounded-md p-0.5">
         {modes.map((m) => (
           <button
             key={m.id}
@@ -90,20 +90,22 @@ export function Toolbar({ mode, onModeChange, onShowExport, onShowImport, onShow
       </div>
 
       <div className="flex items-center gap-1.5">
-        <ThemeSelector />
+        <span data-tour="theme-selector"><ThemeSelector /></span>
         <span className="w-px h-4 bg-ide-border" />
         <div className="flex items-center gap-1 px-2 py-1 bg-ide-hover rounded text-[10px] text-ide-text">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
           Saved
         </div>
-        <button onClick={onShowCommandPalette} className="px-2 py-1 bg-ide-hover rounded text-[10px] text-ide-text-dim hover:text-ide-text transition-colors">⌘K</button>
-        <button onClick={handleImportJson} className="flex items-center gap-1 px-2 py-1 text-[11px] text-ide-text hover:text-ide-text-bright hover:bg-ide-hover rounded transition-colors" title="Import JSON">
-          <Upload size={11} /> JSON
-        </button>
-        <button onClick={onShowImport} className="flex items-center gap-1 px-2 py-1 text-[11px] text-ide-text hover:text-ide-text-bright hover:bg-ide-hover rounded transition-colors" title="Import RN/Expo project">
-          <Upload size={11} /> RN
-        </button>
-        <button onClick={onShowExport} className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold bg-ide-accent text-white rounded-md hover:opacity-90 transition-opacity">
+        <button data-tour="command-palette" onClick={onShowCommandPalette} className="px-2 py-1 bg-ide-hover rounded text-[10px] text-ide-text-dim hover:text-ide-text transition-colors">⌘K</button>
+        <span data-tour="import-btn" className="flex items-center gap-1">
+          <button onClick={handleImportJson} className="flex items-center gap-1 px-2 py-1 text-[11px] text-ide-text hover:text-ide-text-bright hover:bg-ide-hover rounded transition-colors" title="Import JSON">
+            <Upload size={11} /> JSON
+          </button>
+          <button onClick={onShowImport} className="flex items-center gap-1 px-2 py-1 text-[11px] text-ide-text hover:text-ide-text-bright hover:bg-ide-hover rounded transition-colors" title="Import RN/Expo project">
+            <Upload size={11} /> RN
+          </button>
+        </span>
+        <button data-tour="export-btn" onClick={onShowExport} className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold bg-ide-accent text-white rounded-md hover:opacity-90 transition-opacity">
           <Download size={11} /> Export
         </button>
       </div>

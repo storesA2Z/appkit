@@ -15,6 +15,7 @@ import { WidgetTree } from './components/WidgetTree';
 import { CommandPalette } from './components/CommandPalette';
 import { CustomCssPanel } from './components/CustomCssPanel';
 import { ImportWizard } from './components/ImportWizard';
+import { Tour, useShouldShowTour } from './components/tour/Tour';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useAppkitStore } from './store/appkit-store';
 
@@ -30,10 +31,18 @@ export default function App() {
   const [showExport, setShowExport] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [showImport, setShowImport] = useState(false);
+  const shouldShowTour = useShouldShowTour();
+  const [showTour, setShowTour] = useState(false);
 
   useKeyboardShortcuts();
 
-  useEffect(() => { loadFromLocalStorage(); }, []);
+  useEffect(() => {
+    loadFromLocalStorage();
+    if (shouldShowTour) {
+      const timer = setTimeout(() => setShowTour(true), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
   useEffect(() => {
     const timer = setTimeout(() => saveToLocalStorage(), 2000);
     return () => clearTimeout(timer);
@@ -56,6 +65,7 @@ export default function App() {
       {showExport && <ExportDialog onClose={() => setShowExport(false)} />}
       <CommandPalette open={showCommandPalette} onClose={() => setShowCommandPalette(false)} />
       <ImportWizard open={showImport} onClose={() => setShowImport(false)} />
+      <Tour open={showTour} onClose={() => setShowTour(false)} />
 
       <Toolbar
         mode={mode}
@@ -68,19 +78,19 @@ export default function App() {
       <div className="flex-1 overflow-hidden">
         <Allotment>
           <Allotment.Pane minSize={200} preferredSize={240}>
-            <aside className="h-full bg-ide-panel border-r border-ide-border flex flex-col overflow-hidden">
+            <aside data-tour="widget-tree" className="h-full bg-ide-panel border-r border-ide-border flex flex-col overflow-hidden">
               <WidgetTree />
             </aside>
           </Allotment.Pane>
 
           <Allotment.Pane>
-            <main className="h-full overflow-hidden">
+            <main data-tour="section-canvas" className="h-full overflow-hidden">
               {mode === 'code' ? <CodeEditor /> : <SectionCanvas />}
             </main>
           </Allotment.Pane>
 
           <Allotment.Pane minSize={240} preferredSize={280}>
-            <aside className="h-full bg-ide-panel border-l border-ide-border flex flex-col overflow-hidden">
+            <aside data-tour="properties-panel" className="h-full bg-ide-panel border-l border-ide-border flex flex-col overflow-hidden">
               <div className="flex border-b border-ide-border text-[10px]">
                 {(['props', 'style', 'css', 'ai'] as const).map((tab) => (
                   <button
