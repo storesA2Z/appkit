@@ -9,6 +9,7 @@ interface ToolbarProps {
   mode: BuilderMode;
   onModeChange: (mode: BuilderMode) => void;
   onShowExport: () => void;
+  onShowImport: () => void;
   onShowCommandPalette: () => void;
 }
 
@@ -18,7 +19,7 @@ const modes: { id: BuilderMode; label: string }[] = [
   { id: 'preview', label: 'Preview' },
 ];
 
-export function Toolbar({ mode, onModeChange, onShowExport, onShowCommandPalette }: ToolbarProps) {
+export function Toolbar({ mode, onModeChange, onShowExport, onShowImport, onShowCommandPalette }: ToolbarProps) {
   const undo = useAppkitStore((s) => s.undo);
   const redo = useAppkitStore((s) => s.redo);
   const historyIndex = useAppkitStore((s) => s.historyIndex);
@@ -29,7 +30,7 @@ export function Toolbar({ mode, onModeChange, onShowExport, onShowCommandPalette
   const projects = useAppkitStore((s) => s.projects);
   const currentProject = projects.find((p) => p.id === currentProjectId);
 
-  const handleImport = () => {
+  const handleImportJson = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json,.appkit.json';
@@ -96,8 +97,11 @@ export function Toolbar({ mode, onModeChange, onShowExport, onShowCommandPalette
           Saved
         </div>
         <button onClick={onShowCommandPalette} className="px-2 py-1 bg-ide-hover rounded text-[10px] text-ide-text-dim hover:text-ide-text transition-colors">⌘K</button>
-        <button onClick={handleImport} className="flex items-center gap-1 px-2 py-1 text-[11px] text-ide-text hover:text-ide-text-bright hover:bg-ide-hover rounded transition-colors">
-          <Upload size={11} /> Import
+        <button onClick={handleImportJson} className="flex items-center gap-1 px-2 py-1 text-[11px] text-ide-text hover:text-ide-text-bright hover:bg-ide-hover rounded transition-colors" title="Import JSON">
+          <Upload size={11} /> JSON
+        </button>
+        <button onClick={onShowImport} className="flex items-center gap-1 px-2 py-1 text-[11px] text-ide-text hover:text-ide-text-bright hover:bg-ide-hover rounded transition-colors" title="Import RN/Expo project">
+          <Upload size={11} /> RN
         </button>
         <button onClick={onShowExport} className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold bg-ide-accent text-white rounded-md hover:opacity-90 transition-opacity">
           <Download size={11} /> Export

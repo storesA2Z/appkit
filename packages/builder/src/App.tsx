@@ -14,6 +14,7 @@ import { ExportDialog } from './components/ExportDialog';
 import { WidgetTree } from './components/WidgetTree';
 import { CommandPalette } from './components/CommandPalette';
 import { CustomCssPanel } from './components/CustomCssPanel';
+import { ImportWizard } from './components/ImportWizard';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useAppkitStore } from './store/appkit-store';
 
@@ -28,6 +29,7 @@ export default function App() {
   const [rightTab, setRightTab] = useState<RightPanelTab>('props');
   const [showExport, setShowExport] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
+  const [showImport, setShowImport] = useState(false);
 
   useKeyboardShortcuts();
 
@@ -53,11 +55,13 @@ export default function App() {
       {showProjectSwitcher && <ProjectSwitcher />}
       {showExport && <ExportDialog onClose={() => setShowExport(false)} />}
       <CommandPalette open={showCommandPalette} onClose={() => setShowCommandPalette(false)} />
+      <ImportWizard open={showImport} onClose={() => setShowImport(false)} />
 
       <Toolbar
         mode={mode}
         onModeChange={setMode}
         onShowExport={() => setShowExport(true)}
+        onShowImport={() => setShowImport(true)}
         onShowCommandPalette={() => setShowCommandPalette(true)}
       />
 
