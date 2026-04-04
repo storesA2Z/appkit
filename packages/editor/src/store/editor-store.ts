@@ -10,6 +10,7 @@ interface EditorStoreState {
   vscodeReady: boolean;
   snackConnected: boolean;
   vscodePort: number;
+  fileWatcherActive: boolean;
 }
 
 interface EditorStoreActions {
@@ -19,6 +20,7 @@ interface EditorStoreActions {
   setProjects: (projects: AppkitProject[]) => void;
   setVSCodeReady: (ready: boolean) => void;
   setSnackConnected: (connected: boolean) => void;
+  setFileWatcherActive: (active: boolean) => void;
 }
 
 export const useEditorStore = create<EditorStoreState & EditorStoreActions>()((set) => ({
@@ -29,6 +31,7 @@ export const useEditorStore = create<EditorStoreState & EditorStoreActions>()((s
   vscodeReady: false,
   snackConnected: false,
   vscodePort: 3100,
+  fileWatcherActive: false,
 
   setMode: (mode) => set({ mode }),
   toggleAiSidebar: () => set((s) => ({ aiSidebarOpen: !s.aiSidebarOpen })),
@@ -36,4 +39,5 @@ export const useEditorStore = create<EditorStoreState & EditorStoreActions>()((s
   setProjects: (projects) => set({ projects }),
   setVSCodeReady: (ready) => set({ vscodeReady: ready }),
   setSnackConnected: (connected) => set({ snackConnected: connected }),
+  setFileWatcherActive: (active) => set({ fileWatcherActive: active }),
 }));

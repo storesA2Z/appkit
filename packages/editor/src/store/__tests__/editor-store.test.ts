@@ -40,4 +40,9 @@ describe('editor store', () => {
     useEditorStore.getState().setSnackConnected(true);
     expect(useEditorStore.getState().snackConnected).toBe(true);
   });
+
+  it('sets file watcher active', () => {
+    useEditorStore.getState().setFileWatcherActive(true);
+    expect(useEditorStore.getState().fileWatcherActive).toBe(true);
+  });
 });
